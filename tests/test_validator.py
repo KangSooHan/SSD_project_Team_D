@@ -22,3 +22,8 @@ def test_검증기_쓰기_잘못된_입력_길이(wrong_input):
 def test_검증기_읽기_올바른_입력_성공():
     validator = Validator()
     assert validator.run(CORRECT_READ_SENTENCE) == True
+
+@pytest.mark.parametrize("wrong_input", ["r", "0", "r 0 0"])
+def test_검증기_읽기_잘못된_입력_길이(wrong_input):
+    validator = Validator()
+    assert validator.run(wrong_input) == False
