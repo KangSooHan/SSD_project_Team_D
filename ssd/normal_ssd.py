@@ -1,6 +1,7 @@
 import os
 from ssd.abstract_ssd import AbstractSSD
 
+
 class NormalSSD(AbstractSSD):
     DEFAULT_NAND_FILE: str = "ssd_nand.txt"
     DEFAULT_OUTPUT_FILE: str = "ssd_output.txt"
@@ -9,35 +10,38 @@ class NormalSSD(AbstractSSD):
     DEFAULT_LBA_RANGE: range = range(0, 100)
 
     def __init__(
-        self,
-        nand_file: str = DEFAULT_NAND_FILE,
-        output_file: str = DEFAULT_OUTPUT_FILE,
-        lba_range: range = DEFAULT_LBA_RANGE,
+            self,
+            nand_file: str = DEFAULT_NAND_FILE,
+            output_file: str = DEFAULT_OUTPUT_FILE,
+            lba_range: range = DEFAULT_LBA_RANGE,
     ) -> None:
-        self.nand_file: str = nand_file
-        self.output_file: str = output_file
-        self.valid_lba_range: range = lba_range
+        self._nand_file: str = nand_file
+        self._output_file: str = output_file
+        self._valid_lba_range: range = lba_range
 
-        if not os.path.exists(self.nand_file):
-            open(self.nand_file, "w").close()
+        if not os.path.exists(self._nand_file):
+            open(self._nand_file, "w").close()
 
     def read(self, address: int) -> None:
-        if address not in self.valid_lba_range:
+        if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
 
-        with open(self.nand_file, "r") as f:
-            for line in f:
-                lba_str, value = line.strip().split()
-                if int(lba_str) == address:
-                    self._write_output(value)
-                    return
+        value = self._load_value_from_nand(address)
+        self._write_output(value)
 
-        self._write_output(self.EMPTY_VALUE)
+    def _load_value_from_nand(self, address: int) -> str:
+        with open(self._nand_file, "r") as f:
+            for line in f:
+                parts = line.strip().split()
+                lba_str, value = parts
+                if int(lba_str) == address:
+                    return value
+        return self.EMPTY_VALUE
 
     def write(self, address: int, value: int) -> None:
         pass
 
     def _write_output(self, value: str) -> None:
-        with open(self.output_file, "w") as f:
+        with open(self._output_file, "w") as f:
             f.write(value)
