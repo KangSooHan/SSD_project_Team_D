@@ -4,10 +4,9 @@ from shell.commands.help_command import HelpCommand
 
 def test_help_객체생성(mocker):
     # arrange
-    help_cmd: HelpCommand = mocker.Mock()
+    ssd: AbstractSSD = mocker.Mock()
+    help_cmd = HelpCommand(ssd)
 
-    # act
-    help_cmd.execute()
-
-    # assert
-    assert help_cmd.execute.call_count == 1
+    # act & assert
+    assert help_cmd.execute() == True
+    assert ssd.write.call_count == 1

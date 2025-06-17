@@ -1,6 +1,10 @@
 from shell.commands.base import Command
+from ssd.abstract_ssd import AbstractSSD
 
-class HelpCommand(Command):
-    def execute(self, args: list[str]) -> None:
-        print("팀명: D팀 | 팀원: 박치원")
-        print("Available commands: write, read, fullwrite, fullread, help, exit")
+class HelpCommand:
+    def __init__(self, ssd: AbstractSSD):
+        self._ssd = ssd
+
+    def execute(self) -> None:
+        self._ssd.write("")
+        return True
