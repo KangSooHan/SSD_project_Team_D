@@ -1,3 +1,5 @@
+from unittest.mock import call
+
 import pytest
 from pytest_mock import MockerFixture
 
@@ -21,3 +23,16 @@ def test_테스트시나리오1_객체는_execute_메서드로_시나리오를_�
     sut = TestScenario1(ssd_mock)
     sut.execute()
     assert True
+
+def test_테스트시나리오1_객체는_0에서_4번지까지_write명령을_실행한다(ssd_mock):
+    sut = TestScenario1(ssd_mock)
+
+    sut.execute()
+
+    assert ssd_mock.write.call_count == 4
+    ssd_mock.write.assert_has_calls([
+        call(0x00, hex(0)),
+        call(0x01, hex(1)),
+        call(0x02, hex(2)),
+        call(0x03, hex(3)),
+    ])
