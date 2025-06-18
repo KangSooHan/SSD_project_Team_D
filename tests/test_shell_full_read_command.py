@@ -12,4 +12,3 @@ def test_full_read_성공(mocker):
 
     # assert
     assert ssd.read.call_count == 100
-
