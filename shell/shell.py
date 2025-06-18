@@ -17,6 +17,15 @@ def main():
 
         if command == "help":
             print("---- 제작자 & 명령어 ----")
+            print("팀명: Discovery | 팀원: 강수한, 이후광, 윤창흠, 김지영, 이지훈, 박치원")
+            print("----------------------")
+            print("명령어")
+            print("write")
+            print("read")
+            print("help")
+            print("fullwrite")
+            print("fullread")
+            print("----------------------")
 
         elif command == "write":
             print("[Write] Done")
