@@ -45,9 +45,8 @@ def main():
             print("[Write] Done")
         elif command == "read":
             valid_cmd, address, data = validator.run(user_input)
-            executor = ReadCommand(ssd)
-            receive_data = executor.execute(address)  # return type 불일치, duck typing 적용
-            print(f"[Read] LBA {address} : {receive_data}")
+            executor = ReadCommand(ssd, address)
+            executor.execute()
         elif command == "help":
             executor = HelpCommand()
             executor.execute()
