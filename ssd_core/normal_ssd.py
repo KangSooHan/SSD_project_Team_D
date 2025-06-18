@@ -1,8 +1,5 @@
 import os
-
-from ssd.abstract_ssd import AbstractSSD
-
-
+from ssd_core.abstract_ssd import AbstractSSD
 
 class NormalSSD(AbstractSSD):
     DEFAULT_NAND_FILE: str = "ssd_nand.txt"
@@ -30,7 +27,7 @@ class NormalSSD(AbstractSSD):
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
-          
+
         value = self._load_value_from_nand(address)
         self._write_output(value)
 
