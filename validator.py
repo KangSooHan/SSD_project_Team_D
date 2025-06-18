@@ -66,17 +66,22 @@ class Validator:
             return False
 
     def validate_test(self, sentence:str):
-        sentence = self.preprocess_sentence(sentence)
-        split_sentence = sentence.split(" ")
-        return self.validate(split_sentence)
+        try:
+            sentence = self.preprocess_sentence(sentence)
+            split_sentence = sentence.split(" ")
+            return self.validate(split_sentence)
+        except:
+            return False
 
     def run(self, sentence:str) -> (bool, int, int):
-        sentence = self.preprocess_sentence(sentence)
-        split_sentence = sentence.split(" ")
-        if self.validate(split_sentence):
-            if split_sentence[0] == "w":
-                return True, int(split_sentence[1]), int(split_sentence[2], 16)
-            if split_sentence[0] == "r":
-                return True, int(split_sentence[1]), None
-
-        return False, None, None
+        try:
+            sentence = self.preprocess_sentence(sentence)
+            split_sentence = sentence.split(" ")
+            if self.validate(split_sentence):
+                if split_sentence[0] == "w":
+                    return True, int(split_sentence[1]), int(split_sentence[2], 16)
+                if split_sentence[0] == "r":
+                    return True, int(split_sentence[1]), None
+            return False, None, None
+        except:
+            return False, None, None
