@@ -40,7 +40,7 @@ class NormalSSD(AbstractSSD):
         with open(self._output_file, "w") as f:
             f.write(value)
 
-    def write(self, address: int, data: str) -> None:
+    def write(self, address: int, data: int) -> None:
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
