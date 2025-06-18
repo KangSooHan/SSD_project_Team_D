@@ -3,7 +3,6 @@ import os
 import io
 from unittest.mock import patch
 from ssd import main as ssd_main
-from ssd import validate_main
 from validator import Validator
 from contextlib import redirect_stdout
 
@@ -65,7 +64,7 @@ def test_write_command_with_mock(cli_args):
         ssd_main(cli_args)
 
         lba = int(cli_args[1])
-        value = cli_args[2]
+        value = int(cli_args[2], 16)
         mock_write.assert_called_once_with(lba, value)
         assert get_output_content() == ""
 
@@ -80,7 +79,7 @@ def test_write_then_read_with_write_mock(write_args, read_args):
         ssd_main(write_args)
 
         lba = int(write_args[1])
-        value = write_args[2]
+        value = int(write_args[2], 16)
         mock_write.assert_called_once_with(lba, value)
 
     ssd_main(read_args)
@@ -102,16 +101,18 @@ def test_SSD_검증기_Mock_추가_및_실행(write_args, return_value):
 
         mock_validator_instance.run.assert_called_once_with(" ".join(write_args))
 
-import pytest
-
-@pytest.mark.parametrize("args", [
-    (["W", "77", "0xFEEDBEEF"]),
-    (["R", "77"]),
-    (["W", "0", "0x12345678"]),
-    (["R", "0"]),
-])
-def test_ssd_and_validator_output_match(args, capture_stdout):
-    output_ssd = capture_stdout(ssd_main, args)
-    output_validator = capture_stdout(validate_main, args)
-
-    assert output_ssd == output_validator, f"\nSSD: {output_ssd}\nValidator: {output_validator}"
+'''
+새로운 main 함수를 구현할 때 사용한 pytest문
+'''
+# @pytest.mark.parametrize("args", [
+#     (["W", "77", "0xFEEDBEEF"]),
+#     (["R", "77"]),
+#     (["W", "0", "0x12345678"]),
+#     (["R", "0"]),
+# ])
+# def test_ssd_and_validator_output_match(args, capture_stdout):
+#     from ssd import validate_main
+#     output_ssd = capture_stdout(ssd_main, args)
+#     output_validator = capture_stdout(validate_main, args)
+#
+#     assert output_ssd == output_validator, f"\nSSD: {output_ssd}\nValidator: {output_validator}"
