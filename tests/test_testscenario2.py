@@ -1,3 +1,5 @@
+import io
+import sys
 from unittest.mock import call
 
 import pytest
@@ -12,12 +14,20 @@ def ssd_mock(mocker: MockerFixture):
     return mocker.Mock(spec=AbstractSSD)
 
 
-def test_전체시나리오에_실패할경우_FAIL값을_리턴한다(ssd_mock):
+def test_전체시나리오에_실패할경우_FAIL값을_출력한다(ssd_mock):
     sut = TestScenario2(ssd_mock)
-    assert sut.execute() == "FAIL"
+    output = io.StringIO()
+    sys.stdout = output
+
+    sut.execute()
+    assert output.getvalue() == "FAIL\n"
 
 
-def test_전체시나리오에_성공할경우_PASS값을_리턴한다(ssd_mock):
+def test_전체시나리오에_성공할경우_PASS값을_출력한다(ssd_mock):
     sut = TestScenario2(ssd_mock)
     ssd_mock.read.return_value = sut.test_constant
-    assert sut.execute() == "PASS"
+    output = io.StringIO()
+    sys.stdout = output
+
+    sut.execute()
+    assert output.getvalue() == "PASS\n"
