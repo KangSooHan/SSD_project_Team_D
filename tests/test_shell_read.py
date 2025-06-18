@@ -1,5 +1,5 @@
 import pytest
-from ssd.abstract_ssd import AbstractSSD
+from ssd_core.abstract_ssd import AbstractSSD
 from shell_core.commands.read_command import ReadCommand
 
 

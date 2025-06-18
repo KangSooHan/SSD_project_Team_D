@@ -1,6 +1,6 @@
 import random
 
-from ssd.abstract_ssd import AbstractSSD
+from ssd_core.abstract_ssd import AbstractSSD
 
 
 class TestScenario3:

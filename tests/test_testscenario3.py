@@ -4,10 +4,9 @@ from unittest.mock import call
 import pytest
 from pytest_mock import MockerFixture
 
-from shell.commands.testscenario3 import TestScenario3
-from shell.commands.write_command import WriteCommand
-from ssd import ssd
-from ssd.abstract_ssd import AbstractSSD
+from shell_core.commands.testscenario3 import TestScenario3
+from shell_core.commands.write_command import WriteCommand
+from ssd_core.abstract_ssd import AbstractSSD
 
 
 @pytest.fixture
