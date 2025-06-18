@@ -2,6 +2,7 @@ import pytest
 import os
 from unittest.mock import patch
 from ssd import main as ssd_main
+from validator import Validator
 
 NAND_FILENAME = "ssd_nand.txt"
 OUTPUT_FILENAME = "ssd_output.txt"
@@ -73,3 +74,16 @@ def test_write_then_read_with_write_mock(write_args, read_args):
     ssd_main(read_args)
     output = get_output_content()
     assert output in {"0x00000000", "ERROR"}
+
+@pytest.mark.parametrize(("write_args", "return_value"), [
+    (["W", "77", "0xFEEDBEEF"], [True, "77", "0xFEEDBEEF"]),
+    (["W", "0", "0x12345678"], [True, "0", "0x12345678"]),
+])
+def test_SSD_검증기_Mock_추가_및_실행(write_args, return_value):
+    with patch("ssd.Validator") as MockValidator:
+        mock_validator_instance = MockValidator.return_value
+        mock_validator_instance.run.return_value = return_value
+
+        ssd_main(write_args)
+
+        mock_validator_instance.run.assert_called_once_with(" ".join(write_args))
