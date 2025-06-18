@@ -61,3 +61,12 @@ def test_검증기_대소문자_성공(validator):
                                          "r -1", "r 100", "r r"])
 def test_검증기_잘못된_LBA_입력(wrong_input, validator):
     assert validator.run(wrong_input) == False
+
+@pytest.mark.parametrize("wrong_input", ["wrong 0 0xFFFFFFFF",  "wrong 100"])
+def test_검증기_잘못된_COMMAND_입력(wrong_input, validator):
+    assert validator.run(wrong_input) == False
+
+@pytest.mark.parametrize("wrong_input", ["w 0 00FFFFFFFF", "w 0 0xGFFFFFFF",
+                                        "w 0 0x-1FFFFFFF", "w 0 0xZZZZZZZZ"])
+def test_검증기_잘못된_VALUE_입력(wrong_input, validator):
+    assert validator.run(wrong_input) == False
