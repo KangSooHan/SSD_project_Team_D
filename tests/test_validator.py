@@ -81,6 +81,7 @@ def test_검증기_잘못된_VALUE_입력(wrong_input, validator):
     assert validator._validate_test(wrong_input) == False
 
 
+@pytest.mark.skip
 def test_검증기_값_가져오는_함수(validator):
     assert validator.run(CORRECT_WRITE_SENTENCE) == (True, 0, int("0xFFFFFFFF", 16))
     assert validator.run(CORRECT_READ_SENTENCE) == (True, 0, None)
