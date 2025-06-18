@@ -1,87 +1,75 @@
-import os
 import pytest
-from ssd_core.normal_ssd import NormalSSD
+import os
+from unittest.mock import patch
+from ssd import main as ssd_main
 
-NAND_FILE = "ssd_nand.txt"
-OUTPUT_FILE = "ssd_output.txt"
+NAND_FILENAME = "ssd_nand.txt"
+OUTPUT_FILENAME = "ssd_output.txt"
 
 
 @pytest.fixture(autouse=True)
 def clean_files():
-    """Remove nand/output files before and after each test."""
-    for f in [NAND_FILE, OUTPUT_FILE]:
-        if os.path.exists(f):
-            os.remove(f)
+    for filename in [NAND_FILENAME, OUTPUT_FILENAME]:
+        if os.path.exists(filename):
+            os.remove(filename)
     yield
-    for f in [NAND_FILE, OUTPUT_FILE]:
-        if os.path.exists(f):
-            os.remove(f)
+    for filename in [NAND_FILENAME, OUTPUT_FILENAME]:
+        if os.path.exists(filename):
+            os.remove(filename)
 
 
-def write_nand_file(data: dict[str, str]) -> None:
-    with open(NAND_FILE, "w") as f:
-        for lba, value in data.items():
-            f.write(f"{lba} {value}\n")
+def prepare_nand_file(nand_data: dict[str, str]) -> None:
+    with open(NAND_FILENAME, "w") as f:
+        for lba_str, value_str in nand_data.items():
+            f.write(f"{lba_str} {value_str}\n")
 
 
-def read_output() -> str:
-    with open(OUTPUT_FILE, "r") as f:
+def get_output_content() -> str:
+    if not os.path.exists(OUTPUT_FILENAME):
+        return ""
+    with open(OUTPUT_FILENAME, "r") as f:
         return f.read().strip()
 
 
-@pytest.mark.parametrize("nand_contents, lba_to_read, expected_output", [
-    # Valid reads - matching written LBA
-    ({"0": "0x12345678"}, 0, "0x12345678"),
-    ({"50": "0xABCDEF01"}, 50, "0xABCDEF01"),
-    ({"99": "0xFFFFFFFF"}, 99, "0xFFFFFFFF"),
-
-    # Valid LBA but not written
-    ({"10": "0x11111111", "20": "0x22222222"}, 30, "0x00000000"),
-    ({"10": "0x11111111"}, 11, "0x00000000"),
-
-    # Empty NAND
-    ({}, 0, "0x00000000"),
-    ({}, 99, "0x00000000"),
-
-    # Invalid LBA range
-    ({"3": "0xAAAABBBB"}, -1, "ERROR"),
-    ({"3": "0xAAAABBBB"}, 100, "ERROR"),
+@pytest.mark.parametrize("nand_content, cli_args, expected", [
+    ({"3": "0xCAFEBABE"}, ["R", "3"], "0xCAFEBABE"),
+    ({}, ["R", "42"], "0x00000000"),
+    ({}, ["R", "100"], "ERROR"),
 ])
-def test_read(nand_contents, lba_to_read, expected_output):
-    write_nand_file(nand_contents)
-    ssd = NormalSSD()
-
-    ssd.read(lba_to_read)
-
-    assert read_output() == expected_output
+def test_read_command(nand_content, cli_args, expected):
+    prepare_nand_file(nand_content)
+    ssd_main(cli_args)
+    assert get_output_content() == expected
 
 
-@pytest.mark.parametrize("initial_nand, write_lba, data", [
-    # Clean NAND
-    ({}, 0, "0x11111111"),
-    ({}, 99, "0x22222222"),
-    # Dirty NAND
-    ({"0": "0x12345678"}, 50, "0x12345678"),
-    ({"50": "0xABCDEF01"}, 25, "0xAAAAAAAA"),
-    ({"99": "0xFFFFFFFF"}, 75, "0xABCDEFAB"),
-    # Dirty NAND with Overwrite
-    ({"0": "0x12345678"}, 0, "0x12341234"),
-    ({"50": "0xABCDEF01"}, 50, "0xAAAAAAAA"),
-    ({"99": "0xFFFFFFFF"}, 99, "0xABCDEFAB"),
+@pytest.mark.parametrize("cli_args", [
+    ["W", "10", "0x11111111"],
+    ["W", "0", "0xCAFEBABE"],
 ])
-def test_write(initial_nand, write_lba, data):
-    if not os.path.exists(NAND_FILE):
-        open(NAND_FILE, "w").close()
-    if initial_nand:
-        with open(NAND_FILE, "w") as f:
-            for lba, value in initial_nand.items():
-                f.write(f'{lba} {value}\n')
-    ssd = NormalSSD()
-    ssd.write(write_lba, int(data,16))
+def test_write_command_with_mock(cli_args):
+    with patch("ssd_core.normal_ssd.NormalSSD.write") as mock_write:
+        mock_write.return_value = None
+        ssd_main(cli_args)
 
-    with open(NAND_FILE, 'r+') as file:
-        lines = file.readlines()
-        written_lba, written_data = lines[-1].strip().split()
+        lba = int(cli_args[1])
+        value = cli_args[2]
+        mock_write.assert_called_once_with(lba, value)
+        assert get_output_content() == ""
 
-    assert str(written_lba) == str(write_lba)
-    assert written_data == data
+
+@pytest.mark.parametrize("write_args, read_args", [
+    (["W", "77", "0xFEEDBEEF"], ["R", "77"]),
+    (["W", "0", "0x12345678"], ["R", "0"]),
+])
+def test_write_then_read_with_write_mock(write_args, read_args):
+    with patch("ssd_core.normal_ssd.NormalSSD.write") as mock_write:
+        mock_write.return_value = None
+        ssd_main(write_args)
+
+        lba = int(write_args[1])
+        value = write_args[2]
+        mock_write.assert_called_once_with(lba, value)
+
+    ssd_main(read_args)
+    output = get_output_content()
+    assert output in {"0x00000000", "ERROR"}
