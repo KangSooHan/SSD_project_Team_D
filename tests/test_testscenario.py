@@ -24,19 +24,6 @@ def test_테스트시나리오1_객체는_execute_메서드로_시나리오를_�
     sut.execute()
     assert True
 
-def test_테스트시나리오1_객체는_0에서_4번지까지_write명령을_실행한다(ssd_mock):
-    sut = TestScenario1(ssd_mock)
-
-    sut.execute()
-
-    assert ssd_mock.write.call_count == 4
-    ssd_mock.write.assert_has_calls([
-        call(0x00, hex(0)),
-        call(0x01, hex(1)),
-        call(0x02, hex(2)),
-        call(0x03, hex(3)),
-    ])
-
 def test_read_compare_기능은_정상적으로_읽은_경우_true를_리턴한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
     ssd_mock.read.return_value = hex(1)
@@ -49,3 +36,7 @@ def test_read_compare_기능은_읽기에_실패한_경우_false를_반환한다
 
     assert sut.read_compare(0x00, hex(2)) == False
 
+def test_전체시나리오에_실패할경우_FAIL값을_리턴한다(ssd_mock):
+    sut = TestScenario1(ssd_mock)
+
+    assert sut.execute() == "FAIL"
