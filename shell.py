@@ -1,6 +1,6 @@
 from shell_core.command_factory import CommandFactory
 from shell_core.normal_ssd_driver import NormalSSDDriver
-from validator import Validator
+from validator import ShellValidator
 
 
 def run(user_input: str, ssd: NormalSSDDriver, validator: Validator) -> None:
