@@ -1,4 +1,4 @@
-from shell_core.commands.base import Command
+from shell_core.commands.base_command import BaseCommand
 from ssd_core.abstract_ssd import AbstractSSD
 import re
 
