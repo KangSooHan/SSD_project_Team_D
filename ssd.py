@@ -1,5 +1,5 @@
 from ssd_core.normal_ssd import NormalSSD
-from validator import Validator
+from validator import SSDValidator
 
 def main(args=None):
     import sys
@@ -7,7 +7,7 @@ def main(args=None):
     if not args:
         return
 
-    validator = Validator()
+    validator = SSDValidator()
     command_type, lba, value = validator.run(" ".join(args))
 
     ssd = NormalSSD()

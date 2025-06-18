@@ -4,7 +4,7 @@ from shell_core.commands.help_command import HelpCommand
 from shell_core.commands.read_command import ReadCommand
 from shell_core.commands.write_command import WriteCommand
 from ssd_core.abstract_ssd import AbstractSSD
-from validator import Validator
+from validator import ShellValidator
 
 
 class NormalSSDDriver(AbstractSSD):
@@ -56,7 +56,7 @@ def main():
         elif command == "fullread":
             print(f"[FullRead] TBU")
         elif command == "exit":
-            pass
+            return
         else:
             print("INVALID COMMAND")
             continue
