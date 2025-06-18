@@ -4,6 +4,7 @@ import os
 from ssd.abstract_ssd import AbstractSSD
 from ssd.normal_ssd import NormalSSD
 
+
 class NormalSSDDriver(AbstractSSD):
     DEFAULT_NAND_FILE: str = NormalSSD.DEFAULT_NAND_FILE
     DEFAULT_OUTPUT_FILE: str = NormalSSD.DEFAULT_OUTPUT_FILE
