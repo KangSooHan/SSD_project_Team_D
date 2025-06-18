@@ -51,5 +51,4 @@ def test_전체시나리오에_실패할경우_FAIL값을_리턴한다(ssd_mock)
 def test_전체시나리오에_성공할경우_PASS값을_리턴한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
     ssd_mock.read.side_effect = [f'0x{value:08X}' for value in range(100)]
-    print(ssd_mock.return_value)
     assert sut.execute() == "PASS"
