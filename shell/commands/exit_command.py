@@ -1,2 +1,6 @@
+import sys
+
+
 class ExitCommand:
-    pass
+    def execute(self):
+        sys.exit(0)
