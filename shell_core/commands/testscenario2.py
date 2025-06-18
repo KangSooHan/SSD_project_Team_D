@@ -44,6 +44,9 @@ class TestScenario2:
         return
 
     def read_compare(self, address, data):
-        result = int(self._ssd.read(address), 16)
+        try:
+            result = int(self._ssd.read(address), 16)
 
-        return result == data
+            return result == data
+        except:
+            return False

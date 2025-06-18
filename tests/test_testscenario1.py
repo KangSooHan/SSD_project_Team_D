@@ -11,7 +11,9 @@ from ssd_core.abstract_ssd import AbstractSSD
 
 @pytest.fixture
 def ssd_mock(mocker: MockerFixture):
-    return mocker.Mock(spec=AbstractSSD)
+    mock = mocker.Mock(spec=AbstractSSD)
+    mock.read.return_value = f"0x{1:08X}"
+    return mock
 
 
 def test_테스트시나리오1_객체를_생성한다(ssd_mock):
@@ -32,9 +34,8 @@ def test_테스트시나리오1_객체는_execute_메서드로_시나리오를_�
 
 def test_read_compare_기능은_정상적으로_읽은_경우_true를_리턴한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
-    ssd_mock.read.return_value = hex(1)
 
-    assert sut.read_compare(0x00, hex(1)) == True
+    assert sut.read_compare(0x00, 1) == True
 
 
 def test_read_compare_기능은_읽기에_실패한_경우_false를_반환한다(ssd_mock):
