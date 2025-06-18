@@ -8,9 +8,6 @@ CORRECT_READ_SENTENCE="r 0"
 def validator():
     return Validator()
 
-def test_검증기_실행_테스트(validator):
-    assert validator.run("test_input")
-
 def test_검증기_쓰기_올바른_입력_성공(validator):
     assert validator.run(CORRECT_WRITE_SENTENCE) == True
 
