@@ -6,4 +6,6 @@ class WriteCommand:
         self._ssd = ssd
 
     def execute(self, lba, value) -> None:
+        if lba < 0 or lba > 99 :
+            raise Exception
         self._ssd.write(lba, value)
