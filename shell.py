@@ -3,7 +3,7 @@ from shell_core.normal_ssd_driver import NormalSSDDriver
 from validator import ShellValidator
 
 
-def run(user_input: str, ssd: NormalSSDDriver, validator: Validator) -> None:
+def run(user_input: str, ssd: NormalSSDDriver, validator: ShellValidator) -> None:
     user_input = user_input.strip()
     if not user_input:
         return
@@ -21,7 +21,7 @@ def run(user_input: str, ssd: NormalSSDDriver, validator: Validator) -> None:
 def main():
     print("<< Test Shell Application >> Start")
 
-    validator = Validator()
+    validator = ShellValidator()
     ssd = NormalSSDDriver()
 
     while True:
