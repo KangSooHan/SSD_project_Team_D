@@ -3,7 +3,7 @@ import sys
 import textwrap
 
 import pytest
-from shell.commands.help_command import HelpCommand
+from shell_core.commands.help_command import HelpCommand
 
 
 def test_help명령어():

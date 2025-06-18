@@ -1,7 +1,7 @@
 import subprocess
 import time
-from ssd.abstract_ssd import AbstractSSD
-from ssd.normal_ssd import NormalSSD
+from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.normal_ssd import NormalSSD
 
 
 class NormalSSDDriver(AbstractSSD):
