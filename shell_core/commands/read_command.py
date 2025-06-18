@@ -8,4 +8,5 @@ class ReadCommand:
     def execute(self, lba: int) -> None:
         if lba < 0 or lba > 99:
             raise Exception
-        return self._ssd.read(lba)
+        result = self._ssd.read(lba)
+        print(f"[Read] LBA {lba:02d} : {result}")
