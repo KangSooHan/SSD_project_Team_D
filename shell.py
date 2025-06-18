@@ -2,18 +2,13 @@ import sys
 
 from shell_core.commands.help_command import HelpCommand
 from shell_core.commands.read_command import ReadCommand
+from shell_core.commands.testscenario1 import TestScenario1
+from shell_core.commands.testscenario2 import TestScenario2
+from shell_core.commands.testscenario3 import TestScenario3
 from shell_core.commands.write_command import WriteCommand
+from shell_core.normal_ssd_driver import NormalSSDDriver
 from ssd_core.abstract_ssd import AbstractSSD
 from validator import Validator
-
-
-class NormalSSDDriver(AbstractSSD):
-    # 실행 오류 방지를 위한 임시 구현체
-    def write(self, address: int, data: str) -> None:
-        pass
-
-    def read(self, address: int) -> str:
-        pass
 
 
 def main():
@@ -56,6 +51,15 @@ def main():
             print(f"[FullRead] TBU")
         elif command == "exit":
             pass
+        elif command.startswith("1_"):
+            executor = TestScenario1(ssd)
+            executor.execute()
+        elif command.startswith("2_"):
+            executor = TestScenario2(ssd)
+            executor.execute()
+        elif command.startswith("2_"):
+            executor = TestScenario3(ssd)
+            executor.execute()
         else:
             print("INVALID COMMAND")
             continue
