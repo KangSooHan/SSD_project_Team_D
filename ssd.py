@@ -1,4 +1,5 @@
 from ssd_core.normal_ssd import NormalSSD
+from validator import Validator
 
 def main(args=None):
     import sys
@@ -6,17 +7,16 @@ def main(args=None):
     if not args:
         return
 
-    command_type = args[0]
+    validator = Validator()
+    command_type, lba, value = validator.run(" ".join(args))
+
     ssd = NormalSSD()
 
-    if command_type == "R" and len(args) == 2:
-        lba = int(args[1])
+    if command_type == "R":
         ssd.read(lba)
         return
 
-    if command_type == "W" and len(args) == 3:
-        lba = int(args[1])
-        value = args[2]
+    if command_type == "W":
         ssd.write(lba, value)
         return
 
