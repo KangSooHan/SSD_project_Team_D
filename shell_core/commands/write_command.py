@@ -13,3 +13,4 @@ class WriteCommand:
         if self._lba < 0 or self._lba > 99:
             raise Exception
         self._ssd.write(self._lba, self._value)
+        print('[Write] Done')
