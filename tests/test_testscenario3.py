@@ -13,7 +13,9 @@ from ssd_core.abstract_ssd import AbstractSSD
 
 @pytest.fixture
 def ssd_mock(mocker: MockerFixture):
-    return mocker.Mock(spec=AbstractSSD)
+    mock = mocker.Mock(spec=AbstractSSD)
+    mock.read.return_value = "0x00000000"
+    return mock
 
 
 def test_전체시나리오에_실패할경우_FAIL값을_출력한다(ssd_mock):
