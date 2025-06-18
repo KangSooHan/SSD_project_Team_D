@@ -2,7 +2,7 @@ import pytest
 from ssd.abstract_ssd import AbstractSSD
 from shell.commands.write_command import WriteCommand
 
-def test_help명령어(mocker):
+def test_write_성공(mocker):
     # arrange
     ssd: AbstractSSD = mocker.Mock()
     write_cmd = WriteCommand(ssd)
