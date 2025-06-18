@@ -2,11 +2,14 @@ from shell_core.commands.base import Command
 from ssd_core.abstract_ssd import AbstractSSD
 import re
 
-class WriteCommand:
-    def __init__(self, ssd: AbstractSSD):
-        self._ssd = ssd
 
-    def execute(self, lba:int, value:int) -> None:
-        if lba < 0 or lba > 99 :
+class WriteCommand:
+    def __init__(self, ssd: AbstractSSD, lba: int, value: str):
+        self._ssd = ssd
+        self._lba = lba
+        self._value = value
+
+    def execute(self) -> None:
+        if self._lba < 0 or self._lba > 99:
             raise Exception
-        self._ssd.write(lba, value)
+        self._ssd.write(self._lba, self._value)
