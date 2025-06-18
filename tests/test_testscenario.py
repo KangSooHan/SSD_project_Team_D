@@ -9,7 +9,7 @@ from ssd.abstract_ssd import AbstractSSD
 
 @pytest.fixture
 def ssd_mock(mocker: MockerFixture):
-    return mocker.Mock(spe=AbstractSSD)
+    return mocker.Mock(spec=AbstractSSD)
 
 def test_테스트시나리오1_객체를_생성한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
