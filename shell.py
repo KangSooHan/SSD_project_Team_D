@@ -32,10 +32,6 @@ def main():
 
         parts = user_input.split()
 
-        if len(parts) <= 1:  # 1 맞나요?
-            print("INVALID COMMAND")
-            continue
-
         command = parts[0].lower()
 
         if command == "write":
