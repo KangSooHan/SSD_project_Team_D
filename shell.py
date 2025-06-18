@@ -1,7 +1,26 @@
 import sys
 
+from shell.commands.help_command import HelpCommand
+from shell.commands.read_command import ReadCommand
+from shell.commands.write_command import WriteCommand
+from ssd.abstract_ssd import AbstractSSD
+from validator import Validator
+
+
+class NormalSSDDriver(AbstractSSD):
+    # 실행 오류 방지를 위한 임시 구현체
+    def write(self, address: int, data: str) -> None:
+        pass
+
+    def read(self, address: int) -> str:
+        pass
+
+
 def main():
     print("<< Test Shell Application>> Start")
+
+    validator = Validator()
+    ssd = NormalSSDDriver()
 
     while True:
         # 입력 줄의 앞뒤 공백 및 개행 문자 제거
@@ -13,23 +32,36 @@ def main():
 
         parts = user_input.split()
         command = parts[0].lower()
-        args = parts[1:]
 
-        if command == "help":
-            print("---- 제작자 & 명령어 ----")
+        if len(parts) <= 1:  # 1 맞나요?
+            print("INVALID COMMAND")
+            continue
 
-        elif command == "write":
+        command = parts[0].lower()
+
+        if command == "write":
+            valid_cmd, address, data = validator.run(user_input)
+            executor = WriteCommand(ssd)
+            executor.execute(address, data)
             print("[Write] Done")
-
         elif command == "read":
-            print("[Read] LBA 00 : 0x00000000")
-
+            valid_cmd, address, data = validator.run(user_input)
+            executor = ReadCommand(ssd)
+            receive_data = executor.execute(address)  # return type 불일치, duck typing 적용
+            print(f"[Read] LBA {address} : {receive_data}")
+        elif command == "help":
+            executor = HelpCommand()
+            executor.execute()
+        elif command == "fullwrite":
+            pass
+        elif command == "fullread":
+            pass
         elif command == "exit":
-            print("Exit")
-            break
-
+            pass
         else:
             print("INVALID COMMAND")
+            continue
+
 
 if __name__ == "__main__":
     main()
