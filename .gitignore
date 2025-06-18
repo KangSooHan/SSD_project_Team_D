@@ -94,3 +94,6 @@ logs/
 # Optional IDEs
 .idea/
 *.iml
+
+ssd_output.txt
+ssd_nand.txt
