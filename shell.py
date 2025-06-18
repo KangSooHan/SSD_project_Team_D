@@ -3,7 +3,7 @@ import sys
 from shell_core.commands.help_command import HelpCommand
 from shell_core.commands.read_command import ReadCommand
 from shell_core.commands.write_command import WriteCommand
-from ssd.abstract_ssd import AbstractSSD
+from ssd_core.abstract_ssd import AbstractSSD
 from validator import Validator
 
 

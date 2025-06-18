@@ -4,8 +4,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from shell_core.commands.testscenario1 import TestScenario1
-from ssd import ssd
-from ssd.abstract_ssd import AbstractSSD
+from ssd_core.abstract_ssd import AbstractSSD
 
 
 @pytest.fixture
