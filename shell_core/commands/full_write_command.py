@@ -10,4 +10,3 @@ class FullWriteCommand:
     def execute(self) -> None:
         for lba in range(self._loop_count):
             self._ssd.write(lba, self._value)
-            print([])
