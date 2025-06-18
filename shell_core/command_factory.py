@@ -19,7 +19,7 @@ class CommandFactory:
         "exit": lambda ssd, address=None, value=None: ExitCommand(),
         "help": lambda ssd, address=None, value=None: HelpCommand(),
         "fullread": lambda ssd, address=None, value=None: FullReadCommand(ssd),
-        "fullwrite": lambda ssd, address=None, value=None: FullWriteCommand(ssd, value),
+        "fullwrite": lambda ssd, address, value: FullWriteCommand(ssd, value),
         "1_": lambda ssd, address=None, value=None: TestScenario1(ssd),
         "2_": lambda ssd, address=None, value=None: TestScenario2(ssd),
         "3_": lambda ssd, address=None, value=None: TestScenario3(ssd),

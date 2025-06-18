@@ -6,10 +6,10 @@ from shell_core.commands.full_write_command import FullWriteCommand
 def test_full_write_성공(mocker, value):
     # arrange
     ssd: AbstractSSD = mocker.Mock()
-    full_write_cmd = FullWriteCommand(ssd)
+    full_write_cmd = FullWriteCommand(ssd, value)
 
     # act
-    full_write_cmd.execute(int(value))
+    full_write_cmd.execute()
 
     # assert
     assert ssd.write.call_count == 100
