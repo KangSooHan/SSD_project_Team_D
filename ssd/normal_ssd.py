@@ -1,5 +1,7 @@
 import os
-from abstract_ssd import AbstractSSD
+
+from ssd.abstract_ssd import AbstractSSD
+
 
 
 class NormalSSD(AbstractSSD):
@@ -18,7 +20,9 @@ class NormalSSD(AbstractSSD):
         self._nand_file: str = nand_file
         self._output_file: str = output_file
         self._valid_lba_range: range = lba_range
+
         self._overwrite_flag = False
+
         if not os.path.exists(self._nand_file):
             open(self._nand_file, "w").close()
 
@@ -26,15 +30,19 @@ class NormalSSD(AbstractSSD):
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
+          
+        value = self._load_value_from_nand(address)
+        self._write_output(value)
 
+    def _load_value_from_nand(self, address: int) -> str:
         with open(self._nand_file, "r") as f:
             for line in f:
-                lba_str, value = line.strip().split()
+                parts = line.strip().split()
+                lba_str, value = parts
                 if int(lba_str) == address:
-                    self._write_output(value)
-                    return
+                    return value
+        return self.EMPTY_VALUE
 
-        self._write_output(self.EMPTY_VALUE)
 
     def _write_output(self, value: str) -> None:
         with open(self._output_file, "w") as f:
@@ -63,3 +71,4 @@ class NormalSSD(AbstractSSD):
                 file.write(new_line)
             if not self._overwrite_flag:
                 file.write(f'{address} 0x{data:08X}\n')
+
