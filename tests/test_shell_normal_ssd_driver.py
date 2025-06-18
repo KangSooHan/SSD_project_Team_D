@@ -1,4 +1,3 @@
-import os
 import pytest
 from shell.normal_ssd_driver import NormalSSDDriver
 from shell.commands.write_command import WriteCommand
