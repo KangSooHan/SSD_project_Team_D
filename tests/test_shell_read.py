@@ -1,5 +1,6 @@
 import pytest
 from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.normal_ssd import NormalSSD
 from shell_core.commands.read_command import ReadCommand
 
 
@@ -25,10 +26,6 @@ def test_read_실패(mocker, lba):
     # act & assert
     with pytest.raises(Exception):
         read_cmd.execute()
-import pytest
-from ssd_core.abstract_ssd import AbstractSSD
-from ssd_core.normal_ssd import NormalSSD
-from shell_core.commands.read_command import ReadCommand
 
 
 @pytest.mark.parametrize("lba", [1, 2, 3, 4, 99])
