@@ -24,13 +24,28 @@ class TestScenario2:
             self._ssd.write(1, self.test_constant)
             self._ssd.write(2, self.test_constant)
 
-            if not self.read_compare(4, self.test_constant): return TestScenario2.RESULT_FAIL
-            if not self.read_compare(0, self.test_constant): return TestScenario2.RESULT_FAIL
-            if not self.read_compare(3, self.test_constant): return TestScenario2.RESULT_FAIL
-            if not self.read_compare(1, self.test_constant): return TestScenario2.RESULT_FAIL
-            if not self.read_compare(2, self.test_constant): return TestScenario2.RESULT_FAIL
+            if not self.read_compare(4, self.test_constant):
+                print(TestScenario2.RESULT_FAIL)
+                return
 
-        return TestScenario2.RESULT_PASS
+            if not self.read_compare(0, self.test_constant):
+                print(TestScenario2.RESULT_FAIL)
+                return
+
+            if not self.read_compare(3, self.test_constant):
+                print(TestScenario2.RESULT_FAIL)
+                return
+
+            if not self.read_compare(1, self.test_constant):
+                print(TestScenario2.RESULT_FAIL)
+                return
+
+            if not self.read_compare(2, self.test_constant):
+                print(TestScenario2.RESULT_FAIL)
+                return
+
+        print(TestScenario2.RESULT_PASS)
+        return
 
     def read_compare(self, address, data):
         result = self._ssd.read(address)
