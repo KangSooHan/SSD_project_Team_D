@@ -20,18 +20,11 @@ class NormalSSDDriver(AbstractSSD):
         # Run the read command
         subprocess.run(["python", self.ssd_script, "R", str(addr)], check=True)
 
-        # Wait for ssd_output.txt to be written
-        for _ in range(10):  # 최대 1초 대기
-            if os.path.exists(self._output_file):
-                break
-            time.sleep(0.1)
+        time.sleep(0.1)
 
-        try:
-            with open(self._output_file, "r") as f:
-                result = f.read().strip()
-            return result
-        except Exception:
-            return "ERROR"
+        with open(self._output_file, "r") as f:
+            result = f.read().strip()
+        return result
 
     def write(self, addr: int, data: str) -> None:
         # Run the write command
