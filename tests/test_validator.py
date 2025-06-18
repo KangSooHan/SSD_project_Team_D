@@ -56,3 +56,8 @@ def test_검증기_대소문자_성공(validator):
 
     for correct_sentence in correct_sentences:
         assert validator.run(correct_sentence) == True
+
+@pytest.mark.parametrize("wrong_input", ["w -1 0xFFFFFFFF", "w 100 0xFFFFFFFF", "w w 0xFFFFFFFF",
+                                         "r -1", "r 100", "r r"])
+def test_검증기_잘못된_LBA_입력(wrong_input, validator):
+    assert validator.run(wrong_input) == False
