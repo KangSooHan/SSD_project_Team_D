@@ -1,16 +1,16 @@
 import re
 class Validator:
-    def is_valid_write_sentence_length(self, split_sentence:list) -> bool:
+    def _is_valid_write_sentence_length(self, split_sentence:list) -> bool:
         if split_sentence[0] == 'w' and len(split_sentence) == 3:
             return True
         return False
 
-    def is_valid_read_sentence_length(self, split_sentence:list) -> bool:
+    def _is_valid_read_sentence_length(self, split_sentence:list) -> bool:
         if split_sentence[0] == 'r' and len(split_sentence) == 2:
             return True
         return False
 
-    def is_valid_LBA(self, split_sentence:list) -> bool:
+    def _is_valid_LBA(self, split_sentence:list) -> bool:
         try:
             LBA = split_sentence[1]
             LBA = int(LBA, 16)
@@ -18,7 +18,7 @@ class Validator:
         except ValueError:
             return False
 
-    def is_valid_hex_value(self, split_sentence: list) -> bool:
+    def _is_valid_hex_value(self, split_sentence: list) -> bool:
         if len(split_sentence) == 2:
             return True
 
@@ -38,46 +38,46 @@ class Validator:
         except ValueError:
             return False
 
-    def preprocess_sentence(self, sentence:str) -> str:
+    def _preprocess_sentence(self, sentence:str) -> str:
         sentence = sentence.strip()
         sentence = sentence.lower()
         return sentence
 
-    def is_valid_sentence_length(self, split_sentence) -> bool:
-        if self.is_valid_write_sentence_length(split_sentence):
+    def _is_valid_sentence_length(self, split_sentence) -> bool:
+        if self._is_valid_write_sentence_length(split_sentence):
             return True
-        if self.is_valid_read_sentence_length(split_sentence):
+        if self._is_valid_read_sentence_length(split_sentence):
             return True
         return False
 
-    def validate(self, split_sentence:list) -> bool:
+    def _validate(self, split_sentence:list) -> bool:
         try:
-            if not self.is_valid_sentence_length(split_sentence):
+            if not self._is_valid_sentence_length(split_sentence):
                 return False
 
-            if not self.is_valid_LBA(split_sentence):
+            if not self._is_valid_LBA(split_sentence):
                 return False
 
-            if not self.is_valid_hex_value(split_sentence):
+            if not self._is_valid_hex_value(split_sentence):
                 return False
 
             return True
         except:
             return False
 
-    def validate_test(self, sentence:str):
+    def _validate_test(self, sentence:str):
         try:
-            sentence = self.preprocess_sentence(sentence)
+            sentence = self._preprocess_sentence(sentence)
             split_sentence = sentence.split(" ")
-            return self.validate(split_sentence)
+            return self._validate(split_sentence)
         except:
             return False
 
     def run(self, sentence:str) -> (bool, int, int):
         try:
-            sentence = self.preprocess_sentence(sentence)
+            sentence = self._preprocess_sentence(sentence)
             split_sentence = sentence.split(" ")
-            if self.validate(split_sentence):
+            if self._validate(split_sentence):
                 if split_sentence[0] == "w":
                     return True, int(split_sentence[1]), int(split_sentence[2], 16)
                 if split_sentence[0] == "r":
