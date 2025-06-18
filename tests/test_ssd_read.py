@@ -1,6 +1,6 @@
 import os
 import pytest
-from ssd.normal_ssd import NormalSSD
+from ssd_core.normal_ssd import NormalSSD
 
 NAND_FILE = "ssd_nand.txt"
 OUTPUT_FILE = "ssd_output.txt"
