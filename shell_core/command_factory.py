@@ -26,5 +26,5 @@ class CommandFactory:
     }
 
     @classmethod
-    def create(cls, command: str, ssd: AbstractSSDDriver, address: int | None = None, value: int | None = None) -> BaseCommand:
-        return cls._registry[command](ssd, address, value)
+    def create(cls, cmd_type: str, ssd: AbstractSSDDriver, address: int | None = None, value: int | None = None) -> BaseCommand:
+        return cls._registry[cmd_type](ssd, address, value)

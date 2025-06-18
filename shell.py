@@ -14,8 +14,7 @@ def run(user_input: str, ssd: NormalSSDDriver, validator: Validator) -> None:
         print("INVALID COMMAND")
         return
 
-    command = user_input.split()[0].lower()
-    executor = CommandFactory.create(command, ssd, address, value)
+    executor = CommandFactory.create(cmd_type, ssd, address, value)
     executor.execute()
 
 
