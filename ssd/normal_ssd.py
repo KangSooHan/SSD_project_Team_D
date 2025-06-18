@@ -19,8 +19,8 @@ class NormalSSD(AbstractSSD):
         self._output_file: str = output_file
         self._valid_lba_range: range = lba_range
         self._overwrite_flag = False
-        # if not os.path.exists(self._nand_file):
-        #     open(self._nand_file, "w").close()
+        if not os.path.exists(self._nand_file):
+            open(self._nand_file, "w").close()
 
     def read(self, address: int) -> None:
         if address not in self._valid_lba_range:
@@ -40,19 +40,16 @@ class NormalSSD(AbstractSSD):
         with open(self._output_file, "w") as f:
             f.write(value)
 
-    def write(self, address : int, data : str) -> None:
+    def write(self, address: int, data: str) -> None:
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
 
-
-        if not os.path.exists(self.DEFAULT_NAND_FILE):
-            with open(self.DEFAULT_NAND_FILE, 'w') as file:
-                file.write(f'{address} 0x{data:08X}\n')
-            return
-
         with open(self.DEFAULT_NAND_FILE, 'r+') as file:
             lines = file.readlines()  # 전체 줄을 미리 읽고
+            if not lines:
+                file.write(f'{address} 0x{data:08X}\n')
+                return
             file.seek(0)  # 파일 처음으로 이동
             file.truncate()  # 기존 파일 내용을 비움
 
