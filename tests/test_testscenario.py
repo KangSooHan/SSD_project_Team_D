@@ -38,5 +38,10 @@ def test_read_compare_기능은_읽기에_실패한_경우_false를_반환한다
 
 def test_전체시나리오에_실패할경우_FAIL값을_리턴한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
-
     assert sut.execute() == "FAIL"
+
+def test_전체시나리오에_성공할경우_PASS값을_리턴한다(ssd_mock):
+    sut = TestScenario1(ssd_mock)
+    ssd_mock.read.side_effect = [ f'0x{value:08X}' for value in range(100) ]
+    print(ssd_mock.return_value)
+    assert sut.execute() == "PASS"
