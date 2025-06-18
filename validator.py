@@ -104,4 +104,19 @@ class ShellValidator(Validator):
                 return False, None, None
             return "fullread", None, None
 
+        if command == "1_" or command == "1_FullWriteAndReadCompare".lower():
+            if len(split_sentence) != 1:
+                return False, None, None
+            return "1_", None, None
+
+        if command == "2_" or command == "2_PartialLBAWrite".lower():
+            if len(split_sentence) != 1:
+                return False, None, None
+            return "2_", None, None
+
+        if command == "3_" or command == "3_WriteReadAging".lower():
+            if len(split_sentence) != 1:
+                return False, None, None
+            return "3_", None, None
+
         return False, None, None
