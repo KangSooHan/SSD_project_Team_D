@@ -9,6 +9,7 @@ class Validator:
 
     def preprocess_sentence(self, sentence:str):
         sentence = sentence.strip()
+        sentence = sentence.lower()
         return sentence
 
     def run(self, sentence:str):

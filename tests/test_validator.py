@@ -42,3 +42,17 @@ def test_검증기_앞뒤_공백_문자(validator):
     wrong_sentences = make_wrong_sentences()
     for wrong_sentence in wrong_sentences:
         assert validator.run(wrong_sentence) == True
+
+def make_correct_upper_lower_sentences():
+    sentences = []
+    sentences.append(CORRECT_WRITE_SENTENCE.upper())
+    sentences.append(CORRECT_READ_SENTENCE.upper())
+    sentences.append(CORRECT_WRITE_SENTENCE.lower())
+    sentences.append(CORRECT_READ_SENTENCE.lower())
+    return sentences
+
+def test_검증기_대소문자_성공(validator):
+    correct_sentences = make_correct_upper_lower_sentences()
+
+    for correct_sentence in correct_sentences:
+        assert validator.run(correct_sentence) == True
