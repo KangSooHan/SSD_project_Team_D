@@ -4,7 +4,7 @@ import sys
 import pytest
 from shell.commands.help_command import HelpCommand
 
-def test_help명령어(mocker):
+def test_help명령어():
     # arrange
     help_cmd = HelpCommand()
     output = io.StringIO()
