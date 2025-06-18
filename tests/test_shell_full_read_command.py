@@ -1,8 +1,9 @@
 import pytest
+
+from shell_core.commands.full_read_command import FullReadCommand
 from ssd_core.abstract_ssd import AbstractSSD
 #from shell_core.commands.full_read_command import FullReadCommand
 
-@pytest.mark.skip
 def test_full_read_성공(mocker):
     # arrange
     ssd: AbstractSSD = mocker.Mock()

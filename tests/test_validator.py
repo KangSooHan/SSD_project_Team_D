@@ -104,7 +104,7 @@ def test_검증기_값_가져오는_함수(ssdvalidator):
 def test_SHELL_VALIDATOR_검증(shellvalidator, input, output):
     assert shellvalidator.run(input) == output
 
-    @pytest.mark.skip
+@pytest.mark.skip
 def test_검증기_잘못된_VALUE_입력(wrong_input, validator):
     assert validator._validate_test(wrong_input) == False
 

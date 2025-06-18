@@ -45,7 +45,7 @@ def shell_system_call(input_script):
 
 
 def test_shell_단순실행테스트():
-    input_script = ""
+    input_script = "exit\n"
     stdout = shell_system_call(input_script)
 
     assert "Test Shell Application" in stdout
@@ -67,7 +67,7 @@ def test_shell_write_실행테스트():
 
 
 def test_shell_help_실행테스트():
-    input_script = "help"
+    input_script = "help\nexit"
     stdout = shell_system_call(input_script)
     print(stdout)
     assert "팀명: Discovery | 팀원: 강수한, 이후광, 윤창흠, 김지영, 이지훈, 박치원" in stdout
