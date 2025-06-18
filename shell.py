@@ -1,65 +1,38 @@
-import sys
-
-from shell_core.commands.help_command import HelpCommand
-from shell_core.commands.read_command import ReadCommand
-from shell_core.commands.write_command import WriteCommand
-from ssd_core.abstract_ssd import AbstractSSD
-from validator import Validator
+from shell_core.command_factory import CommandFactory
+from shell_core.normal_ssd_driver import NormalSSDDriver
+from validator import ShellValidator
 
 
-class NormalSSDDriver(AbstractSSD):
-    # 실행 오류 방지를 위한 임시 구현체
-    def write(self, address: int, data: str) -> None:
-        pass
+def run(user_input: str, ssd: NormalSSDDriver, validator: ShellValidator) -> None:
+    user_input = user_input.strip()
+    if not user_input:
+        return
 
-    def read(self, address: int) -> str:
-        pass
+    cmd_type, address, value = validator.run(user_input)
+
+    if cmd_type is False:
+        print("INVALID COMMAND")
+        return
+
+    executor = CommandFactory.create(cmd_type, ssd, address, value)
+    executor.execute()
 
 
 def main():
-    print("<< Test Shell Application>> Start")
+    print("<< Test Shell Application >> Start")
 
-    validator = Validator()
+    validator = ShellValidator()
     ssd = NormalSSDDriver()
 
     while True:
-        # 입력 줄의 앞뒤 공백 및 개행 문자 제거
-        line = input("Shell> ")
-        user_input = line.strip()
+        try:
+            user_input = input("Shell> ")
+            run(user_input, ssd, validator)
 
-        if not user_input:
-            continue
-
-        parts = user_input.split()
-
-        if len(parts) <= 1:  # 1 맞나요?
-            print("INVALID COMMAND")
-            continue
-
-        command = parts[0].lower()
-
-        if command == "write":
-            valid_cmd, address, data = validator.run(user_input)
-            executor = WriteCommand(ssd)
-            executor.execute(address, data)
-            print("[Write] Done")
-        elif command == "read":
-            valid_cmd, address, data = validator.run(user_input)
-            executor = ReadCommand(ssd)
-            receive_data = executor.execute(address)  # return type 불일치, duck typing 적용
-            print(f"[Read] LBA {address} : {receive_data}")
-        elif command == "help":
-            executor = HelpCommand()
-            executor.execute()
-        elif command == "fullwrite":
-            print(f"[FullWrite] TBU")
-        elif command == "fullread":
-            print(f"[FullRead] TBU")
-        elif command == "exit":
-            pass
-        else:
-            print("INVALID COMMAND")
-            continue
+        except SystemExit:
+            break
+        except Exception as e:
+            print(f"ERROR: {e}")
 
 
 if __name__ == "__main__":

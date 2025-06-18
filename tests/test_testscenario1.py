@@ -1,3 +1,5 @@
+import io
+import sys
 from unittest.mock import call
 
 import pytest
@@ -42,12 +44,20 @@ def test_read_compare_기능은_읽기에_실패한_경우_false를_반환한다
     assert sut.read_compare(0x00, hex(2)) == False
 
 
-def test_전체시나리오에_실패할경우_FAIL값을_리턴한다(ssd_mock):
+def test_전체시나리오에_실패할경우_FAIL값을_출력한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
-    assert sut.execute() == "FAIL"
+    output = io.StringIO()
+    sys.stdout = output
+
+    sut.execute()
+    assert output.getvalue() == "FAIL\n"
 
 
-def test_전체시나리오에_성공할경우_PASS값을_리턴한다(ssd_mock):
+def test_전체시나리오에_성공할경우_PASS값을_출력한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
     ssd_mock.read.side_effect = [f'0x{value:08X}' for value in range(100)]
-    assert sut.execute() == "PASS"
+    output = io.StringIO()
+    sys.stdout = output
+
+    sut.execute()
+    assert output.getvalue() == "PASS\n"

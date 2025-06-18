@@ -21,15 +21,29 @@ class TestScenario1:
             self._ssd.write(i + 3, self._to_4byte_hex_str(i + 3))
             self._ssd.write(i + 4, self._to_4byte_hex_str(i + 4))
 
-            if not self.read_compare(i, self._to_4byte_hex_str(i)): return TestScenario1.RESULT_FAIL
-            if not self.read_compare(i + 1, self._to_4byte_hex_str(i + 1)): return TestScenario1.RESULT_FAIL
-            if not self.read_compare(i + 2, self._to_4byte_hex_str(i + 2)): return TestScenario1.RESULT_FAIL
-            if not self.read_compare(i + 3, self._to_4byte_hex_str(i + 3)): return TestScenario1.RESULT_FAIL
-            if not self.read_compare(i + 4, self._to_4byte_hex_str(i + 4)): return TestScenario1.RESULT_FAIL
+            if not self.read_compare(i, self._to_4byte_hex_str(i)):
+                print(TestScenario1.RESULT_FAIL)
+                return
 
-        return TestScenario1.RESULT_PASS
+            if not self.read_compare(i + 1, self._to_4byte_hex_str(i + 1)):
+                print(TestScenario1.RESULT_FAIL)
+                return
+
+            if not self.read_compare(i + 2, self._to_4byte_hex_str(i + 2)):
+                print(TestScenario1.RESULT_FAIL)
+                return
+
+            if not self.read_compare(i + 3, self._to_4byte_hex_str(i + 3)):
+                print(TestScenario1.RESULT_FAIL)
+                return
+
+            if not self.read_compare(i + 4, self._to_4byte_hex_str(i + 4)):
+                print(TestScenario1.RESULT_FAIL)
+                return
+
+        print(TestScenario1.RESULT_PASS)
+        return
 
     def read_compare(self, address, data):
         result = self._ssd.read(address)
-
         return result == data

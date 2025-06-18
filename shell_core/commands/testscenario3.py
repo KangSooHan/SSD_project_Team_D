@@ -24,10 +24,16 @@ class TestScenario3:
             second_random_value = random.randint(1, 10)
             self._ssd.write(99, self._to_4byte_hex_str(second_random_value))
 
-            if not self.read_compare(0, self._to_4byte_hex_str(first_random_value)): return TestScenario3.RESULT_FAIL
-            if not self.read_compare(99, self._to_4byte_hex_str(second_random_value)): return TestScenario3.RESULT_FAIL
+            if not self.read_compare(0, self._to_4byte_hex_str(first_random_value)):
+                print(TestScenario3.RESULT_FAIL)
+                return
 
-        return TestScenario3.RESULT_PASS
+            if not self.read_compare(99, self._to_4byte_hex_str(second_random_value)):
+                print(TestScenario3.RESULT_FAIL)
+                return
+
+        print(TestScenario3.RESULT_PASS)
+        return
 
     def read_compare(self, address, data):
         result = self._ssd.read(address)

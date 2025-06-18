@@ -1,0 +1,16 @@
+import pytest
+from ssd_core.abstract_ssd import AbstractSSD
+from shell_core.commands.full_write_command import FullWriteCommand
+
+@pytest.mark.parametrize("value", [0xAAAABBBB, 0x11111111])
+def test_full_write_성공(mocker, value):
+    # arrange
+    ssd: AbstractSSD = mocker.Mock()
+    full_write_cmd = FullWriteCommand(ssd)
+
+    # act
+    full_write_cmd.execute(int(value))
+
+    # assert
+    assert ssd.write.call_count == 100
+
