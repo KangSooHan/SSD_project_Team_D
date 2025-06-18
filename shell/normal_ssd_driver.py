@@ -1,0 +1,2 @@
+class NormalSsdDriver:
+    pass
