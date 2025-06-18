@@ -11,3 +11,8 @@ class TestScenario1:
         self._ssd.write(0x01, hex(1))
         self._ssd.write(0x02, hex(2))
         self._ssd.write(0x03, hex(3))
+
+    def read_compare(self, address, data):
+        result = self._ssd.read(address)
+
+        return result == data

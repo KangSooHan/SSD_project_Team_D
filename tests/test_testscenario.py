@@ -36,3 +36,16 @@ def test_테스트시나리오1_객체는_0에서_4번지까지_write명령을_�
         call(0x02, hex(2)),
         call(0x03, hex(3)),
     ])
+
+def test_read_compare_기능은_정상적으로_읽은_경우_true를_리턴한다(ssd_mock):
+    sut = TestScenario1(ssd_mock)
+    ssd_mock.read.return_value = hex(1)
+
+    assert sut.read_compare(0x00, hex(1)) == True
+
+def test_read_compare_기능은_읽기에_실패한_경우_false를_반환한다(ssd_mock):
+    sut = TestScenario1(ssd_mock)
+    ssd_mock.read.return_value = hex(1)
+
+    assert sut.read_compare(0x00, hex(2)) == False
+
