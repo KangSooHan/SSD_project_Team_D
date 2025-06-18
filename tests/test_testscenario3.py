@@ -4,10 +4,9 @@ from unittest.mock import call
 import pytest
 from pytest_mock import MockerFixture
 
-from shell.commands.testscenario3 import TestScenario3
-from shell.commands.write_command import WriteCommand
-from ssd import ssd
-from ssd.abstract_ssd import AbstractSSD
+from shell_core.commands.testscenario3 import TestScenario3
+from shell_core.commands.write_command import WriteCommand
+from ssd_core.abstract_ssd import AbstractSSD
 
 
 @pytest.fixture
@@ -24,7 +23,7 @@ def test_전체시나리오에_성공할경우_PASS값을_리턴한다(ssd_mock)
     sut = TestScenario3(ssd_mock)
     random.seed(0)
     ssd_mock.read.side_effect = [f'0x{random.randint(1, 10):08X}' for i in range(200 * 2)]
-    
+
     # sut.execute() 실행 시 동일한 시퀀스의 랜덤값을 추출하기 위해 시드 초기화
     random.seed(0)
     assert sut.execute() == "PASS"

@@ -77,7 +77,7 @@ def test_write(initial_nand, write_lba, data):
             for lba, value in initial_nand.items():
                 f.write(f'{lba} {value}\n')
     ssd = NormalSSD()
-    ssd.write(write_lba, int(data,16))
+    ssd.write(write_lba, int(data, 16))
 
     with open(NAND_FILE, 'r+') as file:
         lines = file.readlines()

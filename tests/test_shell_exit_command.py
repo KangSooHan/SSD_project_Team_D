@@ -1,5 +1,5 @@
 import pytest
-from shell.commands.exit_command import ExitCommand
+from shell_core.commands.exit_command import ExitCommand
 
 
 def test_exit_성공():

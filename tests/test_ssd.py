@@ -1,7 +1,19 @@
 import pytest
 import os
+import io
 from unittest.mock import patch
 from ssd import main as ssd_main
+from validator import Validator
+from contextlib import redirect_stdout
+
+@pytest.fixture
+def capture_stdout():
+    def _capture(func, *args, **kwargs):
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            func(*args, **kwargs)
+        return buf.getvalue().strip()
+    return _capture
 
 NAND_FILENAME = "ssd_nand.txt"
 OUTPUT_FILENAME = "ssd_output.txt"
@@ -52,7 +64,7 @@ def test_write_command_with_mock(cli_args):
         ssd_main(cli_args)
 
         lba = int(cli_args[1])
-        value = cli_args[2]
+        value = int(cli_args[2], 16)
         mock_write.assert_called_once_with(lba, value)
         assert get_output_content() == ""
 
@@ -67,9 +79,40 @@ def test_write_then_read_with_write_mock(write_args, read_args):
         ssd_main(write_args)
 
         lba = int(write_args[1])
-        value = write_args[2]
+        value = int(write_args[2], 16)
         mock_write.assert_called_once_with(lba, value)
 
     ssd_main(read_args)
     output = get_output_content()
     assert output in {"0x00000000", "ERROR"}
+
+@pytest.mark.parametrize(("write_args", "return_value"), [
+    (["W", "77", "0xFEEDBEEF"], [True, 77, 0xFEEDBEEF]),
+    (["W", "0", "0x12345678"], [True, 0, 0x12345678]),
+    (["R", "77"], [True, 77, None]),
+    (["R", "0"], [True, 0, None]),
+])
+def test_SSD_검증기_Mock_추가_및_실행(write_args, return_value):
+    with patch("ssd.Validator") as MockValidator:
+        mock_validator_instance = MockValidator.return_value
+        mock_validator_instance.run.return_value = return_value
+
+        ssd_main(write_args)
+
+        mock_validator_instance.run.assert_called_once_with(" ".join(write_args))
+
+'''
+새로운 main 함수를 구현할 때 사용한 pytest문
+'''
+# @pytest.mark.parametrize("args", [
+#     (["W", "77", "0xFEEDBEEF"]),
+#     (["R", "77"]),
+#     (["W", "0", "0x12345678"]),
+#     (["R", "0"]),
+# ])
+# def test_ssd_and_validator_output_match(args, capture_stdout):
+#     from ssd import validate_main
+#     output_ssd = capture_stdout(ssd_main, args)
+#     output_validator = capture_stdout(validate_main, args)
+#
+#     assert output_ssd == output_validator, f"\nSSD: {output_ssd}\nValidator: {output_validator}"
