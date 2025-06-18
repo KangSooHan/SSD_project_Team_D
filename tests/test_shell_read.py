@@ -1,6 +1,6 @@
 import pytest
 from ssd.abstract_ssd import AbstractSSD
-from shell.commands.read_command import ReadCommand
+from shell_core.commands.read_command import ReadCommand
 
 
 @pytest.mark.parametrize("lba", [1, 2, 3, 4, 99])

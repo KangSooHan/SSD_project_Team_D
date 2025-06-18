@@ -1,8 +1,8 @@
 import sys
 
-from shell.commands.help_command import HelpCommand
-from shell.commands.read_command import ReadCommand
-from shell.commands.write_command import WriteCommand
+from shell_core.commands.help_command import HelpCommand
+from shell_core.commands.read_command import ReadCommand
+from shell_core.commands.write_command import WriteCommand
 from ssd.abstract_ssd import AbstractSSD
 from validator import Validator
 
@@ -31,7 +31,6 @@ def main():
             continue
 
         parts = user_input.split()
-        command = parts[0].lower()
 
         if len(parts) <= 1:  # 1 맞나요?
             print("INVALID COMMAND")
@@ -53,9 +52,9 @@ def main():
             executor = HelpCommand()
             executor.execute()
         elif command == "fullwrite":
-            pass
+            print(f"[FullWrite] TBU")
         elif command == "fullread":
-            pass
+            print(f"[FullRead] TBU")
         elif command == "exit":
             pass
         else:

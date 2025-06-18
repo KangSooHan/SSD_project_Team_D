@@ -7,7 +7,7 @@ import pytest
 
 def pipe(input_script):
     process = subprocess.Popen(
-        ["python", "../shell/shell.py"],
+        ["python", "../shell_core/shell_core.py"],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -21,12 +21,12 @@ def pipe(input_script):
     except subprocess.TimeoutExpired:
         process.kill()
         stdout, stderr = process.communicate()
-        pytest.fail("Mock shell 타임 아웃 에러")
+        pytest.fail("Mock shell_core 타임 아웃 에러")
     return stdout
 
 def test_mock_shell_init():
     process = subprocess.Popen(
-        ["python", "../shell/shell.py"],  # <-- 테스트 대상을 mock_shell.py로 변경
+        ["python", "../shell_core/shell_core.py"],  # <-- 테스트 대상을 mock_shell.py로 변경
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
