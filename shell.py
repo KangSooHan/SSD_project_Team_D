@@ -40,8 +40,8 @@ def main():
 
         if command == "write":
             valid_cmd, address, data = validator.run(user_input)
-            executor = WriteCommand(ssd)
-            executor.execute(address, data)
+            executor = WriteCommand(ssd, address, data)
+            executor.execute()
             print("[Write] Done")
         elif command == "read":
             valid_cmd, address, data = validator.run(user_input)
