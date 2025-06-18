@@ -28,4 +28,4 @@ class NormalSSDDriver(AbstractSSD):
 
     def write(self, addr: int, data: str) -> None:
         # Run the write command
-        subprocess.run(["python", self.ssd_script, "W", str(addr), data], check=True)
+        subprocess.run(["python", self.ssd_script, "W", str(addr), f'0x{data:08X}'], check=True)
