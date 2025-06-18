@@ -7,14 +7,11 @@ class TestScenario2:
 
     def __init__(self, ssd: AbstractSSD):
         self._ssd = ssd
+        self.test_constant = self._to_4byte_hex_str(1)
 
     def _to_4byte_hex_str(self, value: int):
         hex_str = f'0x{value:08X}'  # 대문자 출력
         return hex_str
-
-    @property
-    def test_constant(self):
-        return self._to_4byte_hex_str(1)
 
     def execute(self):
         # test scenario from lecture note page #29
