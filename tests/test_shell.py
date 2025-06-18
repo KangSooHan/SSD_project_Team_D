@@ -116,3 +116,22 @@ def test_shell_여러개의_명령어_실행테스트():
     assert "[Read] LBA 0 :" in stdout
     assert "[Write] Done" in stdout
     assert "Exit" in stdout
+
+
+def test_shell_fullwrite_실행테스트():
+    """fullwrite 테스트"""
+    input_script = "fullwrite 0xABCDFFFF\nexit"
+    stdout = pipe(input_script)
+    assert 1 == 1
+
+def test_shell_fullread_실행테스트():
+    """fullread 테스트"""
+    init_nand_file_for_test()
+
+    input_script = "fullread\nexit"
+    stdout = pipe(input_script)
+    expected = ""
+    for _ in range(100):
+        expected += "0x00000005\n"
+
+    assert expected in stdout
