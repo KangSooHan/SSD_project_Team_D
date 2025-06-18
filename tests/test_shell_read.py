@@ -7,10 +7,10 @@ from shell_core.commands.read_command import ReadCommand
 def test_read_성공(mocker, lba):
     # arrange
     ssd: AbstractSSD = mocker.Mock()
-    read_cmd = ReadCommand(ssd)
+    read_cmd = ReadCommand(ssd, lba)
 
     # act
-    read_cmd.execute(lba)
+    read_cmd.execute()
 
     # assert
     assert ssd.read.call_count == 1
@@ -20,8 +20,8 @@ def test_read_성공(mocker, lba):
 def test_read_실패(mocker, lba):
     # arrange
     ssd: AbstractSSD = mocker.Mock()
-    read_cmd = ReadCommand(ssd)
+    read_cmd = ReadCommand(ssd, lba)
 
     # act & assert
     with pytest.raises(Exception):
-        read_cmd.execute(lba)
+        read_cmd.execute()
