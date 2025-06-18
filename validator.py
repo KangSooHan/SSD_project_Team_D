@@ -13,8 +13,7 @@ class Validator:
     def _is_valid_LBA(self, split_sentence:list) -> bool:
         try:
             LBA = split_sentence[1]
-            LBA = int(LBA, 16)
-            return 0 <= LBA < 100
+            return 0 <= int(LBA) < 100
         except ValueError:
             return False
 
@@ -79,9 +78,9 @@ class Validator:
             split_sentence = sentence.split(" ")
             if self._validate(split_sentence):
                 if split_sentence[0] == "w":
-                    return True, int(split_sentence[1]), int(split_sentence[2], 16)
+                    return "W", int(split_sentence[1]), int(split_sentence[2], 16)
                 if split_sentence[0] == "r":
-                    return True, int(split_sentence[1]), None
+                    return "R", int(split_sentence[1]), None
             return False, None, None
         except:
             return False, None, None
