@@ -2,13 +2,11 @@ import io
 import sys
 
 import pytest
-from ssd.abstract_ssd import AbstractSSD
 from shell.commands.help_command import HelpCommand
 
 def test_help명령어(mocker):
     # arrange
-    ssd: AbstractSSD = mocker.Mock()
-    help_cmd = HelpCommand(ssd)
+    help_cmd = HelpCommand()
     output = io.StringIO()
     sys.stdout = output
 
