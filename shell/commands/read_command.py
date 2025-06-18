@@ -1,5 +1,4 @@
-from ssd.abstract_ssd import AbstractSSD
-
+from ssd_core.abstract_ssd import AbstractSSD
 
 class ReadCommand:
     def __init__(self, ssd: AbstractSSD):
