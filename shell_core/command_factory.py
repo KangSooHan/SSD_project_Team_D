@@ -4,11 +4,11 @@ from shell_core.commands.read_command import ReadCommand
 from shell_core.commands.write_command import WriteCommand
 from shell_core.commands.exit_command import ExitCommand
 from shell_core.commands.help_command import HelpCommand
-from shell_core.commands.fullread_command import FullReadCommand
-from shell_core.commands.fullwrite_command import FullWriteCommand
-from shell_core.commands.fullwrite_and_read_compare import FullWriteAndReadCompare
-from shell_core.commands.partial_lba_write import PartialLBAWrite
-from shell_core.commands.write_read_aging import WriteReadAging
+from shell_core.commands.full_read_command import FullReadCommand
+from shell_core.commands.full_write_command import FullWriteCommand
+from shell_core.commands.testscenario1 import TestScenario1
+from shell_core.commands.testscenario2 import TestScenario2
+from shell_core.commands.testscenario3 import TestScenario3
 from ssd_core.abstract_ssd_driver import AbstractSSDDriver
 
 
@@ -20,9 +20,9 @@ class CommandFactory:
         "help": lambda ssd, address=None, value=None: HelpCommand(),
         "fullread": lambda ssd, address=None, value=None: FullReadCommand(ssd),
         "fullwrite": lambda ssd, address=None, value=None: FullWriteCommand(ssd, value),
-        "1_": lambda ssd, address=None, value=None: FullWriteAndReadCompare(ssd),
-        "2_": lambda ssd, address=None, value=None: PartialLBAWrite(ssd),
-        "3_": lambda ssd, address=None, value=None: WriteReadAging(ssd),
+        "1_": lambda ssd, address=None, value=None: TestScenario1(ssd),
+        "2_": lambda ssd, address=None, value=None: TestScenario2(ssd),
+        "3_": lambda ssd, address=None, value=None: TestScenario3(ssd),
     }
 
     @classmethod
