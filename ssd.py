@@ -8,16 +8,15 @@ def main(args=None):
         return
 
     validator = SSDValidator()
-    command_type, lba, value = validator.run(" ".join(args))
-
+    packet = validator.run(" ".join(args))
     ssd = NormalSSD()
 
-    if command_type == "R":
-        ssd.read(lba)
+    if packet.COMMAND == "R":
+        ssd.read(packet.ADDR)
         return
 
-    if command_type == "W":
-        ssd.write(lba, value)
+    if packet.COMMAND == "W":
+        ssd.write(packet.ADDR, packet.VALUE)
         return
 
     ssd._write_output(NormalSSD.INVALID_OUTPUT)

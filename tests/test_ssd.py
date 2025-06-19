@@ -3,7 +3,7 @@ import os
 import io
 from unittest.mock import patch
 from ssd import main as ssd_main
-from validator import SSDValidator
+from validator import SSDValidator, Packet
 from contextlib import redirect_stdout
 
 @pytest.fixture
@@ -87,10 +87,10 @@ def test_write_then_read_with_write_mock(write_args, read_args):
     assert output in {"0x00000000", "ERROR"}
 
 @pytest.mark.parametrize(("write_args", "return_value"), [
-    (["W", "77", "0xFEEDBEEF"], [True, 77, 0xFEEDBEEF]),
-    (["W", "0", "0x12345678"], [True, 0, 0x12345678]),
-    (["R", "77"], [True, 77, None]),
-    (["R", "0"], [True, 0, None]),
+    (["W", "77", "0xFEEDBEEF"], Packet(True, 77, 0xFEEDBEEF)),
+    (["W", "0", "0x12345678"], Packet(True, 0, 0x12345678)),
+    (["R", "77"], Packet(True, 77, None)),
+    (["R", "0"], Packet(True, 0, None)),
 ])
 def test_SSD_검증기_Mock_추가_및_실행(write_args, return_value):
     with patch("ssd.SSDValidator") as MockValidator:

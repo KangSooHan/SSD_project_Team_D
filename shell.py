@@ -11,16 +11,16 @@ def run(user_input: str, ssd: NormalSSDDriver, validator: ShellValidator) -> Non
 
     logger.print(f"User input received: {user_input}")
 
-    cmd_type, address, value = validator.run(user_input)
+    packet = validator.run(user_input)
 
-    if cmd_type is False:
+    if packet.COMMAND is False:
         logger.print(f"Invalid command: {user_input}")
         print("INVALID COMMAND")
         return
 
-    executor = CommandFactory.create(cmd_type, ssd, address, value)
+    executor = CommandFactory.create(packet.COMMAND, ssd, packet.ADDR, packet.VALUE)
     executor.execute()
-    logger.print(f"Command executed: {cmd_type} {address} {value}")
+    logger.print(f"Command executed: {packet.COMMAND} {packet.ADDR} {packet.VALUE}")
 
 
 def main():
