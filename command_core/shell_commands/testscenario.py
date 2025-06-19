@@ -107,7 +107,7 @@ class TestScenario4(TestScenario):
 
         # 2 ~ 98 까지 3개씩 wirte/overwirte/erase/readcompare, (0,1,99)제외
         for _ in range(_loop_count):
-            for i in range(2, 99, 3):
+            for i in range(2, 97, 2):
                 self._ssd.write(i, self._test_constant)
                 self._ssd.write(i, self._test_constant_2)
                 self._ssd.erase(i, _erase_size)
