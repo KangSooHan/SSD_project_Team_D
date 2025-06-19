@@ -7,8 +7,8 @@ class TestScenario(BaseCommand):
     RESULT_PASS = "PASS"
     def __init__(self, ssd: AbstractSSD):
         self._ssd = ssd
-        self.test_constant = 1
-        self.zero_constant = 0x00000000
+        self._test_constant = 1
+        self._zero_constant = 0x00000000
 
     def read_compare(self, address, data):
         try:
@@ -38,29 +38,29 @@ class TestScenario2(TestScenario):
         _loop_count = 30
 
         for i in range(_loop_count):
-            self._ssd.write(4, self.test_constant)
-            self._ssd.write(0, self.test_constant)
-            self._ssd.write(3, self.test_constant)
-            self._ssd.write(1, self.test_constant)
-            self._ssd.write(2, self.test_constant)
+            self._ssd.write(4, self._test_constant)
+            self._ssd.write(0, self._test_constant)
+            self._ssd.write(3, self._test_constant)
+            self._ssd.write(1, self._test_constant)
+            self._ssd.write(2, self._test_constant)
 
-            if not self.read_compare(4, self.test_constant):
+            if not self.read_compare(4, self._test_constant):
                 print(TestScenario2.RESULT_FAIL)
                 return
 
-            if not self.read_compare(0, self.test_constant):
+            if not self.read_compare(0, self._test_constant):
                 print(TestScenario2.RESULT_FAIL)
                 return
 
-            if not self.read_compare(3, self.test_constant):
+            if not self.read_compare(3, self._test_constant):
                 print(TestScenario2.RESULT_FAIL)
                 return
 
-            if not self.read_compare(1, self.test_constant):
+            if not self.read_compare(1, self._test_constant):
                 print(TestScenario2.RESULT_FAIL)
                 return
 
-            if not self.read_compare(2, self.test_constant):
+            if not self.read_compare(2, self._test_constant):
                 print(TestScenario2.RESULT_FAIL)
                 return
 
@@ -100,20 +100,20 @@ class TestScenario4(TestScenario):
 
         # 0 ~ 2 값이 0x00000000 인지 검사
         for i in range(3):
-            if not self.read_compare(0, self.zero_constant):
+            if not self.read_compare(0, self._zero_constant):
                 print(TestScenario4.RESULT_FAIL)
                 return
 
         # 2 ~ 98 까지 3개씩 wirte/overwirte/erase/readcompare, (0,1,99)제외
         for _ in range(_loop_count):
             for i in range(2, 99, 3):
-                self._ssd.write(i, self.test_constant)
-                self._ssd.write(i, self.test_constant)
+                self._ssd.write(i, self._test_constant)
+                self._ssd.write(i, self._test_constant)
                 self._ssd.erase(i, _erase_size)
 
                 # i ~ i+2 값이 0x00000000 인지 검사
                 for j in range(i, i+3):
-                    if not self.read_compare(j, self.zero_constant):
+                    if not self.read_compare(j, self._zero_constant):
                         print(TestScenario4.RESULT_FAIL)
                         return
 
