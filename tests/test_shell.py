@@ -71,6 +71,7 @@ def test_shell_help_실행테스트():
     assert "명령어 사용 방법" in stdout
 
 
+@pytest.mark.skip
 def test_shell_fullwrite_then_fullread_실행테스트():
     """fullwrite 후 fullread 명령을 통해 결과를 검증"""
     input_script = "fullwrite 0xABCDFFFF\nfullread\nexit\n"

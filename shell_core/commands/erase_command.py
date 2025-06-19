@@ -1,4 +1,4 @@
-from shell_core.commands.base_command import BaseCommand
+from command_core.base_command import BaseCommand
 from ssd_core.abstract_ssd import AbstractSSD
 from shell_core.utils.erase_utils import erase_by_chunksize
 
