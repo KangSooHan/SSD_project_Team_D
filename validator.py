@@ -2,14 +2,17 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
+
 @dataclass
 class Packet:
     COMMAND: str
     ADDR: int = None
     VALUE: int = None
+    SIZE: int = None
+
 
 class Validator(ABC):
-    def _is_valid_LBA(self, LBA:int) -> bool:
+    def _is_valid_LBA(self, LBA: int) -> bool:
         try:
             return 0 <= int(LBA) < 100
         except ValueError:
@@ -31,12 +34,12 @@ class Validator(ABC):
         except ValueError:
             return False
 
-    def _preprocess_sentence(self, sentence:str) -> str:
+    def _preprocess_sentence(self, sentence: str) -> str:
         sentence = sentence.strip()
         sentence = sentence.lower()
         return sentence
 
-    def _validate_test(self, sentence:str):
+    def _validate_test(self, sentence: str):
         return self.run(sentence).COMMAND != "ERR"
 
     def run(self, sentence: str) -> (bool, int, int):
@@ -47,8 +50,11 @@ class Validator(ABC):
         except:
             return Packet("ERR")
 
+
 class SSDValidator(Validator):
-    def _validate(self, split_sentence:list) -> (str, int, int):
+    DUMMY_DATA = 0x00000000
+
+    def _validate(self, split_sentence: list) -> (str, int, int):
         if not split_sentence:
             return Packet("ERR")
         command = split_sentence[0]
@@ -65,6 +71,13 @@ class SSDValidator(Validator):
             addr = split_sentence[1]
             if self._is_valid_LBA(addr):
                 return Packet("R", int(addr))
+
+        if command == "e":
+            if len(split_sentence) != 3:
+                return Packet("ERR")
+            addr, size = split_sentence[1], split_sentence[2]
+            if self._is_valid_LBA(addr):
+                return Packet("E", int(addr),self.DUMMY_DATA, int(size))
         return Packet("ERR")
 
 

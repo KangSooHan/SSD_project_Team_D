@@ -19,6 +19,10 @@ def main(args=None):
         ssd.write(packet.ADDR, packet.VALUE)
         return
 
+    if packet.COMMAND == "E":
+        ssd.erase(packet.ADDR, packet.SIZE)
+        return
+
     ssd._write_output(NormalSSD.INVALID_OUTPUT)
 
 if __name__ == "__main__":
