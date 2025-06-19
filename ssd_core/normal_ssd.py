@@ -52,7 +52,7 @@ class NormalSSD(AbstractSSD):
             self._write_output(self.INVALID_OUTPUT)
             return
 
-        with open(self.DEFAULT_NAND_FILE, 'r+') as file:
+        with open(self._nand_file, 'r+') as file:
             lines = file.readlines()
             if not lines:
                 file.write(f'{address} 0x{data:08X}\n')
@@ -82,7 +82,7 @@ class NormalSSD(AbstractSSD):
         if address + size - 1 > max_lba:
             self._write_output(self.INVALID_OUTPUT)
             return
-        with open(self.DEFAULT_NAND_FILE, 'r+') as file:
+        with open(self._nand_file, 'r+') as file:
             lines = file.readlines()
             file.seek(0)
             file.truncate()
