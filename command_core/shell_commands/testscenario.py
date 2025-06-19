@@ -35,9 +35,9 @@ class TestScenario1(TestScenario):
 class TestScenario2(TestScenario):
     def execute(self):
         # test scenario from lecture note page #29
-        LOOP_COUNT = 30
+        _loop_count = 30
 
-        for i in range(LOOP_COUNT):
+        for i in range(_loop_count):
             self._ssd.write(4, self.test_constant)
             self._ssd.write(0, self.test_constant)
             self._ssd.write(3, self.test_constant)
@@ -70,8 +70,8 @@ class TestScenario2(TestScenario):
 class TestScenario3(TestScenario):
     def execute(self):
         # test scenario from lecture note page #30
-        LOOP_COUNT = 200
-        for i in range(LOOP_COUNT):
+        _loop_count = 200
+        for i in range(_loop_count):
             first_random_value = random.randint(1, 10)
             self._ssd.write(0, first_random_value)
 
@@ -92,24 +92,26 @@ class TestScenario3(TestScenario):
 class TestScenario4(TestScenario):
     def execute(self):
         # test scenario from 3day.pdf #8
-        LOOP_COUNT = 30
-        ERASE_SIZE = 3
+        _loop_count = 30
+        _erase_size = 3
 
         # 0 ~ 2번 LBA 삭제
-        self._ssd.erase(0, ERASE_SIZE)
+        self._ssd.erase(0, _erase_size)
 
+        # 0 ~ 2 값이 0x00000000 인지 검사
         for i in range(3):
             if not self.read_compare(0, self.zero_constant):
                 print(TestScenario4.RESULT_FAIL)
                 return
 
         # 2 ~ 98 까지 3개씩 wirte/overwirte/erase/readcompare, (0,1,99)제외
-        for _ in range(LOOP_COUNT):
+        for _ in range(_loop_count):
             for i in range(2, 99, 3):
                 self._ssd.write(i, self.test_constant)
                 self._ssd.write(i, self.test_constant)
-                self._ssd.erase(i, ERASE_SIZE)
+                self._ssd.erase(i, _erase_size)
 
+                # i ~ i+2 값이 0x00000000 인지 검사
                 for j in range(i, i+3):
                     if not self.read_compare(j, self.zero_constant):
                         print(TestScenario4.RESULT_FAIL)
