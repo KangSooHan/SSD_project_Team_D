@@ -8,6 +8,7 @@ class TestScenario(BaseCommand):
     def __init__(self, ssd: AbstractSSD):
         self._ssd = ssd
         self.test_constant = 1
+        self.zero_constant = 0x00000000
 
     def read_compare(self, address, data):
         try:
@@ -86,4 +87,33 @@ class TestScenario3(TestScenario):
                 return
 
         print(TestScenario3.RESULT_PASS)
+        return
+
+class TestScenario4(TestScenario):
+    def execute(self):
+        # test scenario from 3day.pdf #8
+        LOOP_COUNT = 30
+        ERASE_SIZE = 3
+
+        # 0 ~ 2번 LBA 삭제
+        self._ssd.erase(0, ERASE_SIZE)
+
+        for i in range(3):
+            if not self.read_compare(0, self.zero_constant):
+                print(TestScenario4.RESULT_FAIL)
+                return
+
+        # 2 ~ 98 까지 3개씩 wirte/overwirte/erase/readcompare, (0,1,99)제외
+        for _ in range(LOOP_COUNT):
+            for i in range(2, 99, 3):
+                self._ssd.write(i, self.test_constant)
+                self._ssd.write(i, self.test_constant)
+                self._ssd.erase(i, ERASE_SIZE)
+
+                for j in range(i, i+3):
+                    if not self.read_compare(j, self.zero_constant):
+                        print(TestScenario4.RESULT_FAIL)
+                        return
+
+        print(TestScenario4.RESULT_PASS)
         return
