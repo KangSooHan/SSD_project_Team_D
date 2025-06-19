@@ -1,9 +1,7 @@
-from shell_core.commands.base_command import BaseCommand
 from ssd_core.abstract_ssd import AbstractSSD
-import re
+from command_core.base_command import BaseCommand
 
-
-class WriteCommand:
+class WriteCommand(BaseCommand):
     def __init__(self, ssd: AbstractSSD, lba: int, value: str):
         self._ssd = ssd
         self._lba = lba

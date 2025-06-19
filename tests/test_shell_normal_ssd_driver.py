@@ -1,7 +1,7 @@
 import pytest
 from shell_core.normal_ssd_driver import NormalSSDDriver
-from shell_core.commands.write_command import WriteCommand
-from shell_core.commands.read_command import ReadCommand
+from command_core.shell_commands.write_command import WriteCommand
+from command_core.shell_commands.read_command import ReadCommand
 
 
 @pytest.mark.parametrize("write_lba, data", [

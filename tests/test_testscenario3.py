@@ -1,13 +1,11 @@
 import io
 import random
 import sys
-from unittest.mock import call
 
 import pytest
 from pytest_mock import MockerFixture
 
-from shell_core.commands.testscenario3 import TestScenario3
-from shell_core.commands.write_command import WriteCommand
+from command_core.shell_commands.testscenario import TestScenario3
 from ssd_core.abstract_ssd import AbstractSSD
 
 

@@ -1,11 +1,10 @@
 import io
 import sys
-from unittest.mock import call
 
 import pytest
 from pytest_mock import MockerFixture
 
-from shell_core.commands.testscenario1 import TestScenario1
+from command_core.shell_commands.testscenario import TestScenario1
 from ssd_core.abstract_ssd import AbstractSSD
 
 

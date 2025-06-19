@@ -1,7 +1,7 @@
 import pytest
 from ssd_core.abstract_ssd import AbstractSSD
 from ssd_core.normal_ssd import NormalSSD
-from shell_core.commands.read_command import ReadCommand
+from command_core.shell_commands.read_command import ReadCommand
 
 
 @pytest.mark.parametrize("lba", [1, 2, 3, 4, 99])

@@ -2,8 +2,7 @@ import io
 import sys
 import textwrap
 
-import pytest
-from shell_core.commands.help_command import HelpCommand
+from command_core.shell_commands.help_command import HelpCommand
 
 
 def test_help명령어():
