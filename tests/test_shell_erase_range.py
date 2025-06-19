@@ -1,6 +1,6 @@
 import pytest
 from ssd_core.abstract_ssd import AbstractSSD
-from shell_core.commands.erase_range_command import EraseRangeCommand
+from command_core.shell_commands.erase_range_command import EraseRangeCommand
 
 @pytest.mark.parametrize("start,end", [(0,3),(1,8),(5,5)])
 def test_erase_range_성공(mocker, start, end):

@@ -1,8 +1,8 @@
-from shell_core.commands.base_command import BaseCommand
+from command_core.base_command import BaseCommand
 from ssd_core.abstract_ssd import AbstractSSD
-from shell_core.utils.erase_utils import erase_by_chunksize
+from command_core.utils.erase_utils import erase_by_chunksize
 
-class EraseRangeCommand:
+class EraseRangeCommand(BaseCommand):
     def __init__(self, ssd: AbstractSSD, start: int, end: int):
         self._ssd = ssd
         self._start = start
