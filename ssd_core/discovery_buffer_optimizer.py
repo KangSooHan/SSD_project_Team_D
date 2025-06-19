@@ -9,6 +9,10 @@ VALUE_MARK = 2
 
 class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
     def calculate(self, buffer_lst: list[Packet]) -> list[Packet]:
+        """
+        
+        """
+
         # project values
         erase_lst = self.project_erase(buffer_lst)
         write_lst = self.project_write(buffer_lst)
