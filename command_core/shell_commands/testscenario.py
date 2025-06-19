@@ -8,6 +8,7 @@ class TestScenario(BaseCommand):
     def __init__(self, ssd: AbstractSSD):
         self._ssd = ssd
         self._test_constant = 1
+        self._test_constant_2 = 2
         self._zero_constant = 0x00000000
 
     def read_compare(self, address, data):
@@ -108,7 +109,7 @@ class TestScenario4(TestScenario):
         for _ in range(_loop_count):
             for i in range(2, 99, 3):
                 self._ssd.write(i, self._test_constant)
-                self._ssd.write(i, self._test_constant)
+                self._ssd.write(i, self._test_constant_2)
                 self._ssd.erase(i, _erase_size)
 
                 # i ~ i+2 값이 0x00000000 인지 검사
