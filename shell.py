@@ -39,8 +39,8 @@ def main():
             logger.print("Test Shell exited")
             break
         except Exception as e:
-            logger.print(f"Unhandled exception: {e}")
-            print(f"ERROR: {e}")
+            logger.print(f"INVALID COMMAND: {e}")
+            print(f"INVALID COMMAND")
 
 
 if __name__ == "__main__":
