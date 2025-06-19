@@ -9,16 +9,12 @@ class EraseCommand:
 
     def execute(self) -> None:
         # 음수 size 처리
-        if self._size < 0:
-            start = self._lba + self._size + 1
-            count = -self._size
-        else:
-            start = self._lba
-            count = self._size
+        start = self._lba
+        count = self._size
 
-        if count == 0:
-            print("[Erase] Skipped: size is 0")
-            return
+        if count < 0:
+            start = self._lba + count + 1
+            count = -count
 
         while count > 0:
             chunk = min(10, count)
