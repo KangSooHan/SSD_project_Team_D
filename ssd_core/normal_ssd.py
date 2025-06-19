@@ -30,7 +30,6 @@ class NormalSSD(AbstractSSD):
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
-
         value = self._load_value_from_nand(address)
         self._write_output(value)
 

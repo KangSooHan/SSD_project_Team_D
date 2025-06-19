@@ -1,5 +1,6 @@
 from ssd_core.normal_ssd import NormalSSD
 from validator import SSDValidator
+from ssd_core.buffer import Buffer
 
 def main(args=None):
     import sys
@@ -10,20 +11,29 @@ def main(args=None):
     validator = SSDValidator()
     packet = validator.run(" ".join(args))
     ssd = NormalSSD()
+    buffer = Buffer(ssd)
 
-    if packet.COMMAND == "R":
-        ssd.read(packet.ADDR)
+    if buffer.insert(packet):
         return
 
-    if packet.COMMAND == "W":
-        ssd.write(packet.ADDR, packet.VALUE)
+    buffer.write_invalid_output()
+
+def main_test(args=None):
+    import sys
+    args = args if args is not None else sys.argv[1:]
+    if not args:
         return
 
-    if packet.COMMAND == "E":
-        ssd.erase(packet.ADDR, packet.SIZE)
+    validator = SSDValidator()
+    packet = validator.run(" ".join(args))
+    ssd = NormalSSD()
+    buffer = Buffer(ssd)
+
+    if buffer.insert(packet):
+        buffer.flush()
         return
 
-    ssd._write_output(NormalSSD.INVALID_OUTPUT)
+    buffer.write_invalid_output()
 
 if __name__ == "__main__":
     main()
