@@ -52,6 +52,8 @@ class Validator(ABC):
 
 
 class SSDValidator(Validator):
+    DUMMY_DATA = 0x00000000
+
     def _validate(self, split_sentence: list) -> (str, int, int):
         if not split_sentence:
             return Packet("ERR")
@@ -75,8 +77,7 @@ class SSDValidator(Validator):
                 return Packet("ERR")
             addr, size = split_sentence[1], split_sentence[2]
             if self._is_valid_LBA(addr):
-                # erase에서 Data값은 Dummy 값
-                return Packet("E", int(addr), 0x00000000, int(size))
+                return Packet("E", int(addr),self.DUMMY_DATA, int(size))
         return Packet("ERR")
 
 
