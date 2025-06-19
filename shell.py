@@ -14,7 +14,7 @@ def run(user_input: str, ssd: NormalSSDDriver, validator: ShellValidator) -> Non
     packet = validator.run(user_input)
 
     if packet.COMMAND is False:
-        logger.print(f"Invalid command: {user_input}")
+        logger.print(f"INVALID COMMAND: {user_input}")
         print("INVALID COMMAND")
         return
 
