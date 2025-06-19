@@ -1,7 +1,7 @@
 from ssd_core.abstract_ssd import AbstractSSD
+from command_core.base_command import BaseCommand
 
-
-class ReadCommand:
+class ReadCommand(BaseCommand):
     def __init__(self, ssd: AbstractSSD, lba: int):
         self._ssd = ssd
         self._lba = lba

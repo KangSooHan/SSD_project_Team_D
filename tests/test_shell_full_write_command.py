@@ -1,6 +1,6 @@
 import pytest
 from ssd_core.abstract_ssd import AbstractSSD
-from shell_core.commands.full_write_command import FullWriteCommand
+from command_core.shell_commands.full_write_command import FullWriteCommand
 
 @pytest.mark.parametrize("value", [0xAAAABBBB, 0x11111111])
 def test_full_write_성공(mocker, value):

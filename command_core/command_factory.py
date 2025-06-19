@@ -1,14 +1,14 @@
 from typing import Callable, Dict
-from shell_core.commands.base_command import BaseCommand
-from shell_core.commands.read_command import ReadCommand
-from shell_core.commands.write_command import WriteCommand
-from shell_core.commands.exit_command import ExitCommand
-from shell_core.commands.help_command import HelpCommand
-from shell_core.commands.full_read_command import FullReadCommand
-from shell_core.commands.full_write_command import FullWriteCommand
-from shell_core.commands.testscenario1 import TestScenario1
-from shell_core.commands.testscenario2 import TestScenario2
-from shell_core.commands.testscenario3 import TestScenario3
+from command_core.base_command import BaseCommand
+from command_core.shell_commands.read_command import ReadCommand
+from command_core.shell_commands.write_command import WriteCommand
+from command_core.shell_commands.exit_command import ExitCommand
+from command_core.shell_commands.help_command import HelpCommand
+from command_core.shell_commands.full_read_command import FullReadCommand
+from command_core.shell_commands.full_write_command import FullWriteCommand
+from command_core.shell_commands.testscenario import TestScenario1
+from command_core.shell_commands.testscenario import TestScenario2
+from command_core.shell_commands.testscenario import TestScenario3
 from ssd_core.abstract_ssd_driver import AbstractSSDDriver
 
 

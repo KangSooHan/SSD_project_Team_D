@@ -53,7 +53,7 @@ def test_shell_run(user_input, mock_return, expected_output, mock_ssd, mock_vali
     else:
         mock_command.execute.return_value = None
 
-    with patch("shell_core.command_factory.CommandFactory.create", return_value=mock_command):
+    with patch("command_core.command_factory.CommandFactory.create", return_value=mock_command):
         f = io.StringIO()
         if command == "exit":
             with pytest.raises(SystemExit):
