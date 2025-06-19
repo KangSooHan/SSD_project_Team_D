@@ -1,5 +1,6 @@
 from ssd_core.normal_ssd import NormalSSD
 from validator import SSDValidator
+from ssd_core.buffer import Buffer
 
 def main(args=None):
     import sys
@@ -9,7 +10,10 @@ def main(args=None):
 
     validator = SSDValidator()
     packet = validator.run(" ".join(args))
+
     ssd = NormalSSD()
+    buffer = Buffer(ssd)
+    buffer.insert(packet)
 
     if packet.COMMAND == "R":
         ssd.read(packet.ADDR)
