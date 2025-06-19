@@ -15,3 +15,7 @@ class AbstractSSD(ABC):
     @abstractmethod
     def write(self, address: int, data: str) -> None:
         pass
+
+    @abstractmethod
+    def erase(self, address: int, size: int) -> None:
+        pass
