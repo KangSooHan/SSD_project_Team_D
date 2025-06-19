@@ -1,5 +1,13 @@
 import re
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
+@dataclass
+class Packet:
+    COMMAND: str
+    ADDR: int = None
+    VALUE: int = None
+
 class Validator(ABC):
     def _is_valid_LBA(self, LBA:int) -> bool:
         try:
@@ -29,7 +37,7 @@ class Validator(ABC):
         return sentence
 
     def _validate_test(self, sentence:str):
-        return self.run(sentence)[0] != False
+        return self.run(sentence).COMMAND != "ERR"
 
     def run(self, sentence: str) -> (bool, int, int):
         try:
@@ -37,86 +45,86 @@ class Validator(ABC):
             split_sentence = sentence.split(" ")
             return self._validate(split_sentence)
         except:
-            return False, None, None
+            return Packet("ERR")
 
 class SSDValidator(Validator):
     def _validate(self, split_sentence:list) -> (str, int, int):
         if not split_sentence:
-            return False
+            return Packet("ERR")
         command = split_sentence[0]
         if command == "w":
             if len(split_sentence) != 3:
-                return False, None, None
+                return Packet("ERR")
             addr, hex_value = split_sentence[1], split_sentence[2]
             if self._is_valid_LBA(addr) and self._is_valid_hex_value(hex_value):
-                return "W", int(addr), int(hex_value, 16)
+                return Packet("W", int(addr), int(hex_value, 16))
 
         if command == "r":
             if len(split_sentence) != 2:
-                return False, None, None
+                return Packet("ERR")
             addr = split_sentence[1]
             if self._is_valid_LBA(addr):
-                return "R", int(addr), None
-        return False, None, None
+                return Packet("R", int(addr))
+        return Packet("ERR")
 
 
 class ShellValidator(Validator):
     def _validate(self, split_sentence: list) -> (str, int, int):
         if not split_sentence:
-            return False
+            return Packet("ERR")
 
         command = split_sentence[0]
         if command == "write":
             if len(split_sentence) != 3:
-                return False, None, None
+                return Packet("ERR")
 
             addr, hex_value = split_sentence[1], split_sentence[2]
 
             if self._is_valid_LBA(addr) and self._is_valid_hex_value(hex_value):
-                return "write", int(addr), int(hex_value, 16)
+                return Packet("write", int(addr), int(hex_value, 16))
 
         if command == "read":
             if len(split_sentence) != 2:
-                return False, None, None
+                return Packet("ERR")
             addr = split_sentence[1]
             if self._is_valid_LBA(addr):
-                return "read", int(addr), None
+                return Packet("read", int(addr))
 
         if command == "help":
             if len(split_sentence) != 1:
-                return False, None, None
-            return "help", None, None
+                return Packet("ERR")
+            return Packet("help")
 
         if command == "exit":
             if len(split_sentence) != 1:
-                return False, None, None
-            return "exit", None, None
+                return Packet("ERR")
+            return Packet("exit")
 
         if command == "fullwrite":
             if len(split_sentence) != 2:
-                return False, None, None
+                return Packet("ERR")
             hex_value = split_sentence[1]
             if self._is_valid_hex_value(hex_value):
-                return "fullwrite", None, int(hex_value, 16)
+                return Packet("fullwrite", None, int(hex_value, 16))
 
         if command == "fullread":
             if len(split_sentence) != 1:
-                return False, None, None
-            return "fullread", None, None
+                return Packet("ERR")
+            return Packet("fullread")
 
         if command == "1_" or command == "1_FullWriteAndReadCompare".lower():
             if len(split_sentence) != 1:
-                return False, None, None
-            return "1_", None, None
+                return Packet("ERR")
+            return Packet("1_")
 
         if command == "2_" or command == "2_PartialLBAWrite".lower():
             if len(split_sentence) != 1:
-                return False, None, None
-            return "2_", None, None
+                return Packet("ERR")
+            return Packet("2_")
 
         if command == "3_" or command == "3_WriteReadAging".lower():
             if len(split_sentence) != 1:
-                return False, None, None
-            return "3_", None, None
+                return Packet("ERR")
+            return Packet("3_")
 
-        return False, None, None
+        return Packet("ERR")

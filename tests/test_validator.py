@@ -1,5 +1,5 @@
 import pytest
-from validator import SSDValidator, ShellValidator
+from validator import SSDValidator, ShellValidator, Packet
 
 CORRECT_WRITE_SENTENCE = "w 0 0xFFFFFFFF"
 CORRECT_READ_SENTENCE = "r 0"
@@ -84,18 +84,18 @@ def test_검증기_잘못된_VALUE_입력(wrong_input, ssdvalidator):
     assert ssdvalidator._validate_test(wrong_input) == False
 
 def test_검증기_값_가져오는_함수(ssdvalidator):
-    assert ssdvalidator.run(CORRECT_WRITE_SENTENCE) == ("W", 0, int("0xFFFFFFFF", 16))
-    assert ssdvalidator.run(CORRECT_READ_SENTENCE) == ("R", 0, None)
+    assert ssdvalidator.run(CORRECT_WRITE_SENTENCE) == Packet("W", 0, int("0xFFFFFFFF", 16))
+    assert ssdvalidator.run(CORRECT_READ_SENTENCE) == Packet("R", 0, None)
 
 @pytest.mark.parametrize(
     ("input", "output"),
     [
-        ("write 0 0xFFFFFFFF", ("write", 0, int("0xFFFFFFFF", 16))),
-        ("read 0", ("read", 0, None)),
-        ("help", ("help", None, None)),
-        ("fullwrite 0xFFFFFFFF", ("fullwrite", None, int("0xFFFFFFFF", 16))),
-        ("fullread", ("fullread", None, None)),
-        ("exit", ("exit", None, None)),
+        ("write 0 0xFFFFFFFF", Packet("write", 0, int("0xFFFFFFFF", 16))),
+        ("read 0", Packet("read", 0, None)),
+        ("help", Packet("help", None, None)),
+        ("fullwrite 0xFFFFFFFF", Packet("fullwrite", None, int("0xFFFFFFFF", 16))),
+        ("fullread", Packet("fullread", None, None)),
+        ("exit", Packet("exit", None, None)),
     ]
 )
 def test_SHELL_VALIDATOR_검증(shellvalidator, input, output):
