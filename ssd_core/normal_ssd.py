@@ -1,10 +1,12 @@
 import os
 from ssd_core.abstract_ssd import AbstractSSD
-
+import os
 
 class NormalSSD(AbstractSSD):
-    DEFAULT_NAND_FILE: str = "ssd_nand.txt"
-    DEFAULT_OUTPUT_FILE: str = "ssd_output.txt"
+    # 현재 파일 기준으로 상위 디렉터리 추적
+    ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    DEFAULT_NAND_FILE: str = os.path.join(ROOT, "ssd_nand.txt")
+    DEFAULT_OUTPUT_FILE: str = os.path.join(ROOT, "ssd_output.txt")
     INVALID_OUTPUT: str = "ERROR"
     EMPTY_VALUE: str = "0x00000000"
     DEFAULT_LBA_RANGE: range = range(0, 100)
@@ -17,6 +19,7 @@ class NormalSSD(AbstractSSD):
             lba_range: range = DEFAULT_LBA_RANGE,
             size_range: range = DEFAULT_SIZE_RANGE
     ) -> None:
+        print(nand_file)
         self._nand_file: str = nand_file
         self._output_file: str = output_file
         self._valid_lba_range: range = lba_range
@@ -30,7 +33,6 @@ class NormalSSD(AbstractSSD):
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
-
         value = self._load_value_from_nand(address)
         self._write_output(value)
 
@@ -76,12 +78,14 @@ class NormalSSD(AbstractSSD):
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
+
         if size not in self._valid_size_range:
             self._write_output(self.INVALID_OUTPUT)
             return
         if address + size - 1 > max_lba:
             self._write_output(self.INVALID_OUTPUT)
             return
+
         with open(self._nand_file, 'r+') as file:
             lines = file.readlines()
             file.seek(0)

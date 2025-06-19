@@ -83,7 +83,7 @@ class SSDValidator(Validator):
                 return Packet("ERR")
             addr, size = split_sentence[1], split_sentence[2]
             if self._is_valid_LBA(addr):
-                return Packet("E", int(addr),self.DUMMY_DATA, int(size))
+                return Packet("E", int(addr), int(size))
         return Packet("ERR")
 
 
