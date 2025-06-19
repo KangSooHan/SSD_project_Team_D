@@ -1,10 +1,15 @@
 import pytest
+
+from ssd_core.abstract_buffer_optimizer import AbstractBufferOptimizer
+from ssd_core.simple_buffer_optimizer import SimpleBufferOptimizer
 from validator import Packet
+
 
 # 실제 구현체로 교체 필요
 class FakeBuffer:
-    def __init__(self):
-        self.memory : list[Packet] = []
+    def __init__(self, optimizer: AbstractBufferOptimizer):
+        self.memory: list[Packet] = []
+        self._optimizer = optimizer
 
     def insert(self, packet: Packet):
         self.memory.append(packet)
@@ -21,19 +26,15 @@ class FakeBuffer:
         return self.memory
 
     def optimize(self):
-        pass
+        self.memory = self._optimizer.calculate(self.memory)
 
     def fast_read_from(self, lba: int) -> int:
         pass
 
+
 @pytest.fixture
 def buffer():
-    return FakeBuffer()
-
-
-def test_Buffer객체는_파라미터_없이_생성되어야_한다():
-    buffer = FakeBuffer()
-    assert True
+    return FakeBuffer(SimpleBufferOptimizer())
 
 
 def test_Buffer객체_초기_길이값은_0이다(buffer):
@@ -57,7 +58,6 @@ def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목�
     buffer.insert(Packet("W", 3, 0))
     buffer.insert(Packet("W", 4, 0))
 
-
     assert buffer.len() == 5
 
 
@@ -74,9 +74,12 @@ def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_
     assert buffer.memory[3] == Packet("W", 3, 0)
     assert buffer.memory[4] == Packet("W", 4, 0)
 
+
 """
 test cases for buffer optimization
 """
+
+
 @pytest.mark.skip
 def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_1(buffer):
     # 동일 위치에 다른 값을 write
@@ -88,9 +91,9 @@ def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적�
     assert buffer.len() == 1
     assert buffer.fast_read_from(0) == 1
 
+
 @pytest.mark.skip
 def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_2(buffer):
-
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 0, 1))
