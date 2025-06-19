@@ -11,7 +11,7 @@ from ssd_core.abstract_ssd import AbstractSSD
 @pytest.fixture
 def ssd_mock(mocker: MockerFixture):
     mock = mocker.Mock(spec=AbstractSSD)
-    mock.read.return_value = f"0x{1:08X}"
+    mock.fast_read_from.return_value = f"0x{1:08X}"
     return mock
 
 
