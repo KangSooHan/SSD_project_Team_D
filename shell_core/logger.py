@@ -27,7 +27,7 @@ class Logger:
 
     def _get_filename_timestamp(self) -> str:
         """파일 이름용 현재 시간 (YYMMDD_HHMMSS)"""
-        return datetime.now().strftime("%y%m%d_%H%M%S")
+        return datetime.now().strftime("%y%m%d_%Hh_%Mm_%Ss")
 
     def _get_calling_function(self) -> str:
         """
@@ -46,7 +46,13 @@ class Logger:
     def _check_and_roll_log(self):
         """latest.log가 10KB를 넘으면 이름 변경 후 롤링 처리"""
         if CURRENT_LOG.exists() and CURRENT_LOG.stat().st_size > MAX_LOG_SIZE:
-            new_name = LOG_FOLDER / f"until_{self._get_filename_timestamp()}.log"
+            base_name = f"until_{self._get_filename_timestamp()}"
+            new_name = LOG_FOLDER / f"{base_name}.log"
+            count = 1
+            # 파일명이 이미 존재하면 뒤에 _1, _2 ... 붙이기
+            while new_name.exists():
+                new_name = LOG_FOLDER / f"{base_name}_{count}.log"
+                count += 1
             CURRENT_LOG.rename(new_name)
             self._compress_old_logs()
 
