@@ -19,7 +19,6 @@ class NormalSSD(AbstractSSD):
             lba_range: range = DEFAULT_LBA_RANGE,
             size_range: range = DEFAULT_SIZE_RANGE
     ) -> None:
-        print(nand_file)
         self._nand_file: str = nand_file
         self._output_file: str = output_file
         self._valid_lba_range: range = lba_range
