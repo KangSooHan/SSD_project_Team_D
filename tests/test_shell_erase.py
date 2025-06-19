@@ -2,7 +2,7 @@ import pytest
 from ssd_core.abstract_ssd import AbstractSSD
 from shell_core.commands.erase_command import EraseCommand
 
-@pytest.mark.parametrize("lba,size", [(0,3),(1,8)])
+@pytest.mark.parametrize("lba,size", [(0,3),(1,8), (5, 1)])
 def test_erase_성공(mocker, lba, size):
     # arrange
     ssd: AbstractSSD = mocker.Mock()
@@ -15,7 +15,7 @@ def test_erase_성공(mocker, lba, size):
     assert ssd.erase.call_count == 1
 
 
-@pytest.mark.parametrize("lba,size,result", [(0, 11, 2),(8,44,5), (5, 1, 1)])
+@pytest.mark.parametrize("lba,size,result", [(0, 11, 2),(8,44,5)])
 def test_erase_10개초과_성공(mocker, lba, size, result):
     # arrange
     ssd: AbstractSSD = mocker.Mock()
