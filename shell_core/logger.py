@@ -27,7 +27,7 @@ class Logger:
 
     def _get_filename_timestamp(self) -> str:
         """파일 이름용 현재 시간 (YYMMDD_HHMMSS)"""
-        return datetime.now().strftime("%y%m%d_%H%M%S")
+        return datetime.now().strftime("%y%m%d_%Hh_%Mm_%Ss")
 
     def _get_calling_function(self) -> str:
         """
