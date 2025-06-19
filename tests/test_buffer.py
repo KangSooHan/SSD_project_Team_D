@@ -3,7 +3,11 @@ import pytest
 # 실제 구현체로 교체 필요
 class FakeBuffer:
     def __init__(self):
-        self.memory = []
+        self.memory = [
+            ("W", 0, 1),
+            ("E", 10, 9),
+            ("W", 1, 1)
+        ]
 
     def insert(self, cmd: str, op1: int, op2: int):
         self.memory.append((cmd, op1, op2))
@@ -24,6 +28,8 @@ class FakeBuffer:
     def optimize(self):
         pass
 
+    def read_from(self, lba: int) -> int:
+        pass
 
 @pytest.fixture
 def buffer():
@@ -101,16 +107,41 @@ def test_Buffer객체는_최적화대상이_아닌_명령이_5개를초과하면
 
     assert buffer.len == 1
 
+def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(buffer):
+    buffer.insert("W", 0, 0)
+    buffer.insert("W", 1, 1)
+    buffer.insert("W", 2, 2)
+    buffer.insert("W", 3, 3)
+    buffer.insert("W", 4, 4)
+
+    assert buffer.memory[0] == ("W", 0, 0)
+    assert buffer.memory[1] == ("W", 1, 1)
+    assert buffer.memory[2] == ("W", 2, 2)
+    assert buffer.memory[3] == ("W", 3, 3)
+    assert buffer.memory[4] == ("W", 4, 4)
 
 """
 test cases for buffer optimization
 """
 @pytest.mark.skip
-def test_ignore_cmd_동일한_W_명령은_압축한다(buffer):
+def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_1(buffer):
+    # 동일 위치에 다른 값을 write
     buffer.insert("W", 0, 0)
-    buffer.insert("W", 0, 0)
+    buffer.insert("W", 0, 1)
 
     buffer.optimize()
 
     assert buffer.len == 1
-    assert buffer.memory[0] == ("W", 0, 0)
+    assert buffer.read_from(0) == 1
+
+@pytest.mark.skip
+def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_2(buffer):
+
+    buffer.insert("W", 0, 0)
+    buffer.insert("W", 0, 0)
+    buffer.insert("W", 0, 1)
+
+    buffer.optimize()
+
+    assert buffer.len == 1
+    assert buffer.read_from(0) == 1

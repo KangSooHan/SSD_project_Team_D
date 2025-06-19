@@ -12,7 +12,7 @@ from ssd_core.abstract_ssd import AbstractSSD
 @pytest.fixture
 def ssd_mock(mocker: MockerFixture):
     mock = mocker.Mock(spec=AbstractSSD)
-    mock.read.return_value = f"0x{1:08X}"
+    mock.read_from.return_value = f"0x{1:08X}"
     return mock
 
 
@@ -40,7 +40,7 @@ def test_read_compare_기능은_정상적으로_읽은_경우_true를_리턴한�
 
 def test_read_compare_기능은_읽기에_실패한_경우_false를_반환한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
-    ssd_mock.read.return_value = hex(1)
+    ssd_mock.read_from.return_value = hex(1)
 
     assert sut.read_compare(0x00, hex(2)) == False
 
@@ -56,7 +56,7 @@ def test_전체시나리오에_실패할경우_FAIL값을_출력한다(ssd_mock)
 
 def test_전체시나리오에_성공할경우_PASS값을_출력한다(ssd_mock):
     sut = TestScenario1(ssd_mock)
-    ssd_mock.read.side_effect = [f'0x{value:08X}' for value in range(100)]
+    ssd_mock.read_from.side_effect = [f'0x{value:08X}' for value in range(100)]
     output = io.StringIO()
     sys.stdout = output
 
