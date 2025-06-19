@@ -25,7 +25,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
 
 
     def project_erase(self, buffer_lst: list[Packet]) -> list[int]:
-        result = [0 * 100] # LBA 0~99
+        result = [0] * 100 # LBA 0~99
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
                 for i in range(cmd.SIZE):
@@ -33,7 +33,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         return result
 
     def project_write(self, buffer_lst) -> list[int]:
-        result = [0 * 100]  # LBA 0~99
+        result = [0] * 100  # LBA 0~99
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
                 for i in range(cmd.SIZE):
