@@ -1,6 +1,5 @@
 import subprocess
 import time
-from ssd_core.abstract_ssd import AbstractSSD
 from ssd_core.abstract_ssd_driver import AbstractSSDDriver
 from ssd_core.normal_ssd import NormalSSD
 
@@ -30,3 +29,7 @@ class NormalSSDDriver(AbstractSSDDriver):
     def write(self, addr: int, data: int) -> None:
         # Run the write command
         subprocess.run(["python", self.ssd_script, "W", str(addr), f"0x{data:08X}"], check=True)
+
+    def erase(self, addr: int, size: int) -> None:
+        # Run the erase command
+        subprocess.run(["python", self.ssd_script, "E", str(addr), str(size)], check=True)
