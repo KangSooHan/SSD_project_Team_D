@@ -2,9 +2,11 @@ from ssd_core.abstract_ssd import AbstractSSD
 from command_core.base_command import BaseCommand
 import random
 
+
 class TestScenario(BaseCommand):
     RESULT_FAIL = "FAIL"
     RESULT_PASS = "PASS"
+
     def __init__(self, ssd: AbstractSSD):
         self._ssd = ssd
         self._test_constant = 1
@@ -18,20 +20,22 @@ class TestScenario(BaseCommand):
         except:
             return False
 
+
 class TestScenario1(TestScenario):
     def execute(self):
         # test scenario from lecture note page #28
         for i in range(0, 100, 5):
             for j in range(0, 5):
-                self._ssd.write(i+j, i+j)
+                self._ssd.write(i + j, i + j)
 
             for j in range(0, 5):
-                if not self.read_compare(i+j, i+j):
+                if not self.read_compare(i + j, i + j):
                     print(TestScenario1.RESULT_FAIL)
                     return
 
         print(TestScenario1.RESULT_PASS)
         return
+
 
 class TestScenario2(TestScenario):
     def execute(self):
@@ -68,6 +72,7 @@ class TestScenario2(TestScenario):
         print(TestScenario2.RESULT_PASS)
         return
 
+
 class TestScenario3(TestScenario):
     def execute(self):
         # test scenario from lecture note page #30
@@ -89,6 +94,7 @@ class TestScenario3(TestScenario):
 
         print(TestScenario3.RESULT_PASS)
         return
+
 
 class TestScenario4(TestScenario):
     def execute(self):
@@ -113,7 +119,7 @@ class TestScenario4(TestScenario):
                 self._ssd.erase(i, _erase_size)
 
                 # i ~ i+2 값이 0x00000000 인지 검사
-                for j in range(i, i+3):
+                for j in range(i, i + 3):
                     if not self.read_compare(j, self._zero_constant):
                         print(TestScenario4.RESULT_FAIL)
                         return
