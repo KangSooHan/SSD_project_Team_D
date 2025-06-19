@@ -1,7 +1,7 @@
 import pytest
 
 # 실제 구현체로 교체 필요
-class Buffer:
+class FakeBuffer:
     def __init__(self):
         self.memory = []
 
@@ -24,11 +24,11 @@ class Buffer:
 
 @pytest.fixture
 def buffer():
-    return Buffer()
+    return FakeBuffer()
 
 
 def test_Buffer객체는_파라미터_없이_생성되어야_한다():
-    buffer = Buffer()
+    buffer = FakeBuffer()
     assert True
 
 
@@ -89,5 +89,16 @@ def test_Buffer객체는_최적화대상이_아닌_명령이_5개를초과하면
     buffer.insert("W 4 0x00000000")
     # flush
     buffer.insert("W 5 0x00000000")
+
+    assert buffer.len == 1
+
+
+"""
+test cases for buffer optimization
+"""
+@pytest.mark.skip
+def test_ignore_cmd_동일한_W_명령은_압축한다(buffer):
+    buffer.insert("W 0 0x00000000")
+    buffer.insert("W 0 0x00000000")
 
     assert buffer.len == 1
