@@ -101,6 +101,8 @@ def test_SSD_검증기_Mock_추가_및_실행(write_args, return_value):
 
         mock_validator_instance.run.assert_called_once_with(" ".join(write_args))
 
+
+
 '''
 새로운 main 함수를 구현할 때 사용한 pytest문
 '''
@@ -116,3 +118,39 @@ def test_SSD_검증기_Mock_추가_및_실행(write_args, return_value):
 #     output_validator = capture_stdout(validate_main, args)
 #
 #     assert output_ssd == output_validator, f"\nSSD: {output_ssd}\nValidator: {output_validator}"
+
+@pytest.mark.parametrize("cli_args, initial_nand, expected_output, expected_nand_after", [
+    # 정상 지움: lba 0~2 지움, 모두 0x00000000으로
+    (["E", "0", "3"],
+     {"0": "0xAAAABBBB", "1": "0xCCCCDDDD", "2": "0xEEEEFFFF"},
+     "",
+     {"0": "0x00000000", "1": "0x00000000", "2": "0x00000000"}),
+
+    # 일부 지움: 일부만 영향을 줌
+    (["E", "1", "2"],
+     {"0": "0xAAAABBBB", "1": "0x11111111", "2": "0x22222222"},
+     "",
+     {"0": "0xAAAABBBB", "1": "0x00000000", "2": "0x00000000"}),
+
+    # 유효 범위 밖: lba 100은 무효
+    (["E", "100", "1"],
+     {},
+     "ERROR",
+     {}),
+])
+def test_erase_command(cli_args, initial_nand, expected_output, expected_nand_after):
+    prepare_nand_file(initial_nand)
+    ssd_main(cli_args)
+
+    # 1. output 확인
+    assert get_output_content() == expected_output
+
+    # 2. NAND 파일 내용 확인
+    if expected_nand_after:
+        with open(NAND_FILENAME, "r") as f:
+            actual_lines = f.read().strip().splitlines()
+        expected_lines = [f"{lba} {value}" for lba, value in expected_nand_after.items()]
+        assert sorted(actual_lines) == sorted(expected_lines)
+    else:
+        # NAND 파일이 비어 있어야 함
+        assert os.stat(NAND_FILENAME).st_size == 0
