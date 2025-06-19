@@ -18,13 +18,9 @@ def run(user_input: str, ssd: NormalSSDDriver, validator: ShellValidator) -> Non
         print("INVALID COMMAND")
         return
 
-    try:
-        executor = CommandFactory.create(cmd_type, ssd, address, value)
-        executor.execute()
-        logger.print(f"Command executed: {cmd_type} {address} {value}")
-    except Exception as e:
-        logger.print(f"Command execution failed: {e}")
-        print(f"ERROR: {e}")
+    executor = CommandFactory.create(cmd_type, ssd, address, value)
+    executor.execute()
+    logger.print(f"Command executed: {cmd_type} {address} {value}")
 
 
 def main():
