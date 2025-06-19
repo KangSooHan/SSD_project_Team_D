@@ -2,9 +2,10 @@ import os
 import pytest
 from ssd_core.normal_ssd import NormalSSD
 
-NAND_FILE = "ssd_nand.txt"
-OUTPUT_FILE = "ssd_output.txt"
 
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+NAND_FILE: str = os.path.join(ROOT, "ssd_nand.txt")
+OUTPUT_FILE: str = os.path.join(ROOT, "ssd_output.txt")
 
 @pytest.fixture(autouse=True)
 def clean_files():
