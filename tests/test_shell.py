@@ -70,6 +70,10 @@ def test_shell_help_실행테스트():
     stdout = shell_system_call(input_script)
     assert "명령어 사용 방법" in stdout
 
+def test_shell_help_실행테스트():
+    input_script = "test\nexit\n"
+    stdout = shell_system_call(input_script)
+    assert "INVALID COMMAND" in stdout
 
 def test_shell_fullwrite_then_fullread_실행테스트():
     """fullwrite 후 fullread 명령을 통해 결과를 검증"""
