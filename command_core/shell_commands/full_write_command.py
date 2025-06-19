@@ -1,7 +1,7 @@
 from ssd_core.abstract_ssd import AbstractSSD
+from command_core.base_command import BaseCommand
 
-
-class FullWriteCommand:
+class FullWriteCommand(BaseCommand):
     def __init__(self, ssd: AbstractSSD, value: str):
         self._ssd = ssd
         self._loop_count = 100

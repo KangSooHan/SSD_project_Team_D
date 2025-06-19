@@ -1,5 +1,5 @@
 from shell_core.logger import logger
-from shell_core.command_factory import CommandFactory
+from command_core.command_factory import CommandFactory
 from shell_core.normal_ssd_driver import NormalSSDDriver
 from validator import ShellValidator
 
