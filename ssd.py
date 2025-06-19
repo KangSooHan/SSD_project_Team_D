@@ -14,9 +14,11 @@ def main(args=None):
     buffer = Buffer(ssd)
 
     if buffer.insert(packet):
+        buffer.flush()
         return
 
     buffer.write_invalid_output()
+
 
 def main_test(args=None):
     import sys
