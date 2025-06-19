@@ -18,6 +18,12 @@ class Validator(ABC):
         except ValueError:
             return False
 
+    def _is_valid_size_value(self, size: int) -> bool:
+        try :
+            return isinstance(int(size), int)
+        except ValueError:
+            return False
+
     def _is_valid_hex_value(self, hex_vlaue: str) -> bool:
         if not isinstance(hex_vlaue, str):
             return False
@@ -125,6 +131,24 @@ class ShellValidator(Validator):
                 return Packet("ERR")
             return Packet("fullread")
 
+        if command == "erase":
+            if len(split_sentence) != 3:
+                return Packet("ERR")
+
+            addr, size = split_sentence[1], split_sentence[2]
+
+            if self._is_valid_LBA(addr) and self._is_valid_size_value(size) :
+                return Packet("erase", int(addr), int(size))
+
+        if command == "erase_range":
+            if len(split_sentence) != 3:
+                return Packet("ERR")
+
+            start, end = split_sentence[1], split_sentence[2]
+
+            if self._is_valid_LBA(start) and self._is_valid_LBA(end) :
+                return Packet("erase_range", int(start), int(end))
+
         if command == "1_" or command == "1_FullWriteAndReadCompare".lower():
             if len(split_sentence) != 1:
                 return Packet("ERR")
@@ -139,5 +163,10 @@ class ShellValidator(Validator):
             if len(split_sentence) != 1:
                 return Packet("ERR")
             return Packet("3_")
+
+        if command == "4_" or command == "4_EraseAndWriteAging".lower():
+            if len(split_sentence) != 1:
+                return Packet("ERR")
+            return Packet("4_")
 
         return Packet("ERR")
