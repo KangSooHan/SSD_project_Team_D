@@ -28,6 +28,8 @@ def test_read_compare_기능은_읽기에_실패한_경우_false를_반환한다
     ssd_mock.read.return_value = hex(1)
 
     assert sut.read_compare(0x00, hex(2)) == False
+    assert ssd_mock.read.call_count == 1
+    ssd_mock.read.assert_called_once_with(0)
 
 
 def test_삭제되었지만_READ가0이아닌경우_FAIL값을_출력한다(ssd_mock):
