@@ -44,7 +44,7 @@ class Runner(BaseCommand):
 
                 print(f"{scenario_name} ___ Run...", end='')
                 scenario = scenario_class(self.ssd)
-                result = scenario.execute(suppress_output=True)
+                result = scenario.execute(is_runner_called=True)
                 if result:
                     print(f"Pass")
                 else:
