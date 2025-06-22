@@ -1,5 +1,6 @@
 import os
 import inspect
+import sys
 from command_core.base_command import BaseCommand
 from command_core.shell_commands import testscenario
 from ssd_core.abstract_ssd import AbstractSSD
@@ -11,6 +12,7 @@ scenario_map = {
     "3_WriteReadAging": testscenario.TestScenario3,
     "4_EraseAndWriteAging": testscenario.TestScenario4,
 }
+
 
 class Runner(BaseCommand):
     def __init__(self, ssd: AbstractSSD):
@@ -40,9 +42,16 @@ class Runner(BaseCommand):
                     print(f"[Runner] '{scenario_name}'는 유효한 TestScenario가 아닙니다.")
                     return
 
-                print(f"{scenario_name} ___ Run...")
+                print(f"{scenario_name} ___ Run...", end='')
                 scenario = scenario_class(self.ssd)
-                scenario.execute()
+                result = scenario.execute(suppress_output=True)
+                if result:
+                    print(f"Pass")
+                else:
+                    print(f"FAIL!")
+                    sys.exit(0)
 
             except Exception as e:
                 print(f"[Runner] '{scenario_name}' 실행 중 오류 발생: {e}")
+
+        sys.exit(0)

@@ -22,7 +22,7 @@ class TestScenario(BaseCommand):
 
 
 class TestScenario1(TestScenario):
-    def execute(self):
+    def execute(self, suppress_output=False) -> bool:
         # test scenario from lecture note page #28
         for i in range(0, 100, 5):
             for j in range(0, 5):
@@ -30,15 +30,16 @@ class TestScenario1(TestScenario):
 
             for j in range(0, 5):
                 if not self.read_compare(i + j, i + j):
-                    print(TestScenario1.RESULT_FAIL)
-                    return
-
-        print(TestScenario1.RESULT_PASS)
-        return
+                    if not suppress_output:
+                        print(TestScenario1.RESULT_FAIL)
+                    return False
+        if not suppress_output:
+            print(TestScenario1.RESULT_PASS)
+        return True
 
 
 class TestScenario2(TestScenario):
-    def execute(self):
+    def execute(self, suppress_output=False):
         # test scenario from lecture note page #29
         _loop_count = 30
 
@@ -50,31 +51,37 @@ class TestScenario2(TestScenario):
             self._ssd.write(2, self._test_constant)
 
             if not self.read_compare(4, self._test_constant):
-                print(TestScenario2.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario2.RESULT_FAIL)
+                return False
 
             if not self.read_compare(0, self._test_constant):
-                print(TestScenario2.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario2.RESULT_FAIL)
+                return False
 
             if not self.read_compare(3, self._test_constant):
-                print(TestScenario2.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario2.RESULT_FAIL)
+                return False
 
             if not self.read_compare(1, self._test_constant):
-                print(TestScenario2.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario2.RESULT_FAIL)
+                return False
 
             if not self.read_compare(2, self._test_constant):
-                print(TestScenario2.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario2.RESULT_FAIL)
+                return False
 
-        print(TestScenario2.RESULT_PASS)
-        return
+        if not suppress_output:
+            print(TestScenario2.RESULT_PASS)
+        return True
 
 
 class TestScenario3(TestScenario):
-    def execute(self):
+    def execute(self, suppress_output=False):
         # test scenario from lecture note page #30
         _loop_count = 200
         for i in range(_loop_count):
@@ -85,19 +92,22 @@ class TestScenario3(TestScenario):
             self._ssd.write(99, second_random_value)
 
             if not self.read_compare(0, first_random_value):
-                print(TestScenario3.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario3.RESULT_FAIL)
+                return False
 
             if not self.read_compare(99, second_random_value):
-                print(TestScenario3.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario3.RESULT_FAIL)
+                return False
 
-        print(TestScenario3.RESULT_PASS)
-        return
+        if not suppress_output:
+            print(TestScenario3.RESULT_PASS)
+        return True
 
 
 class TestScenario4(TestScenario):
-    def execute(self):
+    def execute(self, suppress_output=False):
         # test scenario from 3day.pdf #8
         _loop_count = 30
         _erase_size = 3
@@ -108,8 +118,9 @@ class TestScenario4(TestScenario):
         # 0 ~ 2 값이 0x00000000 인지 검사
         for i in range(3):
             if not self.read_compare(0, self._zero_constant):
-                print(TestScenario4.RESULT_FAIL)
-                return
+                if not suppress_output:
+                    print(TestScenario4.RESULT_FAIL)
+                return False
 
         # 2 ~ 98 까지 3개씩 wirte/overwirte/erase/readcompare, (0,1,99)제외
         for _ in range(_loop_count):
@@ -121,8 +132,10 @@ class TestScenario4(TestScenario):
                 # i ~ i+2 값이 0x00000000 인지 검사
                 for j in range(i, i + 3):
                     if not self.read_compare(j, self._zero_constant):
-                        print(TestScenario4.RESULT_FAIL)
-                        return
+                        if not suppress_output:
+                            print(TestScenario4.RESULT_FAIL)
+                            return False
 
-        print(TestScenario4.RESULT_PASS)
-        return
+        if not suppress_output:
+            print(TestScenario4.RESULT_PASS)
+        return True
