@@ -14,6 +14,7 @@ class HelpCommand(BaseCommand):
         - fullread : fullread
         - erase : erase {LBA} {SIZE}
         - erase_range : erase_range {START_LBA} {END_LBA}
+        - flush : flush
         - 1_FullWriteAndReadCompare : 1_
         - 2_PartialLBAWrite : 2_
         - 3_WriteReadAging : 3_
