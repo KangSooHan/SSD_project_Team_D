@@ -84,6 +84,7 @@ class SSDValidator(Validator):
             addr, size = split_sentence[1], split_sentence[2]
             if self._is_valid_LBA(addr):
                 return Packet("E", int(addr), int(size))
+
         return Packet("ERR")
 
 
@@ -130,6 +131,11 @@ class ShellValidator(Validator):
             if len(split_sentence) != 1:
                 return Packet("ERR")
             return Packet("fullread")
+
+        if command == "flush":
+            if len(split_sentence) != 1:
+                return Packet("ERR")
+            return Packet("flush")
 
         if command == "erase":
             if len(split_sentence) != 3:

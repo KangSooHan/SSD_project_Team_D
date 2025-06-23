@@ -1,5 +1,6 @@
 from typing import Callable, Dict
 from command_core.base_command import BaseCommand
+from command_core.shell_commands.flush_command import FlushCommand
 from command_core.shell_commands.read_command import ReadCommand
 from command_core.shell_commands.write_command import WriteCommand
 from command_core.shell_commands.exit_command import ExitCommand
@@ -24,6 +25,7 @@ class CommandFactory:
         "fullread": lambda ssd, address=None, value=None: FullReadCommand(ssd),
         "fullwrite": lambda ssd, address, value: FullWriteCommand(ssd, value),
         "erase": lambda ssd, address, value: EraseCommand(ssd, address, value),
+        "flush": lambda ssd, address=None, value=None: FlushCommand(ssd),
         "erase_range": lambda ssd, address, value: EraseRangeCommand(ssd, address, value),
         "1_": lambda ssd, address=None, value=None: TestScenario1(ssd),
         "2_": lambda ssd, address=None, value=None: TestScenario2(ssd),
