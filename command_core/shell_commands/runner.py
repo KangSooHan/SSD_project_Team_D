@@ -42,7 +42,7 @@ class Runner(BaseCommand):
                     print(f"[Runner] '{scenario_name}'는 유효한 TestScenario가 아닙니다.")
                     return
 
-                print(f"{scenario_name} ___ Run...", end='')
+                print(f"{scenario_name} ___ Run...", end='',flush=True)
                 scenario = scenario_class(self.ssd)
                 result = scenario.execute(is_runner_called=True)
                 if result:
