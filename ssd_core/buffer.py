@@ -47,7 +47,6 @@ class Buffer:
                     return True
 
                 if mem.COMMAND == "E":
-                    print(mem.ADDR, packet.ADDR, mem.ADDR + mem.VALUE)
                     if not (mem.ADDR <= packet.ADDR < mem.ADDR + mem.VALUE):
                         continue
 
