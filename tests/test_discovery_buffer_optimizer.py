@@ -395,7 +395,7 @@ def test_명령어가_1개이하인경우_최적화하지_않는다(abstract_buf
         [Packet(COMMAND="E", ADDR=0, SIZE=10)]
     ],
 
-    # 5. erase가 write 보다 먼저 수행되는 경우 wirte 명령 유지
+    # 5. erase가 write 보다 먼저 수행되는 경우 write 명령 유지
     [
         [Packet(COMMAND="E", ADDR=0, SIZE=10),
         Packet(COMMAND="W", ADDR=1, VALUE=0x1), Packet(COMMAND="W", ADDR=3, VALUE=0x3), Packet(COMMAND="W", ADDR=5, VALUE=0x5)],
@@ -410,7 +410,65 @@ def test_명령어가_1개이하인경우_최적화하지_않는다(abstract_buf
         [Packet(COMMAND="E", ADDR=0, SIZE=8),
          Packet(COMMAND="W", ADDR=2, VALUE=0x2), Packet(COMMAND="W", ADDR=5, VALUE=0x5)]
     ],
+
+    # tc from SimpleBufferOptimizer
+    # 1. 중복 Write 제거
+    ([Packet("W", 10, 0xA), Packet("W", 10, 0xB)],
+     [Packet("W", 10, 0xB)]),
+
+    # 2. 여러 중복 Write 제거
+    ([Packet("W", 5, 0x1), Packet("W", 5, 0x2), Packet("W", 5, 0x3)],
+     [Packet("W", 5, 0x3)]),
+
+    # 3. Erase가 Write 무효화
+    ([Packet("W", 20, 0xAAA), Packet("E", 19, SIZE=2)],
+     [Packet("E", 19, SIZE=2)]),
+
+    # 4. Erase가 Write에 영향 없음
+    ([Packet("W", 20, 0xAAA), Packet("E", 10, SIZE=5)],
+     [Packet("W", 20, 0xAAA), Packet("E", 10, SIZE=5)]),
+
+    # 5. Erase 병합 (연속 영역)
+    ([Packet("E", 30, SIZE=5), Packet("E", 35, SIZE=3)],
+     [Packet("E", 30, SIZE=8)]),
+
+    # 6. Erase 병합 불가 (간격 존재)
+    ([Packet("E", 30, SIZE=3), Packet("E", 40, SIZE=2)],
+     [Packet("E", 30, SIZE=3), Packet("E", 40, SIZE=2)]),
+
+    # 7. 병합은 가능하나 size > 10
+    ([Packet("E", 10, SIZE=6), Packet("E", 16, SIZE=6)],
+     [Packet("E", 10, SIZE=6), Packet("E", 16, SIZE=6)]),
+
+    # 8. 중복 W 제거 + Erase로 W 제거 + Erase 병합
+    ([Packet("W", 1, 0x111), Packet("W", 1, 0x222), Packet("E", 0, SIZE=2), Packet("E", 2, SIZE=2)],
+     [Packet("E", 0, SIZE=4)]),
+
+    # ✅ 9. Write가 Erase 범위 밖 → 유지 (결과 순서 수정됨)
+    ([Packet("E", 90, SIZE=5), Packet("W", 80, 0x1)],
+     [Packet("E", 90, SIZE=5), Packet("W", 80, 0x1)]),
+
+    # 10. 모든 Write 무효화됨
+    ([Packet("W", 1, 0x1), Packet("W", 1, 0x2), Packet("E", 0, SIZE=5)],
+     [Packet("E", 0, SIZE=5)]),
+
+    # 101. erase 2개를 write 3개가 연결, write/erase 1개 겹침
+    ([Packet("E", 0, SIZE=5), Packet("E", 7, SIZE=2), Packet("W", 5, 0x5), Packet("W", 6, 0x6), Packet("W", 7, 0x7)],
+     [Packet("E", 0, SIZE=9), Packet("W", 5, 0x5), Packet("W", 6, 0x6), Packet("W", 7, 0x7)]),
+
+    # 102. erase 2개를 write 3개가 연결, write/erase 겹치지 않음
+    ([Packet("E", 0, SIZE=5), Packet("E", 8, SIZE=2), Packet("W", 5, 0x5), Packet("W", 6, 0x6), Packet("W", 7, 0x7)],
+     [Packet("E", 0, SIZE=10), Packet("W", 5, 0x5), Packet("W", 6, 0x6), Packet("W", 7, 0x7)]),
+
+    # 103. erase 2개를 write 3개가 연결하지만 erase 10개 초과로 연결하지 못함
+    ([Packet("E", 0, SIZE=8), Packet("E", 11, SIZE=4), Packet("W", 8, 0x8), Packet("W", 9, 0x9), Packet("W", 10, 0x10)],
+     [Packet("E", 0, SIZE=8), Packet("E", 11, SIZE=4), Packet("W", 8, 0x8), Packet("W", 9, 0x9), Packet("W", 10, 0x10)]),
+
+    # 104. erase 명령이 배열 범위 끝에서 수행되는지 확인
+    ([Packet("E", 99, SIZE=1), Packet("E", 98, SIZE=2), Packet("E", 97, SIZE=3),],
+     [Packet("E", 97, SIZE=3)]),
 ])
 def test_buffer_최적화_반환_커맨드_동일_케이스_검증(abstract_buffer_optimizer, tc, expected_cmd):
     result = abstract_buffer_optimizer.calculate(tc)
     assert result == expected_cmd
+

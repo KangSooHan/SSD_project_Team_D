@@ -67,6 +67,13 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                                 erase_cmd_new = None
                                 counting = False
                                 counting_cnt = 0
+                            elif i == 99:
+                                current_erase_cmd_cnt += 1
+                                erase_cmd_new.SIZE = counting_cnt + 1
+                                current_erase_cmd_lst.append(erase_cmd_new)
+                                erase_cmd_new = None
+                                counting = False
+                                counting_cnt = 0
                             else:
                                 counting_cnt += 1
                     elif value == VALUE_EMPTY:
@@ -101,7 +108,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         # 3. e 명령어 lba 범위, 길이 체크, w 명령어 lba 범위 체크, 값 0 아닌지 체크
 
         print(f"INPUT CMD(ORG),{len(buffer_lst)}={buffer_lst}")
-        final_cmd_lst = best_erase_cmd_lst + best_write_cmd_lst
+        final_cmd_lst = best_erase_cmd_lst + best_write_cmd_lst     # erase + write 순서가 유지 되어야 함.
         if len(final_cmd_lst) < len(buffer_lst):
             print(f"FINAL CMD(OPT),{len(final_cmd_lst)}={final_cmd_lst}")
             return final_cmd_lst
