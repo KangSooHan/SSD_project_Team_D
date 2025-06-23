@@ -27,10 +27,11 @@ class Buffer:
 
     def insert(self, packet:Packet):
         if packet.COMMAND in ["W", "E"]:
-            self._memory.append(packet)
-            self.optimize()
             if self.is_full():
                 self.flush()
+
+            self._memory.append(packet)
+            self.optimize()
 
             self.save_memory_to_files()
             return True
@@ -39,7 +40,6 @@ class Buffer:
             if self.is_value_in_buffer(packet.ADDR):
                 pass
             else:
-                self.flush()
                 self._ssd.read(packet.ADDR)
             return True
 
