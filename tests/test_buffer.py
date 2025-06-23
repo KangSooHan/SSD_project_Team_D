@@ -56,33 +56,3 @@ def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_
     assert buffer._memory[1] == Packet("W", 1, 0)
     assert buffer._memory[2] == Packet("W", 2, 0)
     assert buffer._memory[3] == Packet("W", 3, 0)
-
-"""
-test cases for buffer optimization
-"""
-@pytest.mark.skip
-def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_1(ssd):
-    buffer = Buffer(ssd)
-    buffer.clear()
-    # 동일 위치에 다른 값을 write
-    buffer.insert(Packet("W", 0, 0))
-    buffer.insert(Packet("W", 0, 1))
-
-    buffer.optimize()
-
-    assert len(buffer) == 1
-    assert buffer.fast_read_from(0) == 1
-
-@pytest.mark.skip
-def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_2(ssd):
-    buffer = Buffer(ssd)
-    buffer.clear()
-
-    buffer.insert(Packet("W", 0, 0))
-    buffer.insert(Packet("W", 0, 0))
-    buffer.insert(Packet("W", 0, 1))
-
-    buffer.optimize()
-
-    assert len(buffer) == 1
-    assert buffer.fast_read_from(0) == 1

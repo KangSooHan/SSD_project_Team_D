@@ -1,3 +1,4 @@
+from ssd_core.buffer_optimizer_provider import BufferOptimizerProvider
 from validator import Packet
 from ssd_core.normal_ssd import NormalSSD
 import os
@@ -69,7 +70,8 @@ class Buffer:
         self._ssd._write_output(self._ssd.INVALID_OUTPUT)
 
     def optimize(self):
-        pass
+        optimize_strategy = BufferOptimizerProvider.get_instance(self._memory)
+        self._memory = optimize_strategy.calculate(self._memory)
 
     def __len__(self):
         return len(self._memory)
