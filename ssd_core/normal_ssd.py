@@ -2,6 +2,7 @@ import os
 from ssd_core.abstract_ssd import AbstractSSD
 import os
 
+
 class NormalSSD(AbstractSSD):
     # 현재 파일 기준으로 상위 디렉터리 추적
     ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -65,7 +66,7 @@ class NormalSSD(AbstractSSD):
                 written_lba, written_data = line.strip().split()
                 new_line = line
                 if int(written_lba) == address and not _overwrite_flag:
-                    _overwrite_flag  = True
+                    _overwrite_flag = True
                     new_data = f'0x{data:08X}'  # 16진수로 포맷
                     new_line = f'{written_lba} {new_data}\n'
 
