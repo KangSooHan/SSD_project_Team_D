@@ -38,20 +38,22 @@ class Buffer:
             return True
 
         if packet.COMMAND == "R":
-            if self.is_value_in_buffer(packet.ADDR):
-                for mem in reversed(self._memory):
+            for mem in reversed(self._memory):
+                if mem.COMMAND == "W":
                     if mem.ADDR != packet.ADDR:
                         continue
 
-                    if mem.COMMAND == "W":
-                        self._ssd._write_output(f'0x{mem.VALUE:08X}')
-                        return True
+                    self._ssd._write_output(f'0x{mem.VALUE:08X}')
+                    return True
 
-                    if mem.COMMAND == "E":
-                        self._ssd._write_output(self.EMPTY_VALUE)
-                        return True
-            else:
-                self._ssd.read(packet.ADDR)
+                if mem.COMMAND == "E":
+                    print(mem.ADDR, packet.ADDR, mem.ADDR + mem.VALUE)
+                    if not (mem.ADDR <= packet.ADDR < mem.ADDR + mem.VALUE):
+                        continue
+
+                    self._ssd._write_output(self.EMPTY_VALUE)
+                    return True
+            self._ssd.read(packet.ADDR)
             return True
 
         if packet.COMMAND == "F":
@@ -70,22 +72,13 @@ class Buffer:
     def optimize(self):
         pass
 
-    def fast_read_from(self, ADDR:int):
-        return 1
-
-    def is_value_in_buffer(self, ADDR:int):
-        for mem in self._memory:
-            if mem.ADDR == ADDR:
-                return True
-        return False
-
     def __len__(self):
         return len(self._memory)
 
     def load_memory_from_files(self):
         self._memory = []
 
-        for i in range(1, 6):
+        for i in range(1, self.MAX_MEMORY_BUFFER+1):
             found = False
             for filename in os.listdir(self._buffer_path):
                 if filename.startswith(f"{i}_") and filename.endswith(".txt"):
