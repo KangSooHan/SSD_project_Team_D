@@ -14,7 +14,7 @@ def main(args=None):
     buffer = Buffer(ssd)
 
     if buffer.insert(packet):
-        buffer.flush()
+        #buffer.flush()
         return
 
     buffer.write_invalid_output()
