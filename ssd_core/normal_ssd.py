@@ -23,7 +23,6 @@ class NormalSSD(AbstractSSD):
         self._output_file: str = output_file
         self._valid_lba_range: range = lba_range
         self._valid_size_range: range = size_range
-        self._overwrite_flag = False
 
         if not os.path.exists(self._nand_file):
             open(self._nand_file, "w").close()
@@ -53,6 +52,8 @@ class NormalSSD(AbstractSSD):
             self._write_output(self.INVALID_OUTPUT)
             return
 
+        _overwrite_flag = False
+
         with open(self._nand_file, 'r+') as file:
             lines = file.readlines()
             if not lines:
@@ -64,12 +65,12 @@ class NormalSSD(AbstractSSD):
             for line in lines:
                 written_lba, written_data = line.strip().split()
                 new_line = line
-                if int(written_lba) == address and not self._overwrite_flag:
-                    self._overwrite_flag = True
+                if int(written_lba) == address and not _overwrite_flag:
+                    _overwrite_flag = True
                     new_data = f'0x{data:08X}'  # 16진수로 포맷
                     new_line = f'{written_lba} {new_data}\n'
                 file.write(new_line)
-            if not self._overwrite_flag:
+            if not _overwrite_flag:
                 file.write(f'{address} 0x{data:08X}\n')
 
     def erase(self, address: int, size: int) -> None:
