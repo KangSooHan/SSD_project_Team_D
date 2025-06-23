@@ -12,5 +12,11 @@ class HelpCommand(BaseCommand):
         - help : help
         - fullwrite : fullwrite {VALUE}
         - fullread : fullread
+        - erase : erase {LBA} {SIZE}
+        - erase_range : erase_range {START_LBA} {END_LBA}
+        - 1_FullWriteAndReadCompare : 1_
+        - 2_PartialLBAWrite : 2_
+        - 3_WriteReadAging : 3_
+        - 4_EraseAndWriteAging : 4_
         ''').strip()
         print(command_usage)
