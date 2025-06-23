@@ -1,5 +1,7 @@
 import os
 import subprocess
+import textwrap
+
 import pytest
 
 
@@ -68,14 +70,23 @@ def test_shell_write_실행테스트():
 def test_shell_help_실행테스트():
     input_script = "help\nexit\n"
     stdout = shell_system_call(input_script)
-    assert "명령어 사용 방법" in stdout
+    cmd_msg = textwrap.dedent('''
+        - write : write {LBA} {VALUE}
+        - read : read {LBA}
+        - exit : exit
+        - help : help
+        - fullwrite : fullwrite {VALUE}
+        - fullread : fullread
+        ''').strip()
+    assert cmd_msg in stdout
+
 
 def test_shell_잘못된_입력시_INVALID_실행테스트():
     input_script = "test\nexit\n"
     stdout = shell_system_call(input_script)
     assert "INVALID COMMAND" in stdout
 
-@pytest.mark.skip
+
 def test_shell_fullwrite_then_fullread_실행테스트():
     """fullwrite 후 fullread 명령을 통해 결과를 검증"""
     input_script = "fullwrite 0xABCDFFFF\nfullread\nexit\n"
@@ -83,3 +94,12 @@ def test_shell_fullwrite_then_fullread_실행테스트():
     expected_lines = [f"[Read] LBA {i:02d} : 0xABCDFFFF" for i in range(100)]
     for line in expected_lines:
         assert line in stdout
+
+
+def test_shell_runner_1_실행테스트():
+    input_script = "shell_scripts.txt\nexit\n"
+    stdout = shell_system_call(input_script)
+    cmd_msg = textwrap.dedent('''
+    1_FullWriteAndReadCompare ___ Run...Pass
+    ''').strip()
+    assert cmd_msg in stdout

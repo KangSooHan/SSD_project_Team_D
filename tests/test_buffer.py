@@ -47,12 +47,10 @@ def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목�
 def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(ssd):
     buffer = Buffer(ssd)
     buffer.clear()
-    buffer.insert(Packet("W", 0, 0))
-    buffer.insert(Packet("W", 1, 0))
-    buffer.insert(Packet("W", 2, 0))
-    buffer.insert(Packet("W", 3, 0))
+    buffer.insert(Packet("W", 1, 1))
+    buffer.insert(Packet("W", 2, 1))
+    buffer.insert(Packet("W", 3, 1))
 
-    assert buffer._memory[0] == Packet("W", 0, 0)
-    assert buffer._memory[1] == Packet("W", 1, 0)
-    assert buffer._memory[2] == Packet("W", 2, 0)
-    assert buffer._memory[3] == Packet("W", 3, 0)
+    assert buffer._memory[0] == Packet("W", 1, 1)
+    assert buffer._memory[1] == Packet("W", 2, 1)
+    assert buffer._memory[2] == Packet("W", 3, 1)
