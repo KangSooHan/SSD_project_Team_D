@@ -203,7 +203,7 @@ python ssd.py R 20
 ## 🧑‍💻 팀 소개
 
 - **팀명:** SSD Project Team D
-- **참여자:** chiwona11, jiyoung61, winsowss, jihoonlee91, hkmilk0829, gbyl2024, changheum, KangSooHan
+- **참여자:** chiwona11, jiyoung61, jihoonlee91, hkmilk0829, gbyl2024, changheum, KangSooHan
 
 ---
 
