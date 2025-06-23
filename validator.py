@@ -10,7 +10,6 @@ class Packet:
     VALUE: int = None
 
 
-
 class Validator(ABC):
     def _is_valid_LBA(self, LBA: int) -> bool:
         try:
@@ -48,6 +47,13 @@ class Validator(ABC):
     def _validate_test(self, sentence: str):
         return self.run(sentence).COMMAND != "ERR"
 
+    def _is_valid_erase_range(self, size):
+        try:
+            size_int = int(size)
+            return 0 <= size_int <= 10
+        except ValueError:
+            return False
+
     def run(self, sentence: str) -> (bool, int, int):
         try:
             sentence = self._preprocess_sentence(sentence)
@@ -82,7 +88,7 @@ class SSDValidator(Validator):
             if len(split_sentence) != 3:
                 return Packet("ERR")
             addr, size = split_sentence[1], split_sentence[2]
-            if self._is_valid_LBA(addr):
+            if self._is_valid_LBA(addr) and self._is_valid_size_value(size) and self._is_valid_erase_range(size):
                 return Packet("E", int(addr), int(size))
 
         if command == "f":

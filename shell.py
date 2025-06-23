@@ -1,3 +1,4 @@
+import sys
 from shell_core.logger import logger
 from command_core.command_factory import CommandFactory
 from shell_core.normal_ssd_driver import NormalSSDDriver
@@ -23,7 +24,7 @@ def run(user_input: str, ssd: NormalSSDDriver, validator: ShellValidator) -> Non
     logger.print(f"Command executed: {packet.COMMAND} {packet.ADDR} {packet.VALUE}")
 
 
-def main():
+def start_shell():
     logger.print("Test Shell started")
     print("<< Test Shell Application >> Start")
 
@@ -41,6 +42,20 @@ def main():
         except Exception as e:
             logger.print(f"INVALID COMMAND: {e}")
             print(f"INVALID COMMAND")
+
+def run_shell_automatically():
+    logger.print("Running shell in automatic mode without prompt")
+    validator = ShellValidator()
+    ssd = NormalSSDDriver()
+
+    run("shell_scripts.txt", ssd, validator)
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] == 'shell_scripts.txt':
+        # 인자가 있을 경우: 자동 실행 모드
+        run_shell_automatically()
+    start_shell()
+
 
 
 if __name__ == "__main__":
