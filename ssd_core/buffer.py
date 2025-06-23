@@ -76,7 +76,8 @@ class Buffer:
                         _, cmd_str, addr_str, value_str = parts
                         command = cmd_str[0].upper()
                         addr = int(addr_str, 0)        # supports hex (0x), octal (0o), etc.
-                        value = int(value_str, 0)
+
+                        value = int(value_str, 0) if command == "write" else int(value_str, 16)
                         self._memory.append(Packet(COMMAND=command, ADDR=addr, VALUE=value))
                         found = True
                         break
@@ -96,7 +97,8 @@ class Buffer:
 
         for i in range(self.MAX_MEMORY_BUFFER):
             if i < len(self._memory):
-                filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].ADDR}_{self._memory[i].VALUE}.txt"
+                value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else f"0x{self._memory[i].VALUE:08X}"
+                filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].ADDR}_{value}.txt"
             else:
                 filename = f"{i + 1}_empty.txt"
 
