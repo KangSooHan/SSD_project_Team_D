@@ -1,104 +1,81 @@
 import pytest
-
-from ssd_core.abstract_buffer_optimizer import AbstractBufferOptimizer
-from ssd_core.simple_buffer_optimizer import SimpleBufferOptimizer
 from validator import Packet
-
-
-# 실제 구현체로 교체 필요
-class FakeBuffer:
-    def __init__(self, optimizer: AbstractBufferOptimizer):
-        self.memory: list[Packet] = []
-        self._optimizer = optimizer
-
-    def insert(self, packet: Packet):
-        self.memory.append(packet)
-
-    def len(self):
-        return len(self.memory)
-
-    def flush(self):
-        ret = self.memory.copy()
-        self.memory = []
-        return ret
-
-    def _print(self):
-        return self.memory
-
-    def optimize(self):
-        self.memory = self._optimizer.calculate(self.memory)
-
-    def fast_read_from(self, lba: int) -> int:
-        pass
-
+from ssd_core.normal_ssd import NormalSSD
+from ssd_core.buffer import Buffer
+from pytest_mock import MockerFixture
 
 @pytest.fixture
-def buffer():
-    return FakeBuffer(SimpleBufferOptimizer())
+def ssd(mocker: MockerFixture):
+    mock = mocker.Mock(spec=NormalSSD)
+    mock.write.return_value = None
+    mock.erase.return_value = None
+    return mock
 
+def test_Buffer객체는_파라미터_없이_생성되어야_한다(ssd):
+    buffer = Buffer(ssd)
+    assert isinstance(buffer, Buffer)
 
-def test_Buffer객체_초기_길이값은_0이다(buffer):
-    assert buffer.len() == 0
+def test_Buffer객체는_flush_명령으로_buffer를_비운다(ssd):
+    buffer = Buffer(ssd)
+    buffer.insert(Packet("W", 0, 0xABCD))
 
-
-def test_Buffer객체는_flush_명령으로_buffer를_비운다(buffer):
-    buffer.insert(Packet("W", 0, 0))
-
-    assert buffer.len() == 1
+    assert len(buffer) == 1
 
     buffer.flush()
 
-    assert buffer.len() == 0
+    assert len(buffer) == 0
+    ssd.write.assert_called_once_with(0, 0xABCD)
 
-
-def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목을_유지한다(buffer):
+def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목을_유지한다(ssd, mocker:MockerFixture):
+    buffer = Buffer(ssd)
+    spy_optimize = mocker.spy(buffer, "optimize")
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 1, 0))
     buffer.insert(Packet("W", 2, 0))
     buffer.insert(Packet("W", 3, 0))
     buffer.insert(Packet("W", 4, 0))
 
-    assert buffer.len() == 5
+    assert spy_optimize.call_count == 5
+    assert len(buffer) == 0
 
 
-def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(buffer):
+
+def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(ssd):
+    buffer = Buffer(ssd)
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 1, 0))
     buffer.insert(Packet("W", 2, 0))
     buffer.insert(Packet("W", 3, 0))
-    buffer.insert(Packet("W", 4, 0))
 
-    assert buffer.memory[0] == Packet("W", 0, 0)
-    assert buffer.memory[1] == Packet("W", 1, 0)
-    assert buffer.memory[2] == Packet("W", 2, 0)
-    assert buffer.memory[3] == Packet("W", 3, 0)
-    assert buffer.memory[4] == Packet("W", 4, 0)
-
+    assert buffer._memory[0] == Packet("W", 0, 0)
+    assert buffer._memory[1] == Packet("W", 1, 0)
+    assert buffer._memory[2] == Packet("W", 2, 0)
+    assert buffer._memory[3] == Packet("W", 3, 0)
 
 """
 test cases for buffer optimization
 """
-
-
 @pytest.mark.skip
-def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_1(buffer):
+def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_1(ssd):
+    buffer = Buffer(ssd)
     # 동일 위치에 다른 값을 write
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 0, 1))
 
     buffer.optimize()
 
-    assert buffer.len() == 1
+    assert len(buffer) == 1
     assert buffer.fast_read_from(0) == 1
 
-
 @pytest.mark.skip
-def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_2(buffer):
+def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_2(ssd):
+    buffer = Buffer(ssd)
+
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 0, 1))
 
     buffer.optimize()
 
-    assert buffer.len() == 1
+    assert len(buffer) == 1
     assert buffer.fast_read_from(0) == 1
