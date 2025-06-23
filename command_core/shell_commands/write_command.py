@@ -3,7 +3,7 @@ from command_core.base_command import BaseCommand
 from command_core.exceptions import InvalidLBAError
 
 class WriteCommand(BaseCommand):
-    def __init__(self, ssd: AbstractSSDDriver, lba: int, value: str):
+    def __init__(self, ssd: AbstractSSDDriver, lba: int, value: int):
         self._ssd = ssd
         self._lba = lba
         self._value = value
