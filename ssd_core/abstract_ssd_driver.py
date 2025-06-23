@@ -12,3 +12,7 @@ class AbstractSSDDriver(ABC):
     @abstractmethod
     def erase(self, address: int, size: int) -> None:
         pass
+
+    @abstractmethod
+    def flush(self) -> None:
+        pass
