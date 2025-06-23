@@ -13,10 +13,12 @@ def ssd(mocker: MockerFixture):
 
 def test_Buffer객체는_파라미터_없이_생성되어야_한다(ssd):
     buffer = Buffer(ssd)
+    buffer.clear()
     assert isinstance(buffer, Buffer)
 
 def test_Buffer객체는_flush_명령으로_buffer를_비운다(ssd):
     buffer = Buffer(ssd)
+    buffer.clear()
     buffer.insert(Packet("W", 0, 0xABCD))
 
     assert len(buffer) == 1
@@ -28,20 +30,23 @@ def test_Buffer객체는_flush_명령으로_buffer를_비운다(ssd):
 
 def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목을_유지한다(ssd, mocker:MockerFixture):
     buffer = Buffer(ssd)
+    buffer.clear()
     spy_optimize = mocker.spy(buffer, "optimize")
-    buffer.insert(Packet("W", 0, 0))
-    buffer.insert(Packet("W", 1, 0))
-    buffer.insert(Packet("W", 2, 0))
-    buffer.insert(Packet("W", 3, 0))
-    buffer.insert(Packet("W", 4, 0))
+    buffer.insert(Packet("W", 0, 1))
+    buffer.insert(Packet("W", 1, 1))
+    buffer.insert(Packet("W", 2, 1))
+    buffer.insert(Packet("W", 3, 1))
+    buffer.insert(Packet("W", 4, 1))
+    buffer.insert(Packet("W", 5, 1))
 
-    assert spy_optimize.call_count == 5
-    assert len(buffer) == 0
+    assert spy_optimize.call_count == 6
+    assert len(buffer) == 1
 
 
 
 def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(ssd):
     buffer = Buffer(ssd)
+    buffer.clear()
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 1, 0))
     buffer.insert(Packet("W", 2, 0))
@@ -58,6 +63,7 @@ test cases for buffer optimization
 @pytest.mark.skip
 def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_1(ssd):
     buffer = Buffer(ssd)
+    buffer.clear()
     # 동일 위치에 다른 값을 write
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 0, 1))
@@ -70,6 +76,7 @@ def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적�
 @pytest.mark.skip
 def test_ignore_cmd_동일한_LBA에_대한_W_명령은_마지막_명령을_적용한다_2(ssd):
     buffer = Buffer(ssd)
+    buffer.clear()
 
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 0, 0))
