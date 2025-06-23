@@ -3,6 +3,8 @@ from itertools import product, combinations
 from ssd_core.abstract_buffer_optimizer import AbstractBufferOptimizer
 from validator import Packet
 
+MAX_LBA_ADDRESS = 100
+
 VALUE_EMPTY = 0
 VALUE_VALID = 1
 
@@ -67,7 +69,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                                 erase_cmd_new = None
                                 counting = False
                                 counting_cnt = 0
-                            elif i == 99:
+                            elif i == MAX_LBA_ADDRESS - 1:
                                 current_erase_cmd_cnt += 1
                                 erase_cmd_new.SIZE = counting_cnt + 1
                                 current_erase_cmd_lst.append(erase_cmd_new)
@@ -126,7 +128,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         return new_lst
 
     def project_erase(self, buffer_lst: list[Packet]) -> list[int]:
-        mask = [0] * 100  # LBA 0~99
+        mask = [0] * MAX_LBA_ADDRESS  # LBA 0~99
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
                 for i in range(cmd.SIZE):
@@ -134,8 +136,8 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         return mask
 
     def project_write(self, buffer_lst) -> tuple[list[int], list[int]]:
-        mask = [0] * 100  # LBA 0~99
-        value = [0] * 100
+        mask = [0] * MAX_LBA_ADDRESS  # LBA 0~99
+        value = [0] * MAX_LBA_ADDRESS
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
                 for i in range(cmd.SIZE):
