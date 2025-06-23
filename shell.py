@@ -54,9 +54,7 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == 'shell_scripts.txt':
         # 인자가 있을 경우: 자동 실행 모드
         run_shell_automatically()
-    else:
-        # 인자가 없을 경우: 대화형 모드
-        start_shell()
+    start_shell()
 
 
 
