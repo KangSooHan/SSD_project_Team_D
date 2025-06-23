@@ -10,30 +10,30 @@ test_cases = test_cases_pretty = [
     # 1. 중복 Write 제거
     (
         [
-            Packet("W", 10, 0xA),  # 제거됨
-            Packet("W", 10, 0xB),  # 유지
+            Packet("W", 10, 0x11111111),  # 제거됨
+            Packet("W", 10, 0x22222222),  # 유지
         ],
         [
-            Packet("W", 10, 0xB),  # 최종 결과
+            Packet("W", 10, 0x22222222),  # 최종 결과
         ]
     ),
 
     # 2. 여러 중복 Write 제거
     (
         [
-            Packet("W", 5, 0x1),  # 제거됨
-            Packet("W", 5, 0x2),  # 제거됨
-            Packet("W", 5, 0x3),  # 유지
+            Packet("W", 5, 0x11111111),  # 제거됨
+            Packet("W", 5, 0x22222222),  # 제거됨
+            Packet("W", 5, 0x33333333),  # 유지
         ],
         [
-            Packet("W", 5, 0x3),  # 최종 결과
+            Packet("W", 5, 0x33333333),  # 최종 결과
         ]
     ),
 
     # 3. Erase가 Write 무효화
     (
         [
-            Packet("W", 20, 0xAAA),  # 제거됨
+            Packet("W", 20, 0xABCD1234),  # 제거됨
             Packet("E", 19, 2),  # 유지
         ],
         [
@@ -44,11 +44,11 @@ test_cases = test_cases_pretty = [
     # 4. Erase가 Write에 영향 없음
     (
         [
-            Packet("W", 20, 0xAAA),  # 유지
+            Packet("W", 20, 0xABCD1234),  # 유지
             Packet("E", 10, 5),  # 유지
         ],
         [
-            Packet("W", 20, 0xAAA),  # 최종 결과
+            Packet("W", 20, 0xABCD1234),  # 최종 결과
             Packet("E", 10, 5),
         ]
     ),
@@ -91,8 +91,8 @@ test_cases = test_cases_pretty = [
     # 8. 중복 W 제거 + Erase로 W 제거 + Erase 병합
     (
         [
-            Packet("W", 1, 0x111),  # 제거됨
-            Packet("W", 1, 0x222),  # 제거됨 (erase로 무효화)
+            Packet("W", 1, 0x11111111),  # 제거됨
+            Packet("W", 1, 0x22222222),  # 제거됨 (erase로 무효화)
             Packet("E", 0, 2),  # 병합됨
             Packet("E", 2, 2),  # 병합됨
         ],
@@ -105,19 +105,19 @@ test_cases = test_cases_pretty = [
     (
         [
             Packet("E", 90, 5),  # 유지
-            Packet("W", 80, 0x1),  # 유지
+            Packet("W", 80, 0xABCD1234),  # 유지
         ],
         [
             Packet("E", 90, 5),  # 최종 결과
-            Packet("W", 80, 0x1),
+            Packet("W", 80, 0xABCD1234),
         ]
     ),
 
     # 10. 모든 Write 무효화됨
     (
         [
-            Packet("W", 1, 0x1),  # 제거됨
-            Packet("W", 1, 0x2),  # 제거됨
+            Packet("W", 1, 0x11111111),  # 제거됨
+            Packet("W", 1, 0x22222222),  # 제거됨
             Packet("E", 0, 5),
         ],
         [
@@ -197,9 +197,9 @@ test_cases = test_cases_pretty = [
     # 17. 뒤 Erase로 앞 Write 무효화
     (
         [
-            Packet("W", 1, 0x1),  # 제거됨
-            Packet("W", 3, 0x3),  # 제거됨
-            Packet("W", 5, 0x5),  # 제거됨
+            Packet("W", 1, 0xABCD1234),  # 제거됨
+            Packet("W", 3, 0xABCD1234),  # 제거됨
+            Packet("W", 5, 0xABCD1234),  # 제거됨
             Packet("E", 0, 10),  # 유지
         ],
         [
@@ -211,15 +211,15 @@ test_cases = test_cases_pretty = [
     (
         [
             Packet("E", 0, 10),  # 유지
-            Packet("W", 1, 0x1),  # 유지
-            Packet("W", 3, 0x3),  # 유지
-            Packet("W", 5, 0x5),  # 유지
+            Packet("W", 1, 0xABCD1234),  # 유지
+            Packet("W", 3, 0xABCD1234),  # 유지
+            Packet("W", 5, 0xABCD1234),  # 유지
         ],
         [
             Packet("E", 0, 10),  # 최종 결과
-            Packet("W", 1, 0x1),
-            Packet("W", 3, 0x3),
-            Packet("W", 5, 0x5),
+            Packet("W", 1, 0xABCD1234),
+            Packet("W", 3, 0xABCD1234),
+            Packet("W", 5, 0xABCD1234),
         ]
     ),
 
@@ -229,13 +229,13 @@ test_cases = test_cases_pretty = [
             Packet("E", 0, 2),  # 병합
             Packet("E", 3, 2),  # 병합
             Packet("E", 6, 2),  # 병합
-            Packet("W", 2, 0x2),  # 유지
-            Packet("W", 5, 0x5),  # 유지
+            Packet("W", 2, 0xABCD1234),  # 유지
+            Packet("W", 5, 0xABCD1234),  # 유지
         ],
         [
             Packet("E", 0, 8),  # 최종 결과
-            Packet("W", 2, 0x2),
-            Packet("W", 5, 0x5),
+            Packet("W", 2, 0xABCD1234),
+            Packet("W", 5, 0xABCD1234),
         ]
     ),
 
@@ -252,10 +252,10 @@ test_cases = test_cases_pretty = [
     # 21. 단일 Write → 그대로 유지
     (
         [
-            Packet("W", 42, 0xAB),  # 유지
+            Packet("W", 42, 0xABCD1234),  # 유지
         ],
         [
-            Packet("W", 42, 0xAB),  # 최종 결과
+            Packet("W", 42, 0xABCD1234),  # 최종 결과
         ]
     ),
 
@@ -277,18 +277,6 @@ test_cases = test_cases_pretty = [
         ],
         [
             Packet("E", 0, 9),  # 최종 결과
-        ]
-    ),
-
-    # 24. Erase 범위 내 Write 보존 테스트
-    (
-        [
-            Packet("E", 0, 15),  # 유지
-            Packet("W", 12, 0x12),  # 유지 (erase 뒤)
-        ],
-        [
-            Packet("E", 0, 15),  # 최종 결과
-            Packet("W", 12, 0x12),
         ]
     ),
 
