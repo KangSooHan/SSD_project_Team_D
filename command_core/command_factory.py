@@ -12,6 +12,7 @@ from command_core.shell_commands.testscenario import TestScenario1
 from command_core.shell_commands.testscenario import TestScenario2
 from command_core.shell_commands.testscenario import TestScenario3
 from command_core.shell_commands.testscenario import TestScenario4
+from command_core.shell_commands.runner import Runner
 from ssd_core.abstract_ssd_driver import AbstractSSDDriver
 
 
@@ -29,6 +30,7 @@ class CommandFactory:
         "2_": lambda ssd, address=None, value=None: TestScenario2(ssd),
         "3_": lambda ssd, address=None, value=None: TestScenario3(ssd),
         "4_": lambda ssd, address=None, value=None: TestScenario4(ssd),
+        "Runner": lambda ssd, address=None, value=None: Runner(ssd)
     }
 
     @classmethod
