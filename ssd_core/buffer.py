@@ -109,7 +109,8 @@ class Buffer:
 
         for i in range(self.MAX_MEMORY_BUFFER):
             if i < len(self._memory):
-                value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else to_4byte_hex_str(self._memory[i].VALUE)
+                value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else to_4byte_hex_str(
+                    self._memory[i].VALUE)
                 filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].ADDR}_{value}.txt"
             else:
                 filename = f"{i + 1}_empty.txt"

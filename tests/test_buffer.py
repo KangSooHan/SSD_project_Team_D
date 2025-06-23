@@ -4,6 +4,7 @@ from ssd_core.normal_ssd import NormalSSD
 from ssd_core.buffer import Buffer
 from pytest_mock import MockerFixture
 
+
 @pytest.fixture
 def ssd(mocker: MockerFixture):
     mock = mocker.Mock(spec=NormalSSD)
@@ -11,10 +12,12 @@ def ssd(mocker: MockerFixture):
     mock.erase.return_value = None
     return mock
 
+
 def test_Buffer객체는_파라미터_없이_생성되어야_한다(ssd):
     buffer = Buffer(ssd)
     buffer.clear()
     assert isinstance(buffer, Buffer)
+
 
 def test_Buffer객체는_flush_명령으로_buffer를_비운다(ssd):
     buffer = Buffer(ssd)
@@ -28,7 +31,8 @@ def test_Buffer객체는_flush_명령으로_buffer를_비운다(ssd):
     assert len(buffer) == 0
     ssd.write.assert_called_once_with(0, 0xABCD)
 
-def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목을_유지한다(ssd, mocker:MockerFixture):
+
+def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목을_유지한다(ssd, mocker: MockerFixture):
     buffer = Buffer(ssd)
     buffer.clear()
     spy_optimize = mocker.spy(buffer, "optimize")
@@ -41,7 +45,6 @@ def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목�
 
     assert spy_optimize.call_count == 6
     assert len(buffer) == 1
-
 
 
 def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(ssd):
