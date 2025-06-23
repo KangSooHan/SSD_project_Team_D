@@ -54,8 +54,8 @@ class Buffer:
         self._ssd._write_output(self._ssd.INVALID_OUTPUT)
 
     def optimize(self):
-        optimizer = BufferOptimizerProvider.get_instance(self._memory)
-        self._memory = optimizer.calculate(self._memory)
+        optimize_strategy = BufferOptimizerProvider.get_instance(self._memory)
+        self._memory = optimize_strategy.calculate(self._memory)
 
     def fast_read_from(self, ADDR: int):
         return 1
