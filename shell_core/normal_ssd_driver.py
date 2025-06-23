@@ -35,5 +35,5 @@ class NormalSSDDriver(AbstractSSDDriver):
         subprocess.run(["python", self.ssd_script, "E", str(addr), str(size)], check=True)
 
     def flush(self) -> None:
-        # Run the erase command
+        # Run the flush command
         subprocess.run(["python", self.ssd_script, "F"], check=True)
