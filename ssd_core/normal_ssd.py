@@ -1,4 +1,3 @@
-import os
 from ssd_core.abstract_ssd import AbstractSSD
 import os
 
