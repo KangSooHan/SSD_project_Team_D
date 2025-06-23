@@ -7,6 +7,7 @@ class Buffer:
         self._ssd = ssd
         self._memory:list[Packet] = []
         self.MAX_MEMORY_BUFFER = 5
+        self.EMPTY_VALUE: str = "0x00000000"
 
         self._buffer_path = "buffer"
         os.makedirs(self._buffer_path, exist_ok=True)
@@ -38,7 +39,17 @@ class Buffer:
 
         if packet.COMMAND == "R":
             if self.is_value_in_buffer(packet.ADDR):
-                pass
+                for mem in reversed(self._memory):
+                    if mem.ADDR != packet.ADDR:
+                        continue
+
+                    if mem.COMMAND == "W":
+                        self._ssd._write_output(f'0x{mem.VALUE:08X}')
+                        return True
+
+                    if mem.COMMAND == "E":
+                        self._ssd._write_output(self.EMPTY_VALUE)
+                        return True
             else:
                 self._ssd.read(packet.ADDR)
             return True
@@ -48,6 +59,10 @@ class Buffer:
             return True
 
         return False
+
+    def clear(self):
+        self._memory = []
+        self.save_memory_to_files()
 
     def write_invalid_output(self):
         self._ssd._write_output(self._ssd.INVALID_OUTPUT)
@@ -59,6 +74,9 @@ class Buffer:
         return 1
 
     def is_value_in_buffer(self, ADDR:int):
+        for mem in self._memory:
+            if mem.ADDR == ADDR:
+                return True
         return False
 
     def __len__(self):
