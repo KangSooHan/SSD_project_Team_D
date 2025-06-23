@@ -1,3 +1,4 @@
+from ssd_core.buffer_optimizer_provider import BufferOptimizerProvider
 from validator import Packet
 from ssd_core.normal_ssd import NormalSSD
 import os
@@ -53,7 +54,8 @@ class Buffer:
         self._ssd._write_output(self._ssd.INVALID_OUTPUT)
 
     def optimize(self):
-        pass
+        optimizer = BufferOptimizerProvider.get_instance(self._memory)
+        self._memory = optimizer.calculate(self._memory)
 
     def fast_read_from(self, ADDR: int):
         return 1
