@@ -356,8 +356,8 @@ def test_명령어가_1개이하인경우_최적화하지_않는다(abstract_buf
 
     assert result == tc
 
-
-@pytest.mark.parametrize("tc, expected_cmd", [
+REPEAT_FOR_STRESS = 1
+@pytest.mark.parametrize("tc, expected_cmd", REPEAT_FOR_STRESS * [
     #1. 중복 erase 제거
     [[Packet("E", 0, 5), Packet("E", 0, 5)],
      [Packet("E", 0, 5)]],
@@ -377,16 +377,16 @@ def test_명령어가_1개이하인경우_최적화하지_않는다(abstract_buf
      [Packet("E", 0, 10), Packet("E", 10, 10)]],
 
     # 4. erase에 의해 overwrite 되는 write 명령 제거
-    [[Packet("W", 1, VALUE=0x1), Packet("W", 3, VALUE=0x3), Packet("W", 5, VALUE=0x5), Packet("E", 0, 10)],
+    [[Packet("W", 1, 0x1), Packet("W", 3, 0x3), Packet("W", 5, 0x5), Packet("E", 0, 10)],
      [Packet("E", 0, 10)]],
 
     # 5. erase가 write 보다 먼저 수행되는 경우 write 명령 유지
-    [[Packet("E", 0, 10), Packet("W", 1, VALUE=0x1), Packet("W", 3, VALUE=0x3), Packet("W", 5, VALUE=0x5)],
-     [Packet("E", 0, 10), Packet("W", 1, VALUE=0x1), Packet("W", 3, VALUE=0x3), Packet("W", 5, VALUE=0x5)]],
+    [[Packet("E", 0, 10), Packet("W", 1, 0x1), Packet("W", 3, 0x3), Packet("W", 5, 0x5)],
+     [Packet("E", 0, 10), Packet("W", 1, 0x1), Packet("W", 3, 0x3), Packet("W", 5, 0x5)]],
 
     # 6. write로 덮어지는 영역이 2개 이상의 erase 영역을 접합하는 경우
-    [[Packet("E", 0, 2), Packet("E", 3, 2), Packet("E", 6, 2), Packet("W", 2, VALUE=0x2), Packet("W", 5, VALUE=0x5)],
-     [Packet("E", 0, 8), Packet("W", 2, VALUE=0x2), Packet("W", 5, VALUE=0x5)]],
+    [[Packet("E", 0, 2), Packet("E", 3, 2), Packet("E", 6, 2), Packet("W", 2, 0x2), Packet("W", 5, 0x5)],
+     [Packet("E", 0, 8), Packet("W", 2, 0x2), Packet("W", 5, 0x5)]],
 
     # tc from SimpleBufferOptimizer
     # 1. 중복 Write 제거

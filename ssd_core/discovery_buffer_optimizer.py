@@ -8,10 +8,12 @@ MAX_LBA_ADDRESS = 100
 VALUE_EMPTY = 0
 VALUE_VALID = 1
 
+DEBUG_FEATURE = False   # True로 설정하면, stdout으로 각 케이스에 대한 중간 계산 결과가 출력됨
 
 class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
     def calculate(self, buffer_lst: list[Packet]) -> list[Packet]:
-        print()
+        self.print_result("")
+
         # trivial case
         if len(buffer_lst) == 0 or len(buffer_lst) == 1:
             return buffer_lst
@@ -46,6 +48,10 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         try_cnt = 1
         for r in range(0, len(overwritten_idx) + 1):
             for selected_element in combinations(overwritten_idx, r):
+                # erase 명령은 명령이 있는 경우 1이 최소값이다. 최소값을 찾으면 추가 탐색하지 않는다.
+                if len(best_erase_cmd_lst) <= 1:
+                    break
+
                 next_erase_mask = merged_mask.copy()
                 for idx in selected_element:
                     next_erase_mask[idx] = VALUE_EMPTY
@@ -55,7 +61,14 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                 counting_cnt = 0
                 current_erase_cmd_lst = []
                 erase_cmd_new: Packet = None
+
+                # 0~MAX_LBA_ADDRESS 까지 영역을 순회하면서 merge 가능한 erase lba를 찾는다.
                 for i, value in enumerate(next_erase_mask):
+
+                    # 탐색 중, 이미 찾은 최적값과 동일한 경우 탐색 중단
+                    if current_erase_cmd_cnt >= len(best_erase_cmd_lst):
+                        break
+
                     if value == VALUE_VALID:
                         if not counting:
                             counting = True
@@ -96,26 +109,19 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                                   f"result={current_erase_cmd_cnt},best={len(best_erase_cmd_lst)}",
                                   next_erase_mask)
 
-                # 최적값을 찾은 경우 탐색 중단
-                #if len(best_erase_cmd_lst) <= 1:
-                #    break
-
         self.print_format("ERASE_MASK", erase_mask)
         self.print_format("FINAL_ERASE_BEST", best_erase_mask)
         self.print_format("WRITE_MASK", write_mask)
         self.print_format("MERGED_MASK", merged_mask)
 
-        # validate
-        # 2. 기존과 길이가 같은 경우, 기존 명령셋을 그대로 리턴한다.
-        # 3. e 명령어 lba 범위, 길이 체크, w 명령어 lba 범위 체크, 값 0 아닌지 체크
 
-        print(f"INPUT CMD(ORG),{len(buffer_lst)}={buffer_lst}")
+        self.print_result(f"INPUT CMD(ORG),{len(buffer_lst)}={buffer_lst}")
         final_cmd_lst = best_erase_cmd_lst + best_write_cmd_lst     # erase + write 순서가 유지 되어야 함.
         if len(final_cmd_lst) < len(buffer_lst):
-            print(f"FINAL CMD(OPT),{len(final_cmd_lst)}={final_cmd_lst}")
+            self.print_result(f"FINAL CMD(OPT),{len(final_cmd_lst)}={final_cmd_lst}")
             return final_cmd_lst
         else:
-            print(f"FINAL CMD(ORG),{len(buffer_lst)}={buffer_lst}")
+            self.print_result(f"FINAL CMD(ORG),{len(buffer_lst)}={buffer_lst}")
             return buffer_lst
 
     def replace_zero_write(self, buffer_lst: list[Packet]) -> list[Packet]:
@@ -156,4 +162,9 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         return mask
 
     def print_format(self, prefix, lst, lst_seperator=''):
-        print(f"{prefix:>50} [{lst_seperator.join(map(str, lst))}]")
+        if DEBUG_FEATURE:
+            print(f"{prefix:>50} [{lst_seperator.join(map(str, lst))}]")
+
+    def print_result(self, data: str):
+        if DEBUG_FEATURE:
+            print(data)
