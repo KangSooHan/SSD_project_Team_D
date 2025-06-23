@@ -37,7 +37,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
 
         best_erase_mask = erase_mask
         best_erase_cmd_lst = [cmd for cmd in replaced_buffer_lst if cmd.COMMAND == "E"]
-        best_write_cmd_lst = [Packet(COMMAND="W", ADDR=i, VALUE=pkt[1])
+        best_write_cmd_lst = [Packet("W", i, pkt[1])
                               for i, pkt in enumerate(zip(write_mask, write_value))
                               if pkt[0] == VALUE_VALID]
 
@@ -54,24 +54,24 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                 counting = False
                 counting_cnt = 0
                 current_erase_cmd_lst = []
-                erase_cmd_new = None
+                erase_cmd_new: Packet = None
                 for i, value in enumerate(next_erase_mask):
                     if value == VALUE_VALID:
                         if not counting:
                             counting = True
                             counting_cnt = 1
-                            erase_cmd_new = Packet(COMMAND="E", ADDR=i)
+                            erase_cmd_new = Packet("E", i)
                         else:
                             if counting_cnt == 9:
                                 current_erase_cmd_cnt += 1
-                                erase_cmd_new.SIZE = 10
+                                erase_cmd_new.VALUE = 10
                                 current_erase_cmd_lst.append(erase_cmd_new)
                                 erase_cmd_new = None
                                 counting = False
                                 counting_cnt = 0
                             elif i == MAX_LBA_ADDRESS - 1:
                                 current_erase_cmd_cnt += 1
-                                erase_cmd_new.SIZE = counting_cnt + 1
+                                erase_cmd_new.VALUE = counting_cnt + 1
                                 current_erase_cmd_lst.append(erase_cmd_new)
                                 erase_cmd_new = None
                                 counting = False
@@ -81,7 +81,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                     elif value == VALUE_EMPTY:
                         if counting:
                             current_erase_cmd_cnt += 1
-                            erase_cmd_new.SIZE = counting_cnt
+                            erase_cmd_new.VALUE = counting_cnt
                             current_erase_cmd_lst.append(erase_cmd_new)
                             erase_cmd_new = None
                             counting = False
@@ -122,7 +122,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         new_lst = []
         for item in buffer_lst:
             if item.COMMAND == "W" and item.VALUE == 0:
-                new_lst.append(Packet(COMMAND="E", ADDR=item.ADDR, SIZE=1))
+                new_lst.append(Packet("E", item.ADDR, 1))
             else:
                 new_lst.append(item)
         return new_lst
@@ -131,16 +131,16 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         mask = [0] * MAX_LBA_ADDRESS  # LBA 0~99
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
-                for i in range(cmd.SIZE):
+                for i in range(cmd.VALUE):
                     mask[cmd.ADDR + i] = VALUE_VALID
         return mask
 
-    def project_write(self, buffer_lst) -> tuple[list[int], list[int]]:
+    def project_write(self, buffer_lst: list[Packet]) -> tuple[list[int], list[int]]:
         mask = [0] * MAX_LBA_ADDRESS  # LBA 0~99
         value = [0] * MAX_LBA_ADDRESS
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
-                for i in range(cmd.SIZE):
+                for i in range(cmd.VALUE):
                     mask[cmd.ADDR + i] = VALUE_EMPTY  # overwrite
             elif cmd.COMMAND == "W":
                 mask[cmd.ADDR] = VALUE_VALID  # written
