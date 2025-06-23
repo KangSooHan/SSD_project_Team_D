@@ -8,7 +8,7 @@ class Packet:
     COMMAND: str
     ADDR: int = None
     VALUE: int = None
-    SIZE: int = None
+
 
 
 class Validator(ABC):
@@ -19,7 +19,7 @@ class Validator(ABC):
             return False
 
     def _is_valid_size_value(self, size: int) -> bool:
-        try :
+        try:
             return isinstance(int(size), int)
         except ValueError:
             return False
@@ -143,7 +143,7 @@ class ShellValidator(Validator):
 
             addr, size = split_sentence[1], split_sentence[2]
 
-            if self._is_valid_LBA(addr) and self._is_valid_size_value(size) :
+            if self._is_valid_LBA(addr) and self._is_valid_size_value(size):
                 return Packet("erase", int(addr), int(size))
 
         if command == "erase_range":
@@ -152,7 +152,7 @@ class ShellValidator(Validator):
 
             start, end = split_sentence[1], split_sentence[2]
 
-            if self._is_valid_LBA(start) and self._is_valid_LBA(end) :
+            if self._is_valid_LBA(start) and self._is_valid_LBA(end):
                 return Packet("erase_range", int(start), int(end))
 
         if command == "1_" or command == "1_FullWriteAndReadCompare".lower():
@@ -174,5 +174,10 @@ class ShellValidator(Validator):
             if len(split_sentence) != 1:
                 return Packet("ERR")
             return Packet("4_")
+
+        if command == "shell_scripts.txt":
+            if len(split_sentence) != 1:
+                return Packet("ERR")
+            return Packet("Runner")
 
         return Packet("ERR")
