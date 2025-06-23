@@ -45,11 +45,11 @@ SSD_project_Team_D/
 │
 ├── shell_core/                    # 셸-SSD 연동용 드라이버
 │   ├── logger.py                  # 로그 출력 유틸
-│   └── normal_ssd_driver.py       # SSD 드라이버 구현체
+│   ├── normal_ssd_driver.py       # SSD 드라이버 구현체
+│   └── abstract_ssd_driver.py     # SSD 드라이버 인터페이스
 │
 ├── ssd_core/                      # SSD 동작과 관련된 핵심 모듈
 │   ├── abstract_ssd.py            # SSD 인터페이스 정의
-│   ├── abstract_ssd_driver.py     # SSD 드라이버 인터페이스
 │   ├── abstract_buffer_optimizer.py  # 버퍼 최적화 인터페이스
 │   ├── buffer.py                 # 내부 버퍼 구조
 │   ├── discovery_buffer_optimizer.py
