@@ -1,8 +1,8 @@
-from ssd_core.abstract_ssd import AbstractSSD
+from shell_core.abstract_ssd_driver import AbstractSSDDriver
 from command_core.base_command import BaseCommand
 
 class FullReadCommand(BaseCommand):
-    def __init__(self, ssd: AbstractSSD):
+    def __init__(self, ssd: AbstractSSDDriver):
         self._ssd = ssd
         self._loop_count = 100
 

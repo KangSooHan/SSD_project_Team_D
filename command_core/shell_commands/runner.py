@@ -3,7 +3,7 @@ import inspect
 import sys
 from command_core.base_command import BaseCommand
 from command_core.shell_commands import testscenario
-from ssd_core.abstract_ssd import AbstractSSD
+from shell_core.abstract_ssd_driver import AbstractSSDDriver
 from command_core.shell_commands.testscenario import TestScenario
 
 scenario_map = {
@@ -15,7 +15,7 @@ scenario_map = {
 
 
 class Runner(BaseCommand):
-    def __init__(self, ssd: AbstractSSD):
+    def __init__(self, ssd: AbstractSSDDriver):
         self.ssd = ssd
 
     def execute(self):
