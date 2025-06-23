@@ -452,6 +452,11 @@ def test_명령어가_1개이하인경우_최적화하지_않는다(abstract_buf
     # 16. 병합 후 slicing (20칸 → 10+10)
     ([Packet("E", 0, SIZE=7), Packet("E", 7, SIZE=7), Packet("E", 14, SIZE=6),],
      [Packet("E", 0, SIZE=10), Packet("E", 10, SIZE=10),]),
+
+    # 106. write bridge로 연결 가능한 write 영역 2개와 erase 최대 길이 초과로 연결 불가능한 erase 1개 조합
+    # return case가 여러 가지 일 수 있음
+    ([Packet("E", 0, SIZE=4), Packet("W", 4, 0x4), Packet("W", 10, 0x10), Packet("E", 5, SIZE=5), Packet("E", 11, SIZE=3)],
+     [Packet("E", 0, SIZE=10), Packet("E", 10, SIZE=4), Packet("W", 4, 0x4), Packet("W", 10, 0x10)]),
 ])
 def test_buffer_최적화_반환_커맨드_동일_케이스_검증(abstract_buffer_optimizer, tc, expected_cmd):
     result = abstract_buffer_optimizer.calculate(tc)
