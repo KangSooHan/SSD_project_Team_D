@@ -48,8 +48,8 @@ test_cases = test_cases_pretty = [
             Packet("E", 10, 5),  # 유지
         ],
         [
-            Packet("W", 20, 0xABCD1234),  # 최종 결과
             Packet("E", 10, 5),
+            Packet("W", 20, 0xABCD1234),  # 최종 결과
         ]
     ),
 
@@ -279,6 +279,18 @@ test_cases = test_cases_pretty = [
             Packet("E", 0, 9),  # 최종 결과
         ]
     ),
+
+    # 24. write bridge로 연결 가능한 write 영역 2개와 erase 최대 길이 초과로 연결 불가능한 erase 1개 조합
+    # return case가 여러 가지 일 수 있음
+    ([Packet("E", 0, 4),
+      Packet("W", 4, 0x4),
+      Packet("W", 10, 0x10),
+      Packet("E", 5, 5),
+      Packet("E", 11, 3)],
+     [Packet("E", 0, 10),
+      Packet("E", 10, 4),
+      Packet("W", 4, 0x4),
+      Packet("W", 10, 0x10)]),
 
 ]
 
