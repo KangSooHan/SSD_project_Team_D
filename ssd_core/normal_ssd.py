@@ -48,11 +48,10 @@ class NormalSSD(AbstractSSD):
             f.write(value)
 
     def write(self, address: int, data: int) -> None:
+        _overwrite_flag = False
         if address not in self._valid_lba_range:
             self._write_output(self.INVALID_OUTPUT)
             return
-
-        _overwrite_flag = False
 
         with open(self._nand_file, 'r+') as file:
             lines = file.readlines()
@@ -66,9 +65,10 @@ class NormalSSD(AbstractSSD):
                 written_lba, written_data = line.strip().split()
                 new_line = line
                 if int(written_lba) == address and not _overwrite_flag:
-                    _overwrite_flag = True
+                    _overwrite_flag  = True
                     new_data = f'0x{data:08X}'  # 16진수로 포맷
                     new_line = f'{written_lba} {new_data}\n'
+
                 file.write(new_line)
             if not _overwrite_flag:
                 file.write(f'{address} 0x{data:08X}\n')
