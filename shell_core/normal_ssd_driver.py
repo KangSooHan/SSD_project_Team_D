@@ -20,8 +20,6 @@ class NormalSSDDriver(AbstractSSDDriver):
         # Run the read command
         subprocess.run(["python", self.ssd_script, "R", str(addr)], check=True)
 
-        time.sleep(0.01)
-
         with open(self._output_file, "r") as f:
             result = f.read().strip()
         return result
