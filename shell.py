@@ -3,6 +3,7 @@ from shell_core.logger import logger
 from command_core.command_factory import CommandFactory
 from adapter.ssd_shell_adapter import SSDShellAdapter
 from validator import ShellValidator
+from command_core.exceptions import InvalidLBAError
 
 
 class Shell:
@@ -38,6 +39,9 @@ class Shell:
             except SystemExit:
                 logger.print("Test Shell exited")
                 break
+            except InvalidLBAError as e:
+                logger.print(f"LBA 범위 오류: {e}")
+                print(f"LBA 범위 오류: {e}")
             except Exception as e:
                 logger.print(f"INVALID COMMAND: {e}")
                 print("INVALID COMMAND")
@@ -46,6 +50,7 @@ class Shell:
         logger.print("Running shell in automatic mode without prompt")
         self.run(filename)
 
+    run("shell_scripts.txt", ssd, validator)
 
 def main():
     shell = Shell()

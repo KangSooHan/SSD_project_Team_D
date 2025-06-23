@@ -1,4 +1,6 @@
 from ssd_core.optimizer.buffer_optimizer_provider import BufferOptimizerProvider
+from ssd_core.buffer_optimizer_provider import BufferOptimizerProvider
+from utils import to_4byte_hex_str
 from validator import Packet
 from ssd_core.hardware.normal_ssd import NormalSSD
 import os
@@ -6,7 +8,7 @@ import os
 class CommandBuffer:
     def __init__(self, ssd:NormalSSD):
         self._ssd = ssd
-        self._memory:list[Packet] = []
+        self._memory: list[Packet] = []
         self.MAX_MEMORY_BUFFER = 5
         self.EMPTY_VALUE: str = "0x00000000"
 
@@ -27,7 +29,7 @@ class CommandBuffer:
         self._memory = []
         self.save_memory_to_files()
 
-    def insert(self, packet:Packet):
+    def insert(self, packet: Packet):
         if packet.COMMAND in ["W", "E"]:
             if self.is_full():
                 self.flush()
@@ -44,7 +46,7 @@ class CommandBuffer:
                     if mem.ADDR != packet.ADDR:
                         continue
 
-                    self._ssd._write_output(f'0x{mem.VALUE:08X}')
+                    self._ssd._write_output(to_4byte_hex_str(mem.VALUE))
                     return True
 
                 if mem.COMMAND == "E":
@@ -79,7 +81,7 @@ class CommandBuffer:
     def load_memory_from_files(self):
         self._memory = []
 
-        for i in range(1, self.MAX_MEMORY_BUFFER+1):
+        for i in range(1, self.MAX_MEMORY_BUFFER + 1):
             found = False
             for filename in os.listdir(self._buffer_path):
                 if filename.startswith(f"{i}_") and filename.endswith(".txt"):
@@ -87,7 +89,7 @@ class CommandBuffer:
                     if len(parts) == 4:
                         _, cmd_str, addr_str, value_str = parts
                         command = cmd_str[0].upper()
-                        addr = int(addr_str, 0)        # supports hex (0x), octal (0o), etc.
+                        addr = int(addr_str, 0)  # supports hex (0x), octal (0o), etc.
 
                         value = int(value_str, 0) if command == "write" else int(value_str, 16)
                         self._memory.append(Packet(COMMAND=command, ADDR=addr, VALUE=value))
@@ -109,7 +111,8 @@ class CommandBuffer:
 
         for i in range(self.MAX_MEMORY_BUFFER):
             if i < len(self._memory):
-                value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else f"0x{self._memory[i].VALUE:08X}"
+                value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else to_4byte_hex_str(
+                    self._memory[i].VALUE)
                 filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].ADDR}_{value}.txt"
             else:
                 filename = f"{i + 1}_empty.txt"
