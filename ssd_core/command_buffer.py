@@ -1,9 +1,9 @@
-from ssd_core.buffer_optimizer_provider import BufferOptimizerProvider
+from ssd_core.optimizer.buffer_optimizer_provider import BufferOptimizerProvider
 from validator import Packet
-from ssd_core.normal_ssd import NormalSSD
+from ssd_core.hardware.normal_ssd import NormalSSD
 import os
 
-class Buffer:
+class CommandBuffer:
     def __init__(self, ssd:NormalSSD):
         self._ssd = ssd
         self._memory:list[Packet] = []

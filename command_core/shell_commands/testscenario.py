@@ -1,4 +1,4 @@
-from shell_core.abstract_ssd_driver import AbstractSSDDriver
+from adapter.ssd_adapter_interface import SSDShellInterface
 from command_core.base_command import BaseCommand
 import random
 
@@ -7,7 +7,7 @@ class TestScenario(BaseCommand):
     RESULT_FAIL = "FAIL"
     RESULT_PASS = "PASS"
 
-    def __init__(self, ssd: AbstractSSDDriver):
+    def __init__(self, ssd: SSDShellInterface):
         self._ssd = ssd
         self._test_constant = 1
         self._test_constant_2 = 2

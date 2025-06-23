@@ -2,7 +2,7 @@ import sys, os, pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from ssd_core.simple_buffer_optimizer import SimpleBufferOptimizer
+from ssd_core.optimizer.simple_buffer_optimizer import SimpleBufferOptimizer
 from validator import Packet
 
 test_cases = test_cases_pretty = [

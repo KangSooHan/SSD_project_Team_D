@@ -1,8 +1,8 @@
-from shell_core.abstract_ssd_driver import AbstractSSDDriver
+from adapter.ssd_adapter_interface import SSDShellInterface
 from command_core.base_command import BaseCommand
 
 class ReadCommand(BaseCommand):
-    def __init__(self, ssd: AbstractSSDDriver, lba: int):
+    def __init__(self, ssd: SSDShellInterface, lba: int):
         self._ssd = ssd
         self._lba = lba
 

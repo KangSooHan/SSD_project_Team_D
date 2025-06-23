@@ -1,5 +1,5 @@
 import pytest
-from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.hardware.abstract_ssd import AbstractSSD
 from command_core.shell_commands.write_command import WriteCommand
 
 

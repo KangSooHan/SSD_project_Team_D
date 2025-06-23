@@ -1,7 +1,7 @@
 import pytest
 from validator import Packet
-from ssd_core.normal_ssd import NormalSSD
-from ssd_core.buffer import Buffer
+from ssd_core.hardware.normal_ssd import NormalSSD
+from ssd_core.command_buffer import CommandBuffer
 from pytest_mock import MockerFixture
 
 @pytest.fixture
@@ -12,12 +12,12 @@ def ssd(mocker: MockerFixture):
     return mock
 
 def test_Buffer객체는_파라미터_없이_생성되어야_한다(ssd):
-    buffer = Buffer(ssd)
+    buffer = CommandBuffer(ssd)
     buffer.clear()
-    assert isinstance(buffer, Buffer)
+    assert isinstance(buffer, CommandBuffer)
 
 def test_Buffer객체는_flush_명령으로_buffer를_비운다(ssd):
-    buffer = Buffer(ssd)
+    buffer = CommandBuffer(ssd)
     buffer.clear()
     buffer.insert(Packet("W", 0, 0xABCD))
 
@@ -29,7 +29,7 @@ def test_Buffer객체는_flush_명령으로_buffer를_비운다(ssd):
     ssd.write.assert_called_once_with(0, 0xABCD)
 
 def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목을_유지한다(ssd, mocker:MockerFixture):
-    buffer = Buffer(ssd)
+    buffer = CommandBuffer(ssd)
     buffer.clear()
     spy_optimize = mocker.spy(buffer, "optimize")
     buffer.insert(Packet("W", 0, 1))
@@ -45,7 +45,7 @@ def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목�
 
 
 def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(ssd):
-    buffer = Buffer(ssd)
+    buffer = CommandBuffer(ssd)
     buffer.clear()
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 1, 0))

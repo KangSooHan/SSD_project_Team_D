@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class AbstractSSDDriver(ABC):
+class SSDShellInterface(ABC):
     @abstractmethod
     def write(self, address: int, data: str) -> None:
         pass

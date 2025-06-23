@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 from contextlib import redirect_stdout
 from validator import Packet
 
-from shell import run
+from shell import Shell
 
 
 @pytest.fixture
@@ -32,7 +32,6 @@ def mock_validator():
 def test_shell_run(user_input, mock_return, expected_output, mock_ssd, mock_validator):
     mock_validator.run.return_value = mock_return
 
-    # 명령어 출력 시뮬레이션
     print_map = {
         "read": "[Read]",
         "write": "[Write]",
@@ -55,13 +54,17 @@ def test_shell_run(user_input, mock_return, expected_output, mock_ssd, mock_vali
         mock_command.execute.return_value = None
 
     with patch("command_core.command_factory.CommandFactory.create", return_value=mock_command):
+        shell = Shell()
+        shell.ssd = mock_ssd
+        shell.validator = mock_validator
+
         f = io.StringIO()
         if command == "exit":
             with pytest.raises(SystemExit):
                 with redirect_stdout(f):
-                    run(user_input, mock_ssd, mock_validator)
+                    shell.run(user_input)
         else:
             with redirect_stdout(f):
-                run(user_input, mock_ssd, mock_validator)
+                shell.run(user_input)
             output = f.getvalue()
             assert expected_output in output

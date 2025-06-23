@@ -1,6 +1,6 @@
 import pytest
 
-from ssd_core.discovery_buffer_optimizer import DiscoveryBufferOptimizer
+from ssd_core.optimizer.discovery_buffer_optimizer import DiscoveryBufferOptimizer
 from validator import Packet
 
 @pytest.fixture

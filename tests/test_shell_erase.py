@@ -1,5 +1,5 @@
 import pytest
-from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.hardware.abstract_ssd import AbstractSSD
 from command_core.shell_commands.erase_command import EraseCommand
 
 @pytest.mark.parametrize("lba,size", [(0,3),(1,8), (5, 1)])
