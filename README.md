@@ -6,7 +6,7 @@ Python으로 구현한 가상 SSD 시스템과 이를 검증하는 Test Shell, T
 
 ## 📘 개요
 
-본 프로젝트는 하드웨어 SSD 없이 소프트웨어적으로 SSD의 Read/Write 동작을 시뮬레이션하며, 사용자가 입력한 명령을 파일 입출력 기반으로 처리합니다. 또한, 명령어 기반의 Shell 환경과 자동화된 Test Script를 통해 SSD 동작의 정확성과 일관성을 검증할 수 있도록 설계되었습니다.
+본 프로젝트는 하드웨어 SSD 없이 소프트웨어적으로 SSD의 Read/Write/Erase 동작을 시뮬레이션하며, 사용자가 입력한 명령을 파일 입출력 기반으로 처리합니다. 또한, 명령어 기반의 Shell 환경과 자동화된 Test Script를 통해 SSD 동작의 정확성과 일관성을 검증할 수 있도록 설계되었습니다.
 
 ---
 
@@ -18,38 +18,38 @@ SSD_project_Team_D/
 ├── README.md                     # 프로젝트 설명서
 ├── requirements.txt              # 필요한 Python 패키지 정의
 ├── shell.py                      # 메인 셸 인터페이스
-├── shell_scripts.txt             # 셸 테스트 스크립트 예시
+├── shell_scripts.txt             # runner에 사용되는 테스트 스크립트 순서 모음
 ├── ssd.py                        # SSD 기능 실행 진입점
-├── validator.py                  # 입력값 검증기
+├── validator.py                  # ssd/shell 입력값 검증기
 │
 ├── .github/
 │   └── PULL_REQUEST_TEMPLATE.md  # PR 템플릿
 │
-├── command_core/                 # 명령어 실행 핵심 로직
-│   ├── base_command.py           # 명령어 추상 클래스 (Command Pattern)
-│   ├── command_factory.py        # 명령어 생성 및 매핑
-│   ├── shell_commands/           # 실제 명령어 구현들
-│   │   ├── erase_command.py
-│   │   ├── erase_range_command.py
-│   │   ├── exit_command.py
-│   │   ├── flush_command.py
-│   │   ├── full_read_command.py
-│   │   ├── full_write_command.py
-│   │   ├── help_command.py
-│   │   ├── read_command.py
-│   │   ├── write_command.py
-│   │   ├── runner.py             # 명령어 실행 엔진
-│   │   └── testscenario.py       # 시나리오 기반 테스트
+├── command_core/                  # 명령어 실행 핵심 로직
+│   ├── base_command.py            # command 추상 클래스 (Command Pattern)
+│   ├── command_factory.py         # command 생성 클래스
+│   ├── shell_commands/            # 실제 command 구현들
+│   │   ├── erase_command.py       # erase command class
+│   │   ├── erase_range_command.py # erase_range command class
+│   │   ├── exit_command.py        # exit command class
+│   │   ├── flush_command.py       # flush command class
+│   │   ├── full_read_command.py   # fullread command class
+│   │   ├── full_write_command.py  # fullwrite command class
+│   │   ├── help_command.py        # help command class
+│   │   ├── read_command.py        # read command class
+│   │   ├── write_command.py       # write command class
+│   │   ├── runner.py              # runner 실행 엔진
+│   │   └── testscenario.py        # 시나리오 기반 테스트 클래스 모음
 │   └── utils/
-│       └── erase_utils.py        # erase 관련 보조 함수
+│       └── erase_utils.py         # erase 관련 보조 함수
 │
-├── shell_core/                   # 셸-SSD 연동용 드라이버
-│   ├── logger.py                 # 로그 출력 유틸
-│   └── normal_ssd_driver.py      # SSD 드라이버 구현체
+├── shell_core/                    # 셸-SSD 연동용 드라이버
+│   ├── logger.py                  # 로그 출력 유틸
+│   └── normal_ssd_driver.py       # SSD 드라이버 구현체
 │
-├── ssd_core/                     # SSD 동작과 관련된 핵심 모듈
-│   ├── abstract_ssd.py           # SSD 인터페이스 정의
-│   ├── abstract_ssd_driver.py    # SSD 드라이버 인터페이스
+├── ssd_core/                      # SSD 동작과 관련된 핵심 모듈
+│   ├── abstract_ssd.py            # SSD 인터페이스 정의
+│   ├── abstract_ssd_driver.py     # SSD 드라이버 인터페이스
 │   ├── abstract_buffer_optimizer.py  # 버퍼 최적화 인터페이스
 │   ├── buffer.py                 # 내부 버퍼 구조
 │   ├── discovery_buffer_optimizer.py
