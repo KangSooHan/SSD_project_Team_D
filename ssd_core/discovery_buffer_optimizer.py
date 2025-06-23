@@ -133,7 +133,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                     mask[cmd.ADDR + i] = VALUE_VALID
         return mask
 
-    def project_write(self, buffer_lst) -> (list[int], list[int]):
+    def project_write(self, buffer_lst) -> tuple[list[int], list[int]]:
         mask = [0] * 100  # LBA 0~99
         value = [0] * 100
         for cmd in buffer_lst:

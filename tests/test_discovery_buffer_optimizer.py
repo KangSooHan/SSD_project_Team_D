@@ -444,6 +444,14 @@ def test_명령어가_1개이하인경우_최적화하지_않는다(abstract_buf
     # 104. erase 명령이 배열 범위 끝에서 수행되는지 확인
     ([Packet("E", 99, SIZE=1), Packet("E", 98, SIZE=2), Packet("E", 97, SIZE=3),],
      [Packet("E", 97, SIZE=3)]),
+
+    # 105. erase 영역 사이에 write가 빈공간을 두고 있는 경우 연결하면 안됨
+    ([Packet("E", 1, SIZE=3), Packet("W", 4, 0x4), Packet("W", 6, 0x6), Packet("W", 8, 0x8), Packet("E", 9, SIZE=4)],
+     [Packet("E", 1, SIZE=3), Packet("W", 4, 0x4), Packet("W", 6, 0x6), Packet("W", 8, 0x8), Packet("E", 9, SIZE=4)]),
+
+    # 16. 병합 후 slicing (20칸 → 10+10)
+    ([Packet("E", 0, SIZE=7), Packet("E", 7, SIZE=7), Packet("E", 14, SIZE=6),],
+     [Packet("E", 0, SIZE=10), Packet("E", 10, SIZE=10),]),
 ])
 def test_buffer_최적화_반환_커맨드_동일_케이스_검증(abstract_buffer_optimizer, tc, expected_cmd):
     result = abstract_buffer_optimizer.calculate(tc)
