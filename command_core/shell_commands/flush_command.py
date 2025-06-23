@@ -1,5 +1,5 @@
 from command_core.base_command import BaseCommand
-from ssd_core.abstract_ssd_driver import AbstractSSDDriver
+from shell_core.abstract_ssd_driver import AbstractSSDDriver
 
 
 class FlushCommand(BaseCommand):

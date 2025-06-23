@@ -14,7 +14,7 @@ from command_core.shell_commands.testscenario import TestScenario2
 from command_core.shell_commands.testscenario import TestScenario3
 from command_core.shell_commands.testscenario import TestScenario4
 from command_core.shell_commands.runner import Runner
-from ssd_core.abstract_ssd_driver import AbstractSSDDriver
+from shell_core.abstract_ssd_driver import AbstractSSDDriver
 
 
 class CommandFactory:

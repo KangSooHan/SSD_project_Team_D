@@ -1,8 +1,8 @@
-from ssd_core.abstract_ssd import AbstractSSD
+from shell_core.abstract_ssd_driver import AbstractSSDDriver
 from command_core.base_command import BaseCommand
 
 class WriteCommand(BaseCommand):
-    def __init__(self, ssd: AbstractSSD, lba: int, value: str):
+    def __init__(self, ssd: AbstractSSDDriver, lba: int, value: str):
         self._ssd = ssd
         self._lba = lba
         self._value = value
