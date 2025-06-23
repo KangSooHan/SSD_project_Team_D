@@ -45,7 +45,6 @@ class Buffer:
                     if mem.ADDR != packet.ADDR:
                         continue
 
-                    #self._ssd._write_output(f'0x{mem.VALUE:08X}')
                     self._ssd._write_output(to_4byte_hex_str(mem.VALUE))
                     return True
 
@@ -110,7 +109,6 @@ class Buffer:
 
         for i in range(self.MAX_MEMORY_BUFFER):
             if i < len(self._memory):
-                #value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else f"0x{self._memory[i].VALUE:08X}"
                 value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else to_4byte_hex_str(self._memory[i].VALUE)
                 filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].ADDR}_{value}.txt"
             else:

@@ -58,7 +58,6 @@ class NormalSSD(AbstractSSD):
         with open(self._nand_file, 'r+') as file:
             lines = file.readlines()
             if not lines:
-                #file.write(f'{address} 0x{data:08X}\n')
                 file.write(f'{address} {to_4byte_hex_str(data)}\n')
                 return
             file.seek(0)
@@ -69,13 +68,11 @@ class NormalSSD(AbstractSSD):
                 new_line = line
                 if int(written_lba) == address and not _overwrite_flag:
                     _overwrite_flag = True
-                    #new_data = f'0x{data:08X}'  # 16진수로 포맷
                     new_data = to_4byte_hex_str(data)
                     new_line = f'{written_lba} {new_data}\n'
 
                 file.write(new_line)
             if not _overwrite_flag:
-                #file.write(f'{address} 0x{data:08X}\n')
                 file.write(f'{address} {to_4byte_hex_str(data)}\n')
 
     def erase(self, address: int, size: int) -> None:

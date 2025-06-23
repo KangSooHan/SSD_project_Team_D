@@ -12,7 +12,6 @@ from utils import to_4byte_hex_str
 @pytest.fixture
 def ssd_mock(mocker: MockerFixture):
     mock = mocker.Mock(spec=AbstractSSD)
-    #mock.read.return_value = f"0x{1:08X}"
     mock.read.return_value = to_4byte_hex_str(1)
     return mock
 
