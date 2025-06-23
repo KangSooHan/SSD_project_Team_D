@@ -8,7 +8,7 @@ class Packet:
     COMMAND: str
     ADDR: int = None
     VALUE: int = None
-    SIZE: int = None
+
 
 
 class Validator(ABC):
