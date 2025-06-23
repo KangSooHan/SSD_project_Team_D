@@ -1,5 +1,4 @@
 from ssd_core.optimizer.buffer_optimizer_provider import BufferOptimizerProvider
-from ssd_core.buffer_optimizer_provider import BufferOptimizerProvider
 from utils import to_4byte_hex_str
 from validator import Packet
 from ssd_core.hardware.normal_ssd import NormalSSD

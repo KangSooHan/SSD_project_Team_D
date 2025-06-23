@@ -50,7 +50,6 @@ class Shell:
         logger.print("Running shell in automatic mode without prompt")
         self.run(filename)
 
-    run("shell_scripts.txt", ssd, validator)
 
 def main():
     shell = Shell()
