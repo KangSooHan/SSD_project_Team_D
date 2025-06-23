@@ -1,6 +1,7 @@
 import subprocess
 from shell_core.abstract_ssd_driver import AbstractSSDDriver
 from ssd_core.normal_ssd import NormalSSD
+from utils import to_4byte_hex_str
 
 
 class NormalSSDDriver(AbstractSSDDriver):
@@ -25,7 +26,7 @@ class NormalSSDDriver(AbstractSSDDriver):
 
     def write(self, addr: int, data: int) -> None:
         # Run the write command
-        subprocess.run(["python", self.ssd_script, "W", str(addr), f"0x{data:08X}"], check=True)
+        subprocess.run(["python", self.ssd_script, "W", str(addr), to_4byte_hex_str(data)], check=True)
 
     def erase(self, addr: int, size: int) -> None:
         # Run the erase command

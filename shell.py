@@ -3,6 +3,7 @@ from shell_core.logger import logger
 from command_core.command_factory import CommandFactory
 from shell_core.normal_ssd_driver import NormalSSDDriver
 from validator import ShellValidator
+from command_core.exceptions import InvalidLBAError
 
 
 def run(user_input: str, ssd: NormalSSDDriver, validator: ShellValidator) -> None:
@@ -39,6 +40,9 @@ def start_shell():
         except SystemExit:
             logger.print("Test Shell exited")
             break
+        except InvalidLBAError as e:
+            logger.print(f"LBA 범위 오류: {e}")
+            print(f"LBA 범위 오류: {e}")
         except Exception as e:
             logger.print(f"INVALID COMMAND: {e}")
             print(f"INVALID COMMAND")
