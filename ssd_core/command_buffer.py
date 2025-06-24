@@ -90,7 +90,7 @@ class CommandBuffer:
                         command = cmd_str[0].upper()
                         addr = int(addr_str, 0)  # supports hex (0x), octal (0o), etc.
 
-                        value = int(value_str, 0) if command == "write" else int(value_str, 16)
+                        value = int(value_str, 0) if command == "E" else int(value_str, 16)
                         self._memory.append(Packet(COMMAND=command, OP1=addr, OP2=value))
                         found = True
                         break
@@ -107,12 +107,11 @@ class CommandBuffer:
             except FileNotFoundError:
                 pass
 
-
         for i in range(self.MAX_MEMORY_BUFFER):
             if i < len(self._memory):
-                value = str(self._memory[i].OP2) if self._memory[i].COMMAND.lower() == "write" else to_4byte_hex_str(
+                value = str(self._memory[i].OP2) if self._memory[i].COMMAND == "E" else to_4byte_hex_str(
                     self._memory[i].OP2)
-                filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].OP1}_{value}.txt"
+                filename = f"{i + 1}_{self._memory[i].COMMAND}_{self._memory[i].OP1}_{value}.txt"
             else:
                 filename = f"{i + 1}_empty.txt"
 

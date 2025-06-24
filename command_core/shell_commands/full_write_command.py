@@ -2,7 +2,7 @@ from adapter.ssd_adapter_interface import SSDShellInterface
 from command_core.base_command import BaseCommand
 
 class FullWriteCommand(BaseCommand):
-    def __init__(self, ssd: SSDShellInterface, value: str):
+    def __init__(self, ssd: SSDShellInterface, value: int):
         self._ssd = ssd
         self._loop_count = 100
         self._value = value

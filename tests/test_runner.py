@@ -1,11 +1,11 @@
 import pytest
-from shell_core.normal_ssd_driver import NormalSSDDriver
+from adapter.ssd_shell_adapter import SSDShellAdapter
 from command_core.shell_commands.runner import Runner
 
 
 def test_runner_성공():
     # arrange
-    ssd = NormalSSDDriver()
+    ssd = SSDShellAdapter()
     runner = Runner(ssd)
 
     # act

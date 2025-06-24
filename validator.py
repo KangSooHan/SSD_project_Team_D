@@ -3,6 +3,11 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
+MAX_LBA_ADDRESS = 100
+MAX_ERASE_SIZE = 10
+MAX_LBA_INT_VALUE = 0xFFFFFFFF
+DUMMY_DATA = 0x00000000
+
 @dataclass
 class Packet:
     COMMAND: str
@@ -13,7 +18,7 @@ class Packet:
 class Validator(ABC):
     def _is_valid_LBA(self, LBA: int) -> bool:
         try:
-            return 0 <= int(LBA) < 100
+            return 0 <= int(LBA) < MAX_LBA_ADDRESS
         except ValueError:
             return False
 
@@ -35,7 +40,7 @@ class Validator(ABC):
         # 값 범위는 정규식이 이미 제한하긴 했지만 추가로 int 변환 후 검사해도 좋음
         try:
             num = int(hex_vlaue, 16)
-            return 0x00000000 <= num <= 0xFFFFFFFF
+            return 0x00000000 <= num <= MAX_LBA_INT_VALUE
         except ValueError:
             return False
 
@@ -50,7 +55,7 @@ class Validator(ABC):
     def _is_valid_erase_range(self, size):
         try:
             size_int = int(size)
-            return 0 <= size_int <= 10
+            return 0 <= size_int <= MAX_ERASE_SIZE
         except ValueError:
             return False
 
@@ -64,7 +69,6 @@ class Validator(ABC):
 
 
 class SSDValidator(Validator):
-    DUMMY_DATA = 0x00000000
 
     def _validate(self, split_sentence: list) -> (str, int, int):
         if not split_sentence:
