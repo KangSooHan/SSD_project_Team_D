@@ -3,6 +3,11 @@ import subprocess
 import textwrap
 
 import pytest
+from unittest.mock import patch
+import builtins
+import sys
+from shell import start_shell, run_shell_automatically, main
+
 
 
 def init_nand_file_for_test():
@@ -97,6 +102,24 @@ def test_shell_fullwrite_then_fullread_실행테스트():
         assert line in stdout
 
 
+@patch.object(builtins, 'input', side_effect=SystemExit)  # 첫 입력에서 SystemExit 호출
+def test_start_shell_immediate_exit(mock_input, capsys):
+    # start_shell은 바로 루프 진입 후 input 호출 → SystemExit → break
+    start_shell()
+    captured = capsys.readouterr()
+    # 시작 메시지가 출력되어야 합니다
+    assert "<< Test Shell Application >> Start" in captured.out
+
+@patch.object(sys, 'argv', ["shell.py"])
+@patch.object(builtins, 'input', side_effect=SystemExit)
+def test_main_without_arg_calls_only_shell(mock_input, capsys):
+    # 인자 없으면 start_shell만 호출
+    main()
+    captured = capsys.readouterr()
+    out = captured.out
+    assert "Running shell in automatic mode without prompt" not in out
+    assert "<< Test Shell Application >> Start" in out
+
 def test_shell_runner_1_실행테스트():
     input_script = "shell_scripts.txt\nexit\n"
     stdout = shell_system_call(input_script)
@@ -104,3 +127,4 @@ def test_shell_runner_1_실행테스트():
     1_FullWriteAndReadCompare ___ Run...Pass
     ''').strip()
     assert cmd_msg in stdout
+
