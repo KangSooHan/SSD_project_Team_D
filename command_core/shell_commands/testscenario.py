@@ -12,6 +12,7 @@ class TestScenario(BaseCommand):
         self._test_constant = 1
         self._test_constant_2 = 2
         self._zero_constant = 0x00000000
+        self._loop_count = None
 
     def read_compare(self, address, data):
         try:
@@ -19,6 +20,9 @@ class TestScenario(BaseCommand):
             return result == data
         except:
             return False
+
+    def set_loop(self, cnt:int):
+        self._loop_count = 1
 
 
 class TestScenario1(TestScenario):
@@ -41,9 +45,10 @@ class TestScenario1(TestScenario):
 class TestScenario2(TestScenario):
     def execute(self, is_runner_called=False):
         # test scenario from lecture note page #29
-        _loop_count = 30
+        if self._loop_count == None:
+            self._loop_count = 30
 
-        for i in range(_loop_count):
+        for i in range(self._loop_count):
             self._ssd.write(4, self._test_constant)
             self._ssd.write(0, self._test_constant)
             self._ssd.write(3, self._test_constant)
@@ -83,8 +88,9 @@ class TestScenario2(TestScenario):
 class TestScenario3(TestScenario):
     def execute(self, is_runner_called=False):
         # test scenario from lecture note page #30
-        _loop_count = 200
-        for i in range(_loop_count):
+        if self._loop_count == None:
+            self._loop_count = 200
+        for i in range(self._loop_count):
             first_random_value = random.randint(1, 10)
             self._ssd.write(0, first_random_value)
 
@@ -109,7 +115,8 @@ class TestScenario3(TestScenario):
 class TestScenario4(TestScenario):
     def execute(self, is_runner_called=False):
         # test scenario from 3day.pdf #8
-        _loop_count = 30
+        if self._loop_count == None:
+            self._loop_count = 30
         _erase_size = 3
 
         # 0 ~ 2번 LBA 삭제
@@ -123,7 +130,7 @@ class TestScenario4(TestScenario):
                 return False
 
         # 2 ~ 96 까지 3개씩 wirte/overwirte/erase/readcompare, (0,1,99)제외
-        for _ in range(_loop_count):
+        for _ in range(self._loop_count):
             for i in range(2, 97, 2):
                 self._ssd.write(i, self._test_constant)
                 self._ssd.write(i, self._test_constant_2)
