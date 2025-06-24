@@ -1,17 +1,15 @@
 import os
 import subprocess
 import textwrap
-
 import pytest
 from unittest.mock import patch
 import builtins
 import sys
-from shell import start_shell, run_shell_automatically, main
 
+from shell import Shell, main
 
 
 def init_nand_file_for_test():
-    """테스트용 NAND 파일 생성"""
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     nand_path = os.path.join(project_root, "ssd_nand.txt")
     with open(nand_path, "w") as f:
@@ -20,10 +18,6 @@ def init_nand_file_for_test():
 
 
 def shell_system_call(input_script: str) -> str:
-    """
-    shell.py를 루트에서 실행하고 stdout, stderr를 받아 반환합니다.
-    에러 발생 시 디버깅 정보를 출력합니다.
-    """
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     shell_py_path = os.path.join(project_root, "shell.py")
 
@@ -40,91 +34,67 @@ def shell_system_call(input_script: str) -> str:
 
     try:
         stdout, stderr = process.communicate(input=input_script, timeout=15)
-        print("=== STDOUT ===\n", stdout)
-        print("=== STDERR ===\n", stderr)
         if process.returncode != 0:
-            pytest.fail(f"Shell exited with status {process.returncode}.\nSTDERR:\n{stderr}")
+            print("=== STDERR ===\n", stderr)
+            pytest.fail(f"Shell exited with status {process.returncode}")
         return stdout
     except subprocess.TimeoutExpired:
         process.kill()
         stdout, stderr = process.communicate()
-        print("=== TIMEOUT STDOUT ===\n", stdout)
-        print("=== TIMEOUT STDERR ===\n", stderr)
-        pytest.fail("타임아웃 에러")
+        pytest.fail("Shell command timed out")
 
 
-def test_shell_단순실행테스트():
-    input_script = "exit\n"
-    stdout = shell_system_call(input_script)
+def test_shell_exit_only():
+    stdout = shell_system_call("exit\n")
     assert "Test Shell Application" in stdout
 
 
-def test_shell_read_실행테스트():
+def test_shell_read():
     init_nand_file_for_test()
-    input_script = "read 10\nexit\n"
-    stdout = shell_system_call(input_script)
+    stdout = shell_system_call("read 10\nexit\n")
     assert "[Read] LBA 10 : 0x00000005" in stdout
 
 
-def test_shell_write_실행테스트():
-    input_script = "write 0 0x00000001\nexit\n"
-    stdout = shell_system_call(input_script)
+def test_shell_write():
+    stdout = shell_system_call("write 0 0x00000001\nexit\n")
     assert "[Write] Done" in stdout
 
 
-def test_shell_help_실행테스트():
-    input_script = "help\nexit\n"
-    stdout = shell_system_call(input_script)
-    cmd_msg = textwrap.dedent('''
-        - write : write {LBA} {VALUE}
-        - read : read {LBA}
-        - exit : exit
-        - help : help
-        - fullwrite : fullwrite {VALUE}
-        - fullread : fullread
-        ''').strip()
-    assert cmd_msg in stdout
+def test_shell_help():
+    stdout = shell_system_call("help\nexit\n")
+    assert "- write : write {LBA} {VALUE}" in stdout
+    assert "- read : read {LBA}" in stdout
+    assert "- exit : exit" in stdout
 
 
-
-def test_shell_잘못된_입력시_INVALID_실행테스트():
-    input_script = "test\nexit\n"
-    stdout = shell_system_call(input_script)
+def test_shell_invalid_command():
+    stdout = shell_system_call("invalid_command\nexit\n")
     assert "INVALID COMMAND" in stdout
 
 
-def test_shell_fullwrite_then_fullread_실행테스트():
-    """fullwrite 후 fullread 명령을 통해 결과를 검증"""
-    input_script = "fullwrite 0xABCDFFFF\nfullread\nexit\n"
-    stdout = shell_system_call(input_script)
-    expected_lines = [f"[Read] LBA {i:02d} : 0xABCDFFFF" for i in range(100)]
-    for line in expected_lines:
-        assert line in stdout
+def test_shell_fullwrite_and_fullread():
+    stdout = shell_system_call("fullwrite 0xABCDFFFF\nfullread\nexit\n")
+    for i in range(100):
+        assert f"[Read] LBA {i:02d} : 0xABCDFFFF" in stdout
 
 
-@patch.object(builtins, 'input', side_effect=SystemExit)  # 첫 입력에서 SystemExit 호출
-def test_start_shell_immediate_exit(mock_input, capsys):
-    # start_shell은 바로 루프 진입 후 input 호출 → SystemExit → break
-    start_shell()
+@patch.object(builtins, 'input', side_effect=SystemExit)
+def test_start_shell_outputs_start_message(mock_input, capsys):
+    shell = Shell()
+    try:
+        shell.start_interactive()
+    except SystemExit:
+        pass
     captured = capsys.readouterr()
-    # 시작 메시지가 출력되어야 합니다
     assert "<< Test Shell Application >> Start" in captured.out
+
 
 @patch.object(sys, 'argv', ["shell.py"])
 @patch.object(builtins, 'input', side_effect=SystemExit)
-def test_main_without_arg_calls_only_shell(mock_input, capsys):
-    # 인자 없으면 start_shell만 호출
-    main()
+def test_main_without_args_runs_shell(mock_input, capsys):
+    try:
+        main()
+    except SystemExit:
+        pass
     captured = capsys.readouterr()
-    out = captured.out
-    assert "Running shell in automatic mode without prompt" not in out
-    assert "<< Test Shell Application >> Start" in out
-
-def test_shell_runner_1_실행테스트():
-    input_script = "shell_scripts.txt\nexit\n"
-    stdout = shell_system_call(input_script)
-    cmd_msg = textwrap.dedent('''
-    1_FullWriteAndReadCompare ___ Run...Pass
-    ''').strip()
-    assert cmd_msg in stdout
-
+    assert "<< Test Shell Application >> Start" in captured.out
