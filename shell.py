@@ -24,9 +24,9 @@ class Shell:
             print("INVALID COMMAND")
             return
 
-        executor = CommandFactory.create(packet.COMMAND, self.ssd, packet.ADDR, packet.VALUE)
+        executor = CommandFactory.create(packet.COMMAND, self.ssd, packet.OP1, packet.OP2)
         executor.execute()
-        logger.print(f"Command executed: {packet.COMMAND} {packet.ADDR} {packet.VALUE}")
+        logger.print(f"Command executed: {packet.COMMAND} {packet.OP1} {packet.OP2}")
 
     def start_interactive(self):
         logger.print("Test Shell started")

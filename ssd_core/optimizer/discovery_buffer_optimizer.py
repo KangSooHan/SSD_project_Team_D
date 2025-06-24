@@ -76,14 +76,14 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                         else:
                             if counting_cnt == 9:
                                 current_erase_cmd_cnt += 1
-                                erase_cmd_new.VALUE = 10
+                                erase_cmd_new.OP2 = 10
                                 current_erase_cmd_lst.append(erase_cmd_new)
                                 erase_cmd_new = None
                                 counting = False
                                 counting_cnt = 0
                             elif i == MAX_LBA_ADDRESS - 1:
                                 current_erase_cmd_cnt += 1
-                                erase_cmd_new.VALUE = counting_cnt + 1
+                                erase_cmd_new.OP2 = counting_cnt + 1
                                 current_erase_cmd_lst.append(erase_cmd_new)
                                 erase_cmd_new = None
                                 counting = False
@@ -93,7 +93,7 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                     elif value == VALUE_EMPTY:
                         if counting:
                             current_erase_cmd_cnt += 1
-                            erase_cmd_new.VALUE = counting_cnt
+                            erase_cmd_new.OP2 = counting_cnt
                             current_erase_cmd_lst.append(erase_cmd_new)
                             erase_cmd_new = None
                             counting = False
@@ -126,8 +126,8 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
     def replace_zero_write(self, buffer_lst: list[Packet]) -> list[Packet]:
         new_lst = []
         for item in buffer_lst:
-            if item.COMMAND == "W" and item.VALUE == 0:
-                new_lst.append(Packet("E", item.ADDR, 1))
+            if item.COMMAND == "W" and item.OP2 == 0:
+                new_lst.append(Packet("E", item.OP1, 1))
             else:
                 new_lst.append(item)
         return new_lst
@@ -136,8 +136,8 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         mask = [0] * MAX_LBA_ADDRESS  # LBA 0~99
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
-                for i in range(cmd.VALUE):
-                    mask[cmd.ADDR + i] = VALUE_VALID
+                for i in range(cmd.OP2):
+                    mask[cmd.OP1 + i] = VALUE_VALID
         return mask
 
     def project_write(self, buffer_lst: list[Packet]) -> tuple[list[int], list[int]]:
@@ -145,11 +145,11 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
         value = [0] * MAX_LBA_ADDRESS
         for cmd in buffer_lst:
             if cmd.COMMAND == "E":
-                for i in range(cmd.VALUE):
-                    mask[cmd.ADDR + i] = VALUE_EMPTY  # overwrite
+                for i in range(cmd.OP2):
+                    mask[cmd.OP1 + i] = VALUE_EMPTY  # overwrite
             elif cmd.COMMAND == "W":
-                mask[cmd.ADDR] = VALUE_VALID  # written
-                value[cmd.ADDR] = cmd.VALUE
+                mask[cmd.OP1] = VALUE_VALID  # written
+                value[cmd.OP1] = cmd.OP2
         return mask, value
 
     def merge_erase_and_write(self, erase_lst, write_lst) -> list[int]:

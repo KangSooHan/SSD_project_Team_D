@@ -322,8 +322,8 @@ def test_W_명령값이_0_인경우_E명령으로_대체한다_1(discovery_optim
 
     assert len(result) == 1
     assert result[0].COMMAND == "E"
-    assert result[0].ADDR == 3
-    assert result[0].VALUE == 1
+    assert result[0].OP1 == 3
+    assert result[0].OP2 == 1
 
 
 def test_W_명령값이_0_인경우_E명령으로_대체한다_2(discovery_optimizer):
@@ -340,8 +340,8 @@ def test_W_명령값이_0_인경우_E명령으로_대체한다_2(discovery_optim
     assert result[2] == tc[2]
 
     assert result[1].COMMAND == "E"
-    assert result[1].ADDR == 3
-    assert result[1].VALUE == 1
+    assert result[1].OP1 == 3
+    assert result[1].OP2 == 1
 
 """
 AbstractBufferOptimizer 구현체에 대한 테스트 코드
