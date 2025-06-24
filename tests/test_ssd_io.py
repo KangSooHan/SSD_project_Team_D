@@ -1,6 +1,6 @@
 import os
 import pytest
-from ssd_core.normal_ssd import NormalSSD
+from ssd_core.hardware.normal_ssd import NormalSSD
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

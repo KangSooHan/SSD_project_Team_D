@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import List, Tuple
 
 from validator import Packet
-from ssd_core.abstract_buffer_optimizer import AbstractBufferOptimizer
+from ssd_core.optimizer.abstract_buffer_optimizer import AbstractBufferOptimizer
 
 
 class SimpleBufferOptimizer(AbstractBufferOptimizer):
@@ -45,12 +45,12 @@ class SimpleBufferOptimizer(AbstractBufferOptimizer):
 
         for cmd in reversed(commands):
             if cmd.COMMAND == "E":
-                start = cmd.ADDR
-                size = cmd.VALUE
+                start = cmd.OP1
+                size = cmd.OP2
                 erase_ranges.append((start, start + size - 1))
                 filtered_rev.append(cmd)
             elif cmd.COMMAND == "W":
-                if any(s <= cmd.ADDR <= e for s, e in erase_ranges):
+                if any(s <= cmd.OP1 <= e for s, e in erase_ranges):
                     continue
                 filtered_rev.append(cmd)
             else:
@@ -64,9 +64,9 @@ class SimpleBufferOptimizer(AbstractBufferOptimizer):
 
         for cmd in reversed(commands):
             if cmd.COMMAND == "W":
-                if cmd.ADDR in seen:
+                if cmd.OP1 in seen:
                     continue
-                seen.add(cmd.ADDR)
+                seen.add(cmd.OP1)
             filtered_rev.append(cmd)
 
         return list(reversed(filtered_rev))
@@ -75,22 +75,22 @@ class SimpleBufferOptimizer(AbstractBufferOptimizer):
         """
         Merge overlapping or adjacent address ranges from E/W commands.
         """
-        sorted_cmds = sorted(commands, key=lambda c: c.ADDR)
+        sorted_cmds = sorted(commands, key=lambda c: c.OP1)
         merged: List[Tuple[int, int]] = []
         idx = 0
 
         while idx < len(sorted_cmds):
-            start = sorted_cmds[idx].ADDR
+            start = sorted_cmds[idx].OP1
             if sorted_cmds[idx].COMMAND == "E":
-                end = start + sorted_cmds[idx].VALUE - 1
+                end = start + sorted_cmds[idx].OP2 - 1
             else:
                 end = start
             idx += 1
 
-            while idx < len(sorted_cmds) and sorted_cmds[idx].ADDR <= end + 1:
+            while idx < len(sorted_cmds) and sorted_cmds[idx].OP1 <= end + 1:
                 pkt = sorted_cmds[idx]
                 pkt_end = (
-                    pkt.ADDR + pkt.VALUE - 1 if pkt.COMMAND == "E" else pkt.ADDR
+                    pkt.OP1 + pkt.OP2 - 1 if pkt.COMMAND == "E" else pkt.OP1
                 )
                 end = max(end, pkt_end)
                 idx += 1
@@ -107,7 +107,7 @@ class SimpleBufferOptimizer(AbstractBufferOptimizer):
         or generate fixed-size chunks (size <= MAX_ERASE_SIZE).
         """
         originals = [
-            c for c in commands if c.COMMAND == "E" and start <= c.ADDR <= end
+            c for c in commands if c.COMMAND == "E" and start <= c.OP1 <= end
         ]
         span = end - start + 1
         needed = (span + self.MAX_ERASE_SIZE - 1) // self.MAX_ERASE_SIZE
@@ -143,11 +143,11 @@ class SimpleBufferOptimizer(AbstractBufferOptimizer):
             optimized_erases.extend(self._generate_erase_chunks(start, end, commands))
 
         # Sort erases by address
-        optimized_erases.sort(key=lambda p: p.ADDR)
+        optimized_erases.sort(key=lambda p: p.OP1)
 
         # Collect remaining commands
         writes = [c for c in commands if c.COMMAND == "W"]
-        writes.sort(key=lambda p: p.ADDR)
+        writes.sort(key=lambda p: p.OP1)
         others = [c for c in commands if c.COMMAND not in ("E", "W")]
 
         # Final sequence: all erases first, then writes, then others

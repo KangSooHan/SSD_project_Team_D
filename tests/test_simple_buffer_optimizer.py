@@ -2,7 +2,7 @@ import sys, os, pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from ssd_core.simple_buffer_optimizer import SimpleBufferOptimizer
+from ssd_core.optimizer.simple_buffer_optimizer import SimpleBufferOptimizer
 from validator import Packet
 
 test_cases = test_cases_pretty = [
@@ -315,13 +315,13 @@ def test_buffer_optimizer(buf_in, expected):
                 f"Expected: {expected}\n"
                 f"Got:      {result}\n"
             )
-            assert r.ADDR == e.ADDR, (
+            assert r.OP1 == e.OP1, (
                 f"\n❌ ADDR mismatch at index {i}:\n"
                 f"Input:    {buf_in}\n"
                 f"Expected: {expected}\n"
                 f"Got:      {result}\n"
             )
-            assert r.VALUE == e.VALUE, (
+            assert r.OP2 == e.OP2, (
                 f"\n❌ VALUE mismatch at index {i}:\n"
                 f"Input:    {buf_in}\n"
                 f"Expected: {expected}\n"

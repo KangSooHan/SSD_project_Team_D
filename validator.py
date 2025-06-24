@@ -11,8 +11,8 @@ DUMMY_DATA = 0x00000000
 @dataclass
 class Packet:
     COMMAND: str
-    ADDR: int = None
-    VALUE: int = None
+    OP1: int = None
+    OP2: int = None
 
 
 class Validator(ABC):
