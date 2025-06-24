@@ -1,0 +1,100 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam padding 5
+skinparam nodeMargin 5
+left to right direction
+
+' Top row: Entry & Validation & Adapter
+package "SSD Simulation System" {
+
+  package "Entry Point" {
+    class Shell
+    class SSDScript
+    class Packet
+  }
+
+  package "shell_core" {
+    abstract class Validator
+    class ShellValidator
+    class SSDValidator
+    class Logger
+  }
+
+  package adapter {
+    interface SSDShellInterface
+    class SSDShellAdapter
+  }
+
+  ' Bottom row: Commands & SSD Core
+  package "command_core" {
+    abstract class BaseCommand
+    class CommandFactory
+    class InvalidLBAError
+
+    package shell_commands {
+      class ReadCommand
+      class WriteCommand
+      class FlushCommand
+      class ExitCommand
+      class HelpCommand
+      class TestScenario
+      class Runner
+    }
+  }
+
+  package "ssd_core" {
+    class CommandBuffer
+
+    package hardware {
+      abstract class AbstractSSD
+      class NormalSSD
+    }
+
+    package optimizer {
+      abstract class AbstractBufferOptimizer
+      class SimpleBufferOptimizer
+      class DiscoveryBufferOptimizer
+    }
+  }
+}
+
+' ==== Inheritance ====
+SSDShellAdapter                 --|> SSDShellInterface
+BaseCommand                     <|-- ReadCommand
+BaseCommand                     <|-- WriteCommand
+BaseCommand                     <|-- FlushCommand
+BaseCommand                     <|-- ExitCommand
+BaseCommand                     <|-- HelpCommand
+BaseCommand                     <|-- TestScenario
+Validator                       <|-- ShellValidator
+Validator                       <|-- SSDValidator
+AbstractSSD                     <|-- NormalSSD
+AbstractBufferOptimizer         <|-- SimpleBufferOptimizer
+AbstractBufferOptimizer         <|-- DiscoveryBufferOptimizer
+
+' ==== Flow ====
+Shell       --> ShellValidator        : run(input)
+Shell       --> CommandFactory        : create(Packet)
+CommandFactory --> BaseCommand
+Runner      --> ReadCommand
+Runner      --> WriteCommand
+Runner      --> FlushCommand
+Runner      --> ExitCommand
+Runner      --> HelpCommand
+Runner      --> TestScenario
+
+ReadCommand --> SSDShellInterface
+WriteCommand --> SSDShellInterface
+FlushCommand --> SSDShellInterface
+ExitCommand --> SSDShellInterface
+HelpCommand --> SSDShellInterface
+TestScenario --> SSDShellInterface
+
+SSDShellAdapter --> NormalSSD
+
+SSDScript    --> SSDValidator         : run(args)
+SSDScript    --> CommandBuffer        : insert()/flush()
+CommandBuffer --> AbstractBufferOptimizer : optimize()
+CommandBuffer --> NormalSSD           : direct I/O
+@enduml
