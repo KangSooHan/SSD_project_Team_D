@@ -73,6 +73,15 @@ class DiscoveryBufferOptimizer(AbstractBufferOptimizer):
                             counting = True
                             counting_cnt = 1
                             erase_cmd_new = Packet("E", i)
+
+                            # 99에서 ERASE 시작하고 바로 끝나는 케이스
+                            if i == MAX_LBA_ADDRESS - 1:
+                                current_erase_cmd_cnt += 1
+                                erase_cmd_new.OP2 = counting_cnt    # 카운팅 횟수를 증가시키지 않는다. 이미 위에서 하나가 카운팅 됨
+                                current_erase_cmd_lst.append(erase_cmd_new)
+                                erase_cmd_new = None
+                                counting = False
+                                counting_cnt = 0
                         else:
                             if counting_cnt == 9:
                                 current_erase_cmd_cnt += 1
