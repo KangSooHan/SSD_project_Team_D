@@ -1,5 +1,5 @@
 import pytest
-from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.hardware.abstract_ssd import AbstractSSD
 from command_core.shell_commands.erase_range_command import EraseRangeCommand
 
 @pytest.mark.parametrize("start,end", [(0,3),(1,8),(5,5)])

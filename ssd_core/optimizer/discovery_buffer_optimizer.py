@@ -1,6 +1,5 @@
-import copy
-from itertools import product, combinations
-from ssd_core.abstract_buffer_optimizer import AbstractBufferOptimizer
+from itertools import combinations
+from ssd_core.optimizer.abstract_buffer_optimizer import AbstractBufferOptimizer
 from validator import Packet
 
 MAX_LBA_ADDRESS = 100

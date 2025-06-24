@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import List, Tuple
 
 from validator import Packet
-from ssd_core.abstract_buffer_optimizer import AbstractBufferOptimizer
+from ssd_core.optimizer.abstract_buffer_optimizer import AbstractBufferOptimizer
 
 
 class SimpleBufferOptimizer(AbstractBufferOptimizer):
