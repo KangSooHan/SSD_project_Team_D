@@ -149,7 +149,7 @@ pause > nul
 cls
 echo [6] Ignore Command 테스트
 echo 실행: python ssd.py W 9 0x00000009
-python ssd.py R 8
+python ssd.py W 9 0x00000009
 echo.
 echo [Buffer 상태]
 call :print_files buffer
