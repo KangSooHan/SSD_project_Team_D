@@ -34,7 +34,7 @@ class Shell:
 
         while True:
             try:
-                user_input = input("Shell> ")
+                user_input = input("Shell> ").strip()
                 self.run(user_input)
             except SystemExit:
                 logger.print("Test Shell exited")
