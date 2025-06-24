@@ -81,6 +81,7 @@ def test_shell_help_실행테스트():
     assert cmd_msg in stdout
 
 
+
 def test_shell_잘못된_입력시_INVALID_실행테스트():
     input_script = "test\nexit\n"
     stdout = shell_system_call(input_script)

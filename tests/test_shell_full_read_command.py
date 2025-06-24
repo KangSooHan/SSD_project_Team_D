@@ -1,5 +1,5 @@
 from command_core.shell_commands.full_read_command import FullReadCommand
-from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.hardware.abstract_ssd import AbstractSSD
 #from shell_core.shell_commands.full_read_command import FullReadCommand
 
 def test_full_read_성공(mocker):

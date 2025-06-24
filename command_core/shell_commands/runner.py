@@ -3,8 +3,9 @@ import inspect
 import sys
 from command_core.base_command import BaseCommand
 from command_core.shell_commands import testscenario
-from shell_core.abstract_ssd_driver import AbstractSSDDriver
+from adapter.ssd_adapter_interface import SSDShellInterface
 from command_core.shell_commands.testscenario import TestScenario
+from command_core.exceptions import InvalidLBAError
 
 scenario_map = {
     "1_FullWriteAndReadCompare": testscenario.TestScenario1,
@@ -15,7 +16,7 @@ scenario_map = {
 
 
 class Runner(BaseCommand):
-    def __init__(self, ssd: AbstractSSDDriver):
+    def __init__(self, ssd: SSDShellInterface):
         self.ssd = ssd
 
     def execute(self):
@@ -51,6 +52,8 @@ class Runner(BaseCommand):
                     print(f"FAIL!")
                     sys.exit(0)
 
+            except InvalidLBAError as e:
+                print(f"[Runner] LBA 범위 오류: {e}")
             except Exception as e:
                 print(f"[Runner] '{scenario_name}' 실행 중 오류 발생: {e}")
 

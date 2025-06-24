@@ -5,13 +5,15 @@ import pytest
 from pytest_mock import MockerFixture
 
 from command_core.shell_commands.testscenario import TestScenario4
-from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.hardware.abstract_ssd import AbstractSSD
+from utils import to_4byte_hex_str
+from ssd_core.hardware.abstract_ssd import AbstractSSD
 
 
 @pytest.fixture
 def ssd_mock(mocker: MockerFixture):
     mock = mocker.Mock(spec=AbstractSSD)
-    mock.read.return_value = f"0x{0:08X}"
+    mock.read.return_value = to_4byte_hex_str(0)
     return mock
 
 def test_테스트시나리오4_객체는_SSD_인터페이스를_의존성으로_주입받는다(ssd_mock):
