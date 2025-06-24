@@ -2,7 +2,7 @@ from shell_core.abstract_ssd_driver import AbstractSSDDriver
 from command_core.base_command import BaseCommand
 
 class FullWriteCommand(BaseCommand):
-    def __init__(self, ssd: AbstractSSDDriver, value: str):
+    def __init__(self, ssd: AbstractSSDDriver, value: int):
         self._ssd = ssd
         self._loop_count = 100
         self._value = value
