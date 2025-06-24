@@ -20,42 +20,52 @@ SSD_project_Team_D/
 ├── shell.py                      # 메인 셸 인터페이스
 ├── shell_scripts.txt             # runner에 사용되는 테스트 스크립트 순서 모음
 ├── ssd.py                        # SSD 기능 실행 진입점
+├── utils.py                      # 유틸리티 함수
 ├── validator.py                  # ssd/shell 입력값 검증기
 │
 ├── .github/
 │   └── PULL_REQUEST_TEMPLATE.md  # PR 템플릿
 │
-├── command_core/                  # 명령어 실행 핵심 로직
-│   ├── base_command.py            # command 추상 클래스 (Command Pattern)
-│   ├── command_factory.py         # command 생성 클래스
-│   ├── shell_commands/            # 실제 command 구현들
-│   │   ├── erase_command.py       # erase command class
-│   │   ├── erase_range_command.py # erase_range command class
-│   │   ├── exit_command.py        # exit command class
-│   │   ├── flush_command.py       # flush command class
-│   │   ├── full_read_command.py   # fullread command class
-│   │   ├── full_write_command.py  # fullwrite command class
-│   │   ├── help_command.py        # help command class
-│   │   ├── read_command.py        # read command class
-│   │   ├── write_command.py       # write command class
-│   │   ├── runner.py              # runner 실행 엔진
-│   │   └── testscenario.py        # 시나리오 기반 테스트 클래스 모음
+├── adapter/                      # Shell/SSD 연동 어댑터 계층
+│   ├── __init__.py
+│   ├── ssd_adapter_interface.py  # 어댑터 인터페이스
+│   └── ssd_shell_adapter.py      # Shell-SSD 연결 구현체
+│
+├── command_core/                 # 명령어 실행 핵심 로직
+│   ├── base_command.py           # Command 추상 클래스 (Command Pattern)
+│   ├── command_factory.py        # Command 생성 클래스
+│   ├── exceptions.py             # 사용자 정의 예외 클래스 모음
+│   ├── shell_commands/           # 실제 command 구현들
+│   │   ├── erase_command.py       # erase 명령 클래스
+│   │   ├── erase_range_command.py # erase_range 명령 클래스
+│   │   ├── exit_command.py        # exit 명령 클래스
+│   │   ├── flush_command.py       # flush 명령 클래스
+│   │   ├── full_read_command.py   # fullread 명령 클래스
+│   │   ├── full_write_command.py  # fullwrite 명령 클래스
+│   │   ├── help_command.py        # help 명령 클래스
+│   │   ├── read_command.py        # read 명령 클래스
+│   │   ├── runner.py              # 테스트 시나리오 실행 엔진
+│   │   ├── testscenario.py        # 시나리오 기반 테스트 클래스 모음
+│   │   └── write_command.py       # write 명령 클래스
 │   └── utils/
 │       └── erase_utils.py         # erase 관련 보조 함수
 │
-├── shell_core/                    # 셸-SSD 연동용 드라이버
-│   ├── logger.py                  # 로그 출력 유틸
-│   ├── normal_ssd_driver.py       # SSD 드라이버 구현체
-│   └── abstract_ssd_driver.py     # SSD 드라이버 인터페이스
+├── shell_core/                   # 
+│   ├── logger.py                 # 로그 출력 유틸
 │
-├── ssd_core/                      # SSD 동작과 관련된 핵심 모듈
-│   ├── abstract_ssd.py            # SSD 인터페이스 정의
-│   ├── abstract_buffer_optimizer.py  # 버퍼 최적화 인터페이스
-│   ├── buffer.py                 # 내부 버퍼 구조
-│   ├── discovery_buffer_optimizer.py
-│   ├── simple_buffer_optimizer.py
-│   ├── normal_ssd.py             # 실제 SSD 구현체
-│   └── init.py                   # 초기화 함수들
+├── ssd_core/                     # SSD 동작과 관련된 핵심 모듈
+│   ├── __init__.py
+│   ├── command_buffer.py         # SSD 명령 버퍼
+│   ├── hardware/                 # 실제 SSD 동작 구현체
+│   │   ├── __init__.py
+│   │   ├── abstract_ssd.py       # SSD 인터페이스 정의
+│   │   └── normal_ssd.py         # 파일 기반 SSD 구현
+│   └── optimizer/                # 버퍼 최적화 전략 구현
+│       ├── __init__.py
+│       ├── abstract_buffer_optimizer.py
+│       ├── buffer_optimizer_provider.py
+│       ├── discovery_buffer_optimizer.py
+│       └── simple_buffer_optimizer.py
 │
 ├── tests/                        # TDD 기반 테스트 모듈
 │   ├── test_buffer.py
