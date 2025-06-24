@@ -93,7 +93,7 @@ def test_검증기_잘못된_COMMAND_입력(wrong_input, ssdvalidator):
 
 @pytest.mark.parametrize("wrong_input", ["w 0 00FFFFFFFF", "w 0 0xGFFFFFFF",
                                          "w 0 0x-1FFFFFFF", "w 0 0xZZZZZZZZ"])
-def test_검증기_잘못된_VALUE_입력(wrong_input, ssdvalidator):
+def test_검증기_잘못된_OP2_입력(wrong_input, ssdvalidator):
     assert ssdvalidator._validate_test(wrong_input) == False
 
 
@@ -133,7 +133,7 @@ def test_SHELL_VALIDATOR_검증(shellvalidator, input, output):
         "exit 1",
     ]
 )
-def test_SHELL_검증기_잘못된_VALUE_입력(wrong_input, shellvalidator):
+def test_SHELL_검증기_잘못된_OP2_입력(wrong_input, shellvalidator):
     assert shellvalidator._validate_test(wrong_input) == False
 
 
@@ -167,19 +167,19 @@ def test_SHELL_검증기_시나리오_잘못된_길이_입력(wrong_input, shell
     assert result.COMMAND == "ERR", f"입력 '{wrong_input}'는 ERR를 반환해야 합니다."
 
 @pytest.mark.parametrize(
-    "input_cmd, expected_command, expected_addr, expected_value",
+    "input_cmd, expected_command, expected_OP1, expected_OP2",
     [
         # flush 정상 (길이 1)
         ("flush", "flush", None, None),
         # flush 오류 (길이 != 1)
         ("flush extra", "ERR", None, None),
 
-        # erase 정상 (길이 3, 유효한 addr/size)
+        # erase 정상 (길이 3, 유효한 OP1/size)
         ("erase 10 5", "erase", 10, 5),
         # erase 오류 (길이 != 3)
         ("erase 10", "ERR", None, None),
         ("erase 10 5 7", "ERR", None, None),
-        # erase 오류 (addr invalid)
+        # erase 오류 (OP1 invalid)
         ("erase abc 5", "ERR", None, None),
         # erase 오류 (size invalid)
         ("erase 10 xyz", "ERR", None, None),
@@ -195,21 +195,21 @@ def test_SHELL_검증기_시나리오_잘못된_길이_입력(wrong_input, shell
         ("erase_range 0 xyz", "ERR", None, None),
     ]
 )
-def test_SHELL_검증기_ERASE_ERASERANGE_FLUSH_검증(input_cmd, expected_command, expected_addr, expected_value, shellvalidator):
+def test_SHELL_검증기_ERASE_ERASERANGE_FLUSH_검증(input_cmd, expected_command, expected_OP1, expected_OP2, shellvalidator):
     packet = shellvalidator.run(input_cmd)
 
     assert packet.COMMAND == expected_command
-    assert packet.ADDR == expected_addr
-    assert packet.VALUE == expected_value
+    assert packet.OP1 == expected_OP1
+    assert packet.OP2 == expected_OP2
 
 def test_SHELL_Validate_함수_빈_리스트_검증(shellvalidator):
     packet = shellvalidator._validate([])
     assert packet.COMMAND == "ERR"
-    assert packet.ADDR is None
-    assert packet.VALUE is None
+    assert packet.OP1 is None
+    assert packet.OP2 is None
 
 def test_SSD_Validate_함수_빈_리스트_검증(ssdvalidator):
     packet = ssdvalidator._validate([])
     assert packet.COMMAND == "ERR"
-    assert packet.ADDR is None
-    assert packet.VALUE is None
+    assert packet.OP1 is None
+    assert packet.OP2 is None
