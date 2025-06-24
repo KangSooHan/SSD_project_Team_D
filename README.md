@@ -112,6 +112,7 @@ SSD_project_Team_D/
   - `exit`
   - `erase [LBA] [SIZE]`
   - `erase_range [START LBA] [END LBA]`
+  - `flush`
 
 ### 🔹 Test Script
 

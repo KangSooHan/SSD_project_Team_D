@@ -47,6 +47,7 @@ def test_Buffer객체는_최적화대상이_아닌_명령에_대해_5개_항목�
 def test_Buffer객체는_최적화_알고리즘_계산을위해_입력순서를_유지한다(ssd):
     buffer = CommandBuffer(ssd)
     buffer.clear()
+
     buffer.insert(Packet("W", 0, 0))
     buffer.insert(Packet("W", 1, 1))
     buffer.insert(Packet("W", 2, 2))
