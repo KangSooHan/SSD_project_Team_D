@@ -1,7 +1,9 @@
+import os
+import sys
+
 from ssd_core.hardware.normal_ssd import NormalSSD
 from validator import SSDValidator
 from ssd_core.command_buffer import CommandBuffer
-import sys
 
 
 def _run_buffer_command(args, flush: bool):
@@ -27,6 +29,9 @@ def main(args=None):
 
 
 def main_test(args=None):
+    PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    os.chdir(PROJECT_ROOT)
+
     args = args if args is not None else sys.argv[1:]
     _run_buffer_command(args, flush=True)
 

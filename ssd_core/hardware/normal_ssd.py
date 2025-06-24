@@ -3,7 +3,7 @@ from ssd_core.hardware.abstract_ssd import AbstractSSD
 
 
 def find_project_root() -> str:
-    current = os.path.abspath(__file__)
+    current = os.path.abspath(os.path.dirname(__file__))
     while True:
         if os.path.isfile(os.path.join(current, "requirements.txt")):
             return current

@@ -70,10 +70,12 @@ def test_shell_help_실행테스트():
     stdout = shell_system_call(input_script)
     assert "명령어 사용 방법" in stdout
 
+
 def test_shell_잘못된_입력시_INVALID_실행테스트():
     input_script = "test\nexit\n"
     stdout = shell_system_call(input_script)
     assert "INVALID COMMAND" in stdout
+
 
 @pytest.mark.skip
 def test_shell_fullwrite_then_fullread_실행테스트():

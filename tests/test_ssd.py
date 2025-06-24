@@ -59,13 +59,12 @@ def test_read_command(nand_content, cli_args, expected):
     assert get_output_content() == expected
 
 
-@pytest.mark.skip
 @pytest.mark.parametrize("cli_args", [
     ["W", "10", "0x11111111"],
     ["W", "0", "0xCAFEBABE"],
 ])
 def test_write_command_with_mock(cli_args):
-    with patch("ssd_core.normal_ssd.NormalSSD.write") as mock_write:
+    with patch("ssd_core.hardware.normal_ssd.NormalSSD.write") as mock_write:
         mock_write.return_value = None
         ssd_main(cli_args)
 
@@ -75,13 +74,12 @@ def test_write_command_with_mock(cli_args):
         assert get_output_content() == ""
 
 
-@pytest.mark.skip
 @pytest.mark.parametrize("write_args, read_args", [
     (["W", "77", "0xFEEDBEEF"], ["R", "77"]),
     (["W", "0", "0x12345678"], ["R", "0"]),
 ])
 def test_write_then_read_with_write_mock(write_args, read_args):
-    with patch("ssd_core.normal_ssd.NormalSSD.write") as mock_write:
+    with patch("ssd_core.hardware.normal_ssd.NormalSSD.write") as mock_write:
         mock_write.return_value = None
         ssd_main(write_args)
 
