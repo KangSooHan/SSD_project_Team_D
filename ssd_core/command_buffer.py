@@ -22,9 +22,9 @@ class CommandBuffer:
     def flush(self):
         for packet in self._memory:
             if packet.COMMAND == "E":
-                self._ssd.erase(packet.ADDR, packet.VALUE)
+                self._ssd.erase(packet.OP1, packet.OP2)
             elif packet.COMMAND == "W":
-                self._ssd.write(packet.ADDR, packet.VALUE)
+                self._ssd.write(packet.OP1, packet.OP2)
         self._memory = []
         self.save_memory_to_files()
 
@@ -42,19 +42,19 @@ class CommandBuffer:
         if packet.COMMAND == "R":
             for mem in reversed(self._memory):
                 if mem.COMMAND == "W":
-                    if mem.ADDR != packet.ADDR:
+                    if mem.OP1 != packet.OP1:
                         continue
 
-                    self._ssd._write_output(to_4byte_hex_str(mem.VALUE))
+                    self._ssd._write_output(to_4byte_hex_str(mem.OP2))
                     return True
 
                 if mem.COMMAND == "E":
-                    if not (mem.ADDR <= packet.ADDR < mem.ADDR + mem.VALUE):
+                    if not (mem.OP1 <= packet.OP1 < mem.OP1 + mem.OP2):
                         continue
 
                     self._ssd._write_output(self.EMPTY_VALUE)
                     return True
-            self._ssd.read(packet.ADDR)
+            self._ssd.read(packet.OP1)
             return True
 
         if packet.COMMAND == "F":
@@ -91,7 +91,7 @@ class CommandBuffer:
                         addr = int(addr_str, 0)  # supports hex (0x), octal (0o), etc.
 
                         value = int(value_str, 0) if command == "write" else int(value_str, 16)
-                        self._memory.append(Packet(COMMAND=command, ADDR=addr, VALUE=value))
+                        self._memory.append(Packet(COMMAND=command, OP1=addr, OP2=value))
                         found = True
                         break
             if not found:
@@ -110,9 +110,9 @@ class CommandBuffer:
 
         for i in range(self.MAX_MEMORY_BUFFER):
             if i < len(self._memory):
-                value = str(self._memory[i].VALUE) if self._memory[i].COMMAND.lower() == "write" else to_4byte_hex_str(
-                    self._memory[i].VALUE)
-                filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].ADDR}_{value}.txt"
+                value = str(self._memory[i].OP2) if self._memory[i].COMMAND.lower() == "write" else to_4byte_hex_str(
+                    self._memory[i].OP2)
+                filename = f"{i + 1}_{self._memory[i].COMMAND.lower()}_{self._memory[i].OP1}_{value}.txt"
             else:
                 filename = f"{i + 1}_empty.txt"
 

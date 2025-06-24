@@ -6,8 +6,8 @@ from dataclasses import dataclass
 @dataclass
 class Packet:
     COMMAND: str
-    ADDR: int = None
-    VALUE: int = None
+    OP1: int = None
+    OP2: int = None
 
 
 class Validator(ABC):

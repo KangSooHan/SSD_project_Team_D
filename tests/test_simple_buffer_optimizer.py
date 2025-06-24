@@ -315,13 +315,13 @@ def test_buffer_optimizer(buf_in, expected):
                 f"Expected: {expected}\n"
                 f"Got:      {result}\n"
             )
-            assert r.ADDR == e.ADDR, (
+            assert r.OP1 == e.OP1, (
                 f"\n❌ ADDR mismatch at index {i}:\n"
                 f"Input:    {buf_in}\n"
                 f"Expected: {expected}\n"
                 f"Got:      {result}\n"
             )
-            assert r.VALUE == e.VALUE, (
+            assert r.OP2 == e.OP2, (
                 f"\n❌ VALUE mismatch at index {i}:\n"
                 f"Input:    {buf_in}\n"
                 f"Expected: {expected}\n"
