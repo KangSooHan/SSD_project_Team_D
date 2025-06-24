@@ -1,6 +1,6 @@
-from ssd_core.abstract_buffer_optimizer import AbstractBufferOptimizer
-from ssd_core.discovery_buffer_optimizer import DiscoveryBufferOptimizer
-from ssd_core.simple_buffer_optimizer import SimpleBufferOptimizer
+from ssd_core.optimizer.abstract_buffer_optimizer import AbstractBufferOptimizer
+from ssd_core.optimizer.discovery_buffer_optimizer import DiscoveryBufferOptimizer
+from ssd_core.optimizer.simple_buffer_optimizer import SimpleBufferOptimizer
 from validator import Packet
 
 

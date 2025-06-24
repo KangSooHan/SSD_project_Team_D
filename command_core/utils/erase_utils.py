@@ -1,6 +1,6 @@
-from shell_core.abstract_ssd_driver import AbstractSSDDriver
+from adapter.ssd_adapter_interface import SSDShellInterface
 
-def erase_by_chunksize(_ssd: AbstractSSDDriver, count, start):
+def erase_by_chunksize(_ssd: SSDShellInterface, count, start):
     while count > 0:
         chunk = min(10, count)
         chunk_start = start

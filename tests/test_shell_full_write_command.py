@@ -1,5 +1,5 @@
 import pytest
-from ssd_core.abstract_ssd import AbstractSSD
+from ssd_core.hardware.abstract_ssd import AbstractSSD
 from command_core.shell_commands.full_write_command import FullWriteCommand
 
 @pytest.mark.parametrize("value", [0xAAAABBBB, 0x11111111])

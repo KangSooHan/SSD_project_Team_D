@@ -14,11 +14,11 @@ from command_core.shell_commands.testscenario import TestScenario2
 from command_core.shell_commands.testscenario import TestScenario3
 from command_core.shell_commands.testscenario import TestScenario4
 from command_core.shell_commands.runner import Runner
-from shell_core.abstract_ssd_driver import AbstractSSDDriver
+from adapter.ssd_adapter_interface import SSDShellInterface
 
 
 class CommandFactory:
-    _registry: Dict[str, Callable[[AbstractSSDDriver, int | None, int | None], BaseCommand]] = {
+    _registry: Dict[str, Callable[[SSDShellInterface, int | None, int | None], BaseCommand]] = {
         "read": lambda ssd, address, value=None: ReadCommand(ssd, address),
         "write": lambda ssd, address, value: WriteCommand(ssd, address, value),
         "exit": lambda ssd, address=None, value=None: ExitCommand(),
@@ -36,5 +36,5 @@ class CommandFactory:
     }
 
     @classmethod
-    def create(cls, cmd_type: str, ssd: AbstractSSDDriver, address: int | None = None, value: int | None = None) -> BaseCommand:
+    def create(cls, cmd_type: str, ssd: SSDShellInterface, address: int | None = None, value: int | None = None) -> BaseCommand:
         return cls._registry[cmd_type](ssd, address, value)

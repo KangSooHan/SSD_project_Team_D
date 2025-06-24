@@ -1,12 +1,11 @@
-from ssd_core.buffer_optimizer_provider import BufferOptimizerProvider
+from ssd_core.optimizer.buffer_optimizer_provider import BufferOptimizerProvider
 from utils import to_4byte_hex_str
 from validator import Packet
-from ssd_core.normal_ssd import NormalSSD
+from ssd_core.hardware.normal_ssd import NormalSSD
 import os
 
-
-class Buffer:
-    def __init__(self, ssd: NormalSSD):
+class CommandBuffer:
+    def __init__(self, ssd:NormalSSD):
         self._ssd = ssd
         self._memory: list[Packet] = []
         self.MAX_MEMORY_BUFFER = 5
@@ -15,6 +14,7 @@ class Buffer:
         self._buffer_path = "buffer"
         os.makedirs(self._buffer_path, exist_ok=True)
         self.load_memory_from_files()
+
 
     def is_full(self):
         return len(self._memory) == self.MAX_MEMORY_BUFFER
@@ -106,6 +106,7 @@ class Buffer:
                 os.remove(file_path)
             except FileNotFoundError:
                 pass
+
 
         for i in range(self.MAX_MEMORY_BUFFER):
             if i < len(self._memory):

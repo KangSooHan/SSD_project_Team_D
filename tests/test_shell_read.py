@@ -1,6 +1,6 @@
 import pytest
-from ssd_core.abstract_ssd import AbstractSSD
-from ssd_core.normal_ssd import NormalSSD
+from ssd_core.hardware.abstract_ssd import AbstractSSD
+from ssd_core.hardware.normal_ssd import NormalSSD
 from command_core.shell_commands.read_command import ReadCommand
 
 
