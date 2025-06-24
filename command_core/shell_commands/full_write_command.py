@@ -1,8 +1,8 @@
-from shell_core.abstract_ssd_driver import AbstractSSDDriver
+from adapter.ssd_adapter_interface import SSDShellInterface
 from command_core.base_command import BaseCommand
 
 class FullWriteCommand(BaseCommand):
-    def __init__(self, ssd: AbstractSSDDriver, value: str):
+    def __init__(self, ssd: SSDShellInterface, value: str):
         self._ssd = ssd
         self._loop_count = 100
         self._value = value

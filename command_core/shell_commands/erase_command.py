@@ -1,9 +1,9 @@
 from command_core.base_command import BaseCommand
-from shell_core.abstract_ssd_driver import AbstractSSDDriver
+from adapter.ssd_adapter_interface import SSDShellInterface
 from command_core.utils.erase_utils import erase_by_chunksize
 
 class EraseCommand(BaseCommand):
-    def __init__(self, ssd: AbstractSSDDriver, lba: int, size: int):
+    def __init__(self, ssd: SSDShellInterface, lba: int, size: int):
         self._ssd = ssd
         self._lba = lba
         self._size = size
